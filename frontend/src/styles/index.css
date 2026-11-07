@@ -1,0 +1,135 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Ink and paper */
+  --color-paper: #ffffff;
+  --color-wash: #f6f6f7;
+  --color-ink: #0b0b0c;
+  --color-ink-2: #3f3f46;
+  --color-ink-3: #6b6b74;
+  --color-rule: #e6e6e9;
+  --color-rule-2: #d4d4d8;
+
+  /* Proof red: used only where the AI misheard */
+  --color-proof: #c8281c;
+  --color-proof-ink: #a01f15;
+  --color-proof-soft: #fdecea;
+  --color-proof-light: #f2a59c;
+
+  /* Sample-data state */
+  --color-sample: #8a4b06;
+  --color-sample-bg: #fff8e6;
+  --color-sample-line: #f5d58a;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper font-sans text-[15px] leading-[1.55] text-ink antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  a {
+    text-underline-offset: 3px;
+  }
+  input::placeholder {
+    color: var(--color-ink-3);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule-2) transparent;
+  }
+}
+
+@layer components {
+  /* Provenance flag: a small boxed letter resolved in the page notes. */
+  .flag {
+    @apply ml-1 inline-flex h-[15px] min-w-[15px] items-center justify-center rounded-[3px] border px-[3px] align-[0.35em] font-sans text-[10px] leading-none font-semibold tracking-normal;
+  }
+  .flag-s {
+    @apply border-sample-line bg-sample-bg text-sample;
+  }
+  .flag-c {
+    @apply border-rule-2 bg-wash text-ink-2;
+  }
+  .flag-e {
+    @apply border-dashed border-ink-3 bg-paper text-ink;
+  }
+
+  /* Proof marks for transcript differences */
+  .mark-sub {
+    @apply text-proof-ink;
+    background: linear-gradient(var(--color-proof), var(--color-proof)) no-repeat 0 100% / 100% 2px;
+    padding-bottom: 1px;
+  }
+  .mark-ref {
+    background: linear-gradient(var(--color-proof-light), var(--color-proof-light)) no-repeat 0 100% / 100% 2px;
+    padding-bottom: 1px;
+  }
+  .mark-del {
+    @apply text-proof-ink line-through decoration-proof decoration-[1.5px];
+  }
+  .mark-ins {
+    @apply rounded-[3px] bg-proof-soft px-[3px] text-proof-ink;
+  }
+  .mark-gap {
+    @apply relative mx-[3px] inline-block h-[0.9em] w-[9px] align-[-0.05em];
+  }
+  .mark-gap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-bottom: 7px solid var(--color-proof);
+  }
+
+  /* The one authored motion: proof marks draw in on the specimen. */
+  .draw .mark-sub,
+  .draw .mark-ref {
+    animation: draw-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms + 250ms);
+  }
+  .draw .mark-ins {
+    animation: tint-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms + 250ms);
+  }
+}
+
+@keyframes draw-in {
+  from {
+    background-size: 0% 2px;
+  }
+  to {
+    background-size: 100% 2px;
+  }
+}
+@keyframes tint-in {
+  from {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

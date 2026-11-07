@@ -1,0 +1,102 @@
+[
+  {
+    "rank": 1,
+    "language": "Arabic",
+    "home_speakers": 20585
+  },
+  {
+    "rank": 2,
+    "language": "Urdu",
+    "home_speakers": 18065
+  },
+  {
+    "rank": 3,
+    "language": "Mandarin",
+    "home_speakers": 15975
+  },
+  {
+    "rank": 4,
+    "language": "Punjabi",
+    "home_speakers": 14315
+  },
+  {
+    "rank": 5,
+    "language": "Polish",
+    "home_speakers": 11835
+  },
+  {
+    "rank": 6,
+    "language": "Cantonese",
+    "home_speakers": 9780
+  },
+  {
+    "rank": 7,
+    "language": "Tagalog",
+    "home_speakers": 9595
+  },
+  {
+    "rank": 8,
+    "language": "Spanish",
+    "home_speakers": 8800
+  },
+  {
+    "rank": 9,
+    "language": "Vietnamese",
+    "home_speakers": 6980
+  },
+  {
+    "rank": 10,
+    "language": "Tamil",
+    "home_speakers": 6840
+  },
+  {
+    "rank": 11,
+    "language": "Hindi",
+    "home_speakers": 6435
+  },
+  {
+    "rank": 12,
+    "language": "Portuguese",
+    "home_speakers": 5685
+  },
+  {
+    "rank": 13,
+    "language": "Gujarati",
+    "home_speakers": 4300
+  },
+  {
+    "rank": 14,
+    "language": "Serbo-Croatian",
+    "home_speakers": 4240
+  },
+  {
+    "rank": 15,
+    "language": "Russian",
+    "home_speakers": 3815
+  },
+  {
+    "rank": 16,
+    "language": "Ukrainian",
+    "home_speakers": 3235
+  },
+  {
+    "rank": 17,
+    "language": "Korean",
+    "home_speakers": 3075
+  },
+  {
+    "rank": 18,
+    "language": "Bengali",
+    "home_speakers": 2585
+  },
+  {
+    "rank": 19,
+    "language": "Italian",
+    "home_speakers": 2535
+  },
+  {
+    "rank": 20,
+    "language": "Malayalam",
+    "home_speakers": 2200
+  }
+]

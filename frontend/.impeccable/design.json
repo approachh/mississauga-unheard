@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-07T17:30:00Z",
+  "title": "Design System: VOXELO",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#ffffff", "tonalRamp": ["#1a1a1c", "#3a3a3e", "#5c5c62", "#828289", "#a9a9af", "#cfcfd3", "#ececee", "#ffffff"] },
+      "wash": { "role": "neutral", "displayName": "Wash", "canonical": "#f6f6f7", "tonalRamp": ["#1b1b1e", "#3b3b40", "#5d5d63", "#83838a", "#aaaab0", "#d0d0d4", "#e9e9ec", "#f6f6f7"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#0b0b0c", "tonalRamp": ["#0b0b0c", "#27272a", "#3f3f46", "#52525b", "#71717a", "#a1a1aa", "#d4d4d8", "#f4f4f5"] },
+      "ink-2": { "role": "neutral", "displayName": "Ink 2", "canonical": "#3f3f46", "tonalRamp": ["#0b0b0c", "#27272a", "#3f3f46", "#52525b", "#71717a", "#a1a1aa", "#d4d4d8", "#f4f4f5"] },
+      "ink-3": { "role": "neutral", "displayName": "Ink 3", "canonical": "#6b6b74", "tonalRamp": ["#0b0b0c", "#27272a", "#3f3f46", "#52525b", "#6b6b74", "#a1a1aa", "#d4d4d8", "#f4f4f5"] },
+      "rule": { "role": "neutral", "displayName": "Rule", "canonical": "#e6e6e9", "tonalRamp": ["#0b0b0c", "#27272a", "#3f3f46", "#6b6b74", "#a1a1aa", "#d4d4d8", "#e6e6e9", "#f6f6f7"] },
+      "rule-2": { "role": "neutral", "displayName": "Rule 2", "canonical": "#d4d4d8", "tonalRamp": ["#0b0b0c", "#27272a", "#3f3f46", "#6b6b74", "#a1a1aa", "#d4d4d8", "#e6e6e9", "#f6f6f7"] },
+      "proof": { "role": "primary", "displayName": "Proof Red", "canonical": "#c8281c", "tonalRamp": ["#3d0b07", "#6a140e", "#a01f15", "#c8281c", "#e0594d", "#f2a59c", "#f8cdc7", "#fdecea"] },
+      "proof-ink": { "role": "primary", "displayName": "Proof Ink", "canonical": "#a01f15", "tonalRamp": ["#3d0b07", "#6a140e", "#a01f15", "#c8281c", "#e0594d", "#f2a59c", "#f8cdc7", "#fdecea"] },
+      "proof-soft": { "role": "primary", "displayName": "Proof Soft", "canonical": "#fdecea", "tonalRamp": ["#3d0b07", "#6a140e", "#a01f15", "#c8281c", "#e0594d", "#f2a59c", "#f8cdc7", "#fdecea"] },
+      "proof-light": { "role": "primary", "displayName": "Proof Light", "canonical": "#f2a59c", "tonalRamp": ["#3d0b07", "#6a140e", "#a01f15", "#c8281c", "#e0594d", "#f2a59c", "#f8cdc7", "#fdecea"] },
+      "sample": { "role": "secondary", "displayName": "Sample Amber", "canonical": "#8a4b06", "tonalRamp": ["#2e1902", "#5a3104", "#8a4b06", "#b8700f", "#e0a43a", "#f5d58a", "#fbe9bd", "#fff8e6"] },
+      "sample-bg": { "role": "secondary", "displayName": "Sample Ground", "canonical": "#fff8e6", "tonalRamp": ["#2e1902", "#5a3104", "#8a4b06", "#b8700f", "#e0a43a", "#f5d58a", "#fbe9bd", "#fff8e6"] },
+      "sample-line": { "role": "secondary", "displayName": "Sample Line", "canonical": "#f5d58a", "tonalRamp": ["#2e1902", "#5a3104", "#8a4b06", "#b8700f", "#e0a43a", "#f5d58a", "#fbe9bd", "#fff8e6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Overview H1 only; second line in Ink 3. 2.6rem on mobile." },
+      "headline": { "displayName": "Headline", "purpose": "App page titles. 2.25rem on mobile." },
+      "figure": { "displayName": "Figure", "purpose": "Key figures strip; per-clip and aside figures step down to 17px semibold." },
+      "title": { "displayName": "Title", "purpose": "Section headings on an ink rule." },
+      "lede": { "displayName": "Lede", "purpose": "Paragraph under a page title, 52 to 68ch." },
+      "body": { "displayName": "Body", "purpose": "Default text with tabular numerals." },
+      "table": { "displayName": "Table", "purpose": "Table cells, notices, secondary prose." },
+      "label": { "displayName": "Label", "purpose": "Column heads, filter labels, legends, captions, Notes. Sentence case." },
+      "code": { "displayName": "Code", "purpose": "Language codes, clip IDs, file names, formulas only." }
+    },
+    "shadows": [
+      { "name": "segment-lift", "value": "0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px var(--color-rule-2)", "purpose": "Active segmented option only." },
+      { "name": "floating-layer", "value": "0 4px 16px rgb(0 0 0 / 0.08)", "purpose": "Chart tooltip only." }
+    ],
+    "motion": [
+      { "name": "ease-proof", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Proof-mark draw-in on the Overview specimen: 700ms, 90ms stagger per mark after 250ms." },
+      { "name": "state-transition", "value": "150ms colors", "purpose": "Hover and active colour changes on tabs, chips, segmented options, inputs." },
+      { "name": "reduced-motion", "value": "animation: none; transition-duration: 0.01ms", "purpose": "Applied globally under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled action per view; ink fill, trailing arrow.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Explore speech results <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 6px; background: var(--color-ink, #0b0b0c); color: var(--color-paper, #fff); font: 500 14px/1 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; text-decoration: none; transition: background-color 150ms; } .ds-btn-primary:hover { background: var(--color-ink-2, #3f3f46); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-ink, #0b0b0c); outline-offset: 2px; }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Secondary action beside the primary; no fill until hover.",
+      "html": "<a class=\"ds-btn-quiet\" href=\"#\">How it works</a>",
+      "css": ".ds-btn-quiet { display: inline-flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 6px; color: var(--color-ink-2, #3f3f46); font: 500 14px/1 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-btn-quiet:hover { background: var(--color-wash, #f6f6f7); color: var(--color-ink, #0b0b0c); } .ds-btn-quiet:focus-visible { outline: 2px solid var(--color-ink, #0b0b0c); outline-offset: 2px; }"
+    },
+    {
+      "name": "Language Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Single-select language filter; active chip is solid ink.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">All</button><button class=\"ds-chip\" aria-pressed=\"false\">Arabic</button><button class=\"ds-chip\" aria-pressed=\"false\">Punjabi</button></div>",
+      "css": ".ds-chips { display: flex; gap: 6px; } .ds-chip { height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--color-rule-2, #d4d4d8); background: transparent; color: var(--color-ink-2, #3f3f46); font: 500 13px/1 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: border-color 150ms, color 150ms; } .ds-chip:hover { border-color: var(--color-ink-3, #6b6b74); color: var(--color-ink, #0b0b0c); } .ds-chip[aria-pressed=\"true\"] { background: var(--color-ink, #0b0b0c); border-color: var(--color-ink, #0b0b0c); color: var(--color-paper, #fff); } .ds-chip:focus-visible { outline: 2px solid var(--color-ink, #0b0b0c); outline-offset: 2px; }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented",
+      "description": "Two or three mutually exclusive views (WER / CER).",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Rank by\"><button class=\"ds-seg-opt\" role=\"radio\" aria-checked=\"true\">WER</button><button class=\"ds-seg-opt\" role=\"radio\" aria-checked=\"false\">CER</button></div>",
+      "css": ".ds-seg { display: inline-flex; padding: 3px; border: 1px solid var(--color-rule-2, #d4d4d8); border-radius: 6px; background: var(--color-wash, #f6f6f7); } .ds-seg-opt { height: 32px; padding: 0 12px; border: 0; border-radius: 4px; background: transparent; color: var(--color-ink-3, #6b6b74); font: 500 13px/1 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: color 150ms; } .ds-seg-opt:hover { color: var(--color-ink, #0b0b0c); } .ds-seg-opt[aria-checked=\"true\"] { background: var(--color-paper, #fff); color: var(--color-ink, #0b0b0c); box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px var(--color-rule-2, #d4d4d8); } .ds-seg-opt:focus-visible { outline: 2px solid var(--color-ink, #0b0b0c); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Transcript search; border turns ink on focus, no glow.",
+      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" placeholder=\"Search words, clip IDs, languages\"></label>",
+      "css": ".ds-search { position: relative; display: block; width: 320px; } .ds-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-ink-3, #6b6b74); pointer-events: none; } .ds-search input { width: 100%; height: 40px; padding: 0 36px; border: 1px solid var(--color-rule-2, #d4d4d8); border-radius: 6px; background: var(--color-paper, #fff); color: var(--color-ink, #0b0b0c); font: 400 14px 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; transition: border-color 150ms; } .ds-search input::placeholder { color: var(--color-ink-3, #6b6b74); } .ds-search input:hover { border-color: var(--color-ink-3, #6b6b74); } .ds-search input:focus { outline: none; border-color: var(--color-ink, #0b0b0c); }"
+    },
+    {
+      "name": "Top Bar",
+      "kind": "nav",
+      "refersTo": "top-bar",
+      "description": "Black shell bar: wordmark, tabs with a paper underline when active, data status on the right.",
+      "html": "<header class=\"ds-bar\"><span class=\"ds-mark\"><svg viewBox=\"0 0 20 20\" width=\"18\" height=\"18\" aria-hidden=\"true\"><rect x=\"1\" y=\"7.5\" width=\"2.6\" height=\"5\" rx=\"0.8\" fill=\"currentColor\"/><rect x=\"5.8\" y=\"3.5\" width=\"2.6\" height=\"13\" rx=\"0.8\" fill=\"currentColor\"/><rect x=\"10.6\" y=\"6\" width=\"2.6\" height=\"8\" rx=\"0.8\" fill=\"currentColor\"/><rect x=\"15.4\" y=\"1.5\" width=\"2.6\" height=\"17\" rx=\"0.8\" fill=\"#c8281c\"/></svg>VOXELO</span><nav class=\"ds-tabs\"><a href=\"#\" class=\"ds-tab\" aria-current=\"page\">Overview</a><a href=\"#\" class=\"ds-tab\">Speech</a><a href=\"#\" class=\"ds-tab\">Community</a><a href=\"#\" class=\"ds-tab\">Voice</a></nav><p class=\"ds-status\"><span class=\"ds-dot\"></span>Data: Sample</p></header>",
+      "css": ".ds-bar { display: flex; align-items: center; gap: 32px; height: 56px; padding: 0 32px; background: var(--color-ink, #0b0b0c); color: var(--color-paper, #fff); font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-mark { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; letter-spacing: 0.14em; } .ds-tabs { display: flex; align-self: stretch; gap: 4px; } .ds-tab { position: relative; display: flex; align-items: center; padding: 0 12px; color: rgb(255 255 255 / 0.6); font-size: 14px; font-weight: 500; text-decoration: none; transition: color 150ms; } .ds-tab::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: transparent; } .ds-tab:hover { color: #fff; } .ds-tab[aria-current=\"page\"] { color: #fff; } .ds-tab[aria-current=\"page\"]::after { background: #fff; } .ds-tab:focus-visible { outline: 2px solid #fff; outline-offset: -2px; } .ds-status { margin: 0 0 0 auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgb(255 255 255 / 0.7); } .ds-dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--color-sample-line, #f5d58a); }"
+    },
+    {
+      "name": "Proof Lines",
+      "kind": "custom",
+      "refersTo": "proof-lines",
+      "description": "Signature said/heard comparison with proofreader marks: red underline for substitutions, strike and caret for missed words, tint for insertions.",
+      "html": "<dl class=\"ds-proof\"><dt>Said</dt><dd>Buenos días, quisiera pedir una cita con <span class=\"ds-del\">el</span> <span class=\"ds-ref\">médico.</span></dd><dt>Heard</dt><dd>Buenos días quisiera pedir una cita con <span class=\"ds-gap\" role=\"img\" aria-label=\"missing word: el\"></span> <span class=\"ds-sub\">medico</span> <span class=\"ds-ins\">ya</span></dd></dl>",
+      "css": ".ds-proof { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 8px 16px; margin: 0; font: 400 20px/1.6 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; color: var(--color-ink, #0b0b0c); } .ds-proof dt { padding-top: 0.35em; font-size: 13px; line-height: 1; font-weight: 500; color: var(--color-ink-3, #6b6b74); } .ds-proof dd { margin: 0; } .ds-sub { color: var(--color-proof-ink, #a01f15); background: linear-gradient(var(--color-proof, #c8281c), var(--color-proof, #c8281c)) no-repeat 0 100% / 100% 2px; padding-bottom: 1px; animation: ds-draw 700ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both; } .ds-ref { background: linear-gradient(var(--color-proof-light, #f2a59c), var(--color-proof-light, #f2a59c)) no-repeat 0 100% / 100% 2px; padding-bottom: 1px; animation: ds-draw 700ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both; } .ds-del { color: var(--color-proof-ink, #a01f15); text-decoration: line-through; text-decoration-color: var(--color-proof, #c8281c); text-decoration-thickness: 1.5px; } .ds-ins { border-radius: 3px; background: var(--color-proof-soft, #fdecea); padding: 0 3px; color: var(--color-proof-ink, #a01f15); } .ds-gap { position: relative; display: inline-block; width: 9px; height: 0.9em; margin: 0 3px; vertical-align: -0.05em; } .ds-gap::after { content: ''; position: absolute; left: 0; bottom: 0; border-left: 4.5px solid transparent; border-right: 4.5px solid transparent; border-bottom: 7px solid var(--color-proof, #c8281c); } @keyframes ds-draw { from { background-size: 0% 2px; } to { background-size: 100% 2px; } } @media (prefers-reduced-motion: reduce) { .ds-sub, .ds-ref { animation: none; } }"
+    },
+    {
+      "name": "Ranked Table with Provenance Flags",
+      "kind": "custom",
+      "refersTo": "ranked-table",
+      "description": "Ink-ruled head, hairline rows, right-aligned tabular figures, true-to-value proof red bars, superscript S flags.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Language</th><th class=\"r\">Clips<sup class=\"ds-flag ds-flag-s\">S</sup></th><th class=\"r on\">WER<sup class=\"ds-flag ds-flag-s\">S</sup></th><th class=\"r\">CER<sup class=\"ds-flag ds-flag-c\">C</sup></th></tr></thead><tbody><tr><th>Punjabi <code>pa</code></th><td class=\"r dim\">40</td><td class=\"r\"><span class=\"ds-bar\"><span class=\"ds-track\"><span style=\"width:100%\"></span></span><b>30.0%</b></span></td><td class=\"r\">17.0%</td></tr><tr><th>Spanish <code>es</code></th><td class=\"r dim\">40</td><td class=\"r\"><span class=\"ds-bar\"><span class=\"ds-track\"><span style=\"width:26.7%\"></span></span><b>8.0%</b></span></td><td class=\"r\">4.0%</td></tr></tbody></table>",
+      "css": ".ds-table { width: 100%; border-collapse: collapse; font: 400 14px 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--color-ink, #0b0b0c); } .ds-table thead { border-bottom: 1px solid var(--color-ink, #0b0b0c); } .ds-table thead th { padding: 10px 16px 10px 0; font-size: 13px; font-weight: 500; color: var(--color-ink-3, #6b6b74); text-align: left; } .ds-table thead th.on { color: var(--color-ink, #0b0b0c); } .ds-table tbody tr { border-bottom: 1px solid var(--color-rule, #e6e6e9); transition: background-color 100ms; } .ds-table tbody tr:hover { background: var(--color-wash, #f6f6f7); } .ds-table tbody th { padding: 10px 16px 10px 0; font-weight: 400; text-align: left; } .ds-table td { padding: 10px 0 10px 16px; } .ds-table .r { text-align: right; } .ds-table th.r { padding: 10px 0 10px 16px; } .ds-table .dim { color: var(--color-ink-2, #3f3f46); } .ds-table code { margin-left: 8px; font: 400 11px 'JetBrains Mono', ui-monospace, monospace; color: var(--color-ink-3, #6b6b74); } .ds-bar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; } .ds-track { display: block; width: 100%; max-width: 220px; height: 8px; background: var(--color-wash, #f6f6f7); } .ds-track span { display: block; height: 100%; background: var(--color-proof, #c8281c); } .ds-bar b { width: 56px; flex-shrink: 0; font-weight: 500; } .ds-flag { margin-left: 4px; display: inline-flex; align-items: center; justify-content: center; height: 15px; min-width: 15px; padding: 0 3px; border: 1px solid; border-radius: 3px; vertical-align: 0.35em; font: 600 10px/1 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-flag-s { border-color: var(--color-sample-line, #f5d58a); background: var(--color-sample-bg, #fff8e6); color: var(--color-sample, #8a4b06); } .ds-flag-c { border-color: var(--color-rule-2, #d4d4d8); background: var(--color-wash, #f6f6f7); color: var(--color-ink-2, #3f3f46); }"
+    },
+    {
+      "name": "Notice",
+      "kind": "card",
+      "refersTo": "notice",
+      "description": "Neutral data notice for missing or unreadable files; never coloured.",
+      "html": "<p class=\"ds-notice\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 8v4\"/><path d=\"M12 16h.01\"/></svg><span>Census data not available yet. Waiting for <code>census_languages.json</code>.</span></p>",
+      "css": ".ds-notice { display: flex; align-items: flex-start; gap: 10px; margin: 0; padding: 10px 14px; border: 1px solid var(--color-rule-2, #d4d4d8); border-radius: 6px; background: var(--color-wash, #f6f6f7); color: var(--color-ink-2, #3f3f46); font: 400 14px/1.5 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-notice svg { flex-shrink: 0; margin-top: 2px; color: var(--color-ink-3, #6b6b74); } .ds-notice code { padding: 1px 4px; border-radius: 3px; background: var(--color-paper, #fff); font: 400 12px 'JetBrains Mono', ui-monospace, monospace; color: var(--color-ink, #0b0b0c); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Statistical Release",
+    "overview": "VOXELO reads like a national statistics publication that happens to be interactive. Figures sit in ruled, right-aligned tables; every number carries a small boxed provenance flag resolved in a Notes block at the foot of the page; and the one place colour appears is where the machine got a word wrong, marked like a proofreader's correction on a galley. The page is white paper and near-black ink, held inside a black top bar.\n\nDensity is moderate and editorial: generous vertical air between sections (64 to 80px), tight rhythm inside them (10px table rows, hairline dividers). Structure comes from rules, not boxes. A section begins with a full-width ink rule above its heading; lists and tables are separated by pale hairlines. Single numbers are never put in cards. Motion is almost absent: one authored animation, the proof marks drawing in under the Overview specimen.\n\nThe system rejects the dark card grid with glowing accents and stat tiles, gradients, glows and decorative animation (PRODUCT.md brand commitment).",
+    "keyCharacteristics": [
+      "White ground, near-black ink, zinc greys for secondary text and rules.",
+      "One meaningful colour, proof red, used only for misrecognition: diff marks, error-rate bars, the red bar in the logo.",
+      "Amber reserved exclusively for the sample-data state.",
+      "Ink-ruled sections, hairline-ruled rows, no container boxes for content.",
+      "Superscript provenance flags (S, C) on every figure, resolved in Notes.",
+      "Tabular figures everywhere; mono only for codes, IDs and file names."
+    ],
+    "rules": [
+      { "name": "The Proof Red Rule", "body": "Red appears only where the AI misheard. If removing the red would not lose information about an error, the red should not be there.", "section": "colors" },
+      { "name": "The Quarantined Amber Rule", "body": "Amber marks sample data and nothing else. Real data never touches amber; warnings and errors use neutral notices with an icon.", "section": "colors" },
+      { "name": "The Tabular Figures Rule", "body": "`font-variant-numeric: tabular-nums` is set on body; numbers in tables are right-aligned. Never turn it off.", "section": "typography" },
+      { "name": "The Measure Rule", "body": "Prose is held to roughly 65ch (52ch for the hero lede, 70ch for notes).", "section": "typography" },
+      { "name": "The Mono Means Identifier Rule", "body": "Monospace is for codes, IDs, file names and formulas. It is never a headline, label, or decorative voice.", "section": "typography" },
+      { "name": "The Rules Not Boxes Rule", "body": "Group content with a ruled edge, not a card. A box is reserved for the specimen frame, controls, notices and empty states.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** start every section with a full-width 1px Ink rule above a 1.25rem semibold heading.",
+      "**Do** put a provenance flag on every figure drawn from sample or browser-computed data, and resolve it in Notes.",
+      "**Do** right-align numbers with tabular figures, and draw bars from zero with lengths true to value.",
+      "**Do** keep Proof Red for misrecognition and Sample Amber for sample data, nothing else.",
+      "**Do** show a selected item by focusing it (Wash, semibold) and dimming the rest to Ink 3, not by hiding the rest.",
+      "**Do** name the awaited file in an empty state (in a mono code chip)."
+    ],
+    "donts": [
+      "**Don't** put single numbers in cards or stat tiles; use the ruled figures strip or a ruled definition list.",
+      "**Don't** use gradients, glows, dark card grids or decorative animation.",
+      "**Don't** add shadows beyond the segment lift and the floating tooltip.",
+      "**Don't** use monospace for anything other than codes, IDs, file names and formulas.",
+      "**Don't** colour warnings or errors red or amber; red means misheard, amber means sample.",
+      "**Don't** let sample figures appear without the S flag and the sample banner."
+    ]
+  }
+}
