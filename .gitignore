@@ -1,0 +1,20 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# IDE files
+.idea/
+
+# Dataset and generated-output files
+analysis/data/
+analysis/output/
+*.flac
