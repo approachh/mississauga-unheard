@@ -1,0 +1,15 @@
+﻿dataset,mode,language,n_clips,n_errors,genders,mean_wer,wer_ci_low,wer_ci_high,median_wer,mean_cer,cer_ci_low,cer_ci_high,median_cer,pct_language_mismatch,pct_script_mismatch,audio_minutes
+fleurs,auto,Cantonese,5,0,female/male,,,,,0.2902,0.1337,0.4807,0.2368,100.0,40.0,0.842
+fleurs,auto,Urdu,5,0,female,0.2965,0.0687,0.659,0.1053,0.2363,0.0264,0.6207,0.0685,20.0,20.0,0.734
+fleurs,auto,Hindi,5,0,female/male,0.0686,0.034,0.1007,0.0645,0.0596,0.0179,0.0967,0.0606,0.0,0.0,0.859
+fleurs,auto,Mandarin Chinese,5,0,female/male,,,,,0.0554,0.0216,0.0913,0.0476,0.0,0.0,0.7223
+fleurs,auto,Tamil,5,0,female/male,0.153,0.05,0.2459,0.1579,0.0324,0.0118,0.053,0.0242,0.0,0.0,0.9147
+fleurs,auto,Arabic,5,0,female,0.0613,0.008,0.12,0.04,0.0264,0.0018,0.054,0.009,0.0,0.0,0.98
+fleurs,auto,Punjabi,5,0,female,0.0778,0.0288,0.1297,0.069,0.0241,0.0111,0.0333,0.027,0.0,0.0,0.892
+fleurs,auto,Vietnamese,5,0,male,0.0202,0.0,0.0452,0.0,0.02,0.0,0.0459,0.0,0.0,0.0,0.79
+fleurs,auto,Polish,5,0,female/male,0.0087,0.0,0.0261,0.0,0.0186,0.0,0.0558,0.0,0.0,0.0,0.672
+fleurs,auto,Tagalog,5,0,male,0.0144,0.0,0.0287,0.0,0.0138,0.0,0.0349,0.0,0.0,0.0,1.283
+fleurs,auto,Spanish,5,0,female/male,0.0186,0.0,0.0436,0.0,0.0121,0.0,0.03,0.0,0.0,0.0,1.004
+fleurs,auto,Portuguese,5,0,male,0.0133,0.0,0.04,0.0,0.0052,0.0,0.0156,0.0,0.0,0.0,0.94
+fleurs,auto,English,5,0,female/male,0.008,0.0,0.024,0.0,0.0017,0.0,0.005,0.0,0.0,0.0,0.7547
+fleurs,auto,Gujarati,5,0,female/male,0.0369,0.0,0.094,0.0,0.0016,0.0,0.0049,0.0,0.0,0.0,0.691
