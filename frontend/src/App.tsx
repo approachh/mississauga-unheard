@@ -8,7 +8,11 @@ import { SpeechIntelligence } from './pages/SpeechIntelligence'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  // Block body on purpose: newer browsers return a Promise from scrollTo, and an effect that
+  // returns a non-function makes React crash when it later tries to call it as a cleanup.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   return null
 }
 
