@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
 import { CommunityIntelligence } from './pages/CommunityIntelligence'
-import { ComingSoon } from './pages/ComingSoon'
+import { VoiceExperience } from './pages/VoiceExperience'
 import { Overview } from './pages/Overview'
 import { SpeechIntelligence } from './pages/SpeechIntelligence'
 
@@ -21,21 +21,7 @@ export default function App() {
           <Route index element={<Overview />} />
           <Route path="speech" element={<SpeechIntelligence />} />
           <Route path="community" element={<CommunityIntelligence />} />
-          <Route
-            path="voice"
-            element={
-              <ComingSoon
-                title="Hear yourself through AI"
-                lede="Speak in your language and see exactly what ElevenLabs Scribe recognised, compared word by word with what you meant to say."
-                planned={[
-                  'Choose your language',
-                  'Record from the microphone or upload an audio file',
-                  'See the AI transcript marked against the text you intended',
-                ]}
-                note="Transcription will run through a secure server-side proxy. API keys never reach the browser."
-              />
-            }
-          />
+          <Route path="voice" element={<VoiceExperience />} />
           <Route
             path="*"
             element={

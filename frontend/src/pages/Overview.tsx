@@ -13,12 +13,35 @@ import { useDataset } from '../hooks/useDataset'
 import { diffWords, summarise } from '../lib/diff'
 import type { FlagKind } from '../lib/flags'
 import { int, pct, titleCase } from '../lib/format'
-import { loadCitywideLanguages, loadLanguageResults, loadTranscriptions } from '../services/dataService'
+import { langKey } from '../lib/language'
+import { loadCitywideLanguages, loadLanguageResults, loadSpeechCoverage, loadTranscriptions } from '../services/dataService'
 
 export function Overview() {
   const langs = useDataset(loadLanguageResults)
   const trans = useDataset(loadTranscriptions)
   const census = useDataset(loadCitywideLanguages)
+  const coverage = useDataset(loadSpeechCoverage)
+
+  // Census finding for Q2, from validated counts only.
+  const censusFinding = useMemo(() => {
+    if (!census.data.length) return null
+    const top = [...census.data].sort((a, b) => a.rank - b.rank)[0]
+    const covBy = new Map(coverage.data.map((c) => [langKey(c.language), c]))
+    const gap = census.data.filter((c) => covBy.get(langKey(c.language))?.has_service_request_audio === false)
+    const assessed = census.data.filter((c) => covBy.has(langKey(c.language))).length
+    return (
+      <>
+        {top.language} is the most spoken home language in the ranking ({int(top.home_speakers)} people).
+        {assessed > 0 && (
+          <>
+            {' '}
+            {gap.length} of {assessed} assessed languages, spoken at home by {int(gap.reduce((n, c) => n + c.home_speakers, 0))}{' '}
+            residents, have no service-request audio in our evaluation datasets.
+          </>
+        )}
+      </>
+    )
+  }, [census.data, coverage.data])
 
   const diffs = useMemo(
     () => trans.data.map((t) => {
@@ -178,6 +201,7 @@ export function Overview() {
             body="Which Mississauga language communities may face accessibility barriers, and in which wards and neighbourhoods do they live?"
             status={census.data.length ? 'Census data available' : 'Awaiting census data'}
             live={census.data.length > 0}
+            finding={censusFinding}
           />
         </ol>
       </Section>
@@ -201,7 +225,20 @@ export function Overview() {
         sources={[
           { label: 'Speech results', value: <><Code>language_results.json</Code>, analysis team (Python)</> },
           { label: 'Transcripts', value: <><Code>transcription_results.json</Code>, ElevenLabs Scribe output</> },
-          { label: 'Census', value: census.data.length ? 'Validated citywide and ward language data, census team' : 'Mississauga language data, pending from the research team' },
+          {
+            label: 'Census',
+            value: census.data.length ? (
+              <>
+                Adapted from Statistics Canada, 2021 Census, City of Mississauga by-ward table, under the{' '}
+                <a href="https://www.statcan.gc.ca/en/terms-conditions/open-licence" target="_blank" rel="noopener noreferrer" className="underline">
+                  Statistics Canada Open Licence
+                </a>
+                . Full attribution on the Community page.
+              </>
+            ) : (
+              'Mississauga language data, pending from the research team'
+            ),
+          },
         ]}
       />
     </div>
@@ -215,13 +252,28 @@ const STEPS = [
   { title: 'Map communities', body: 'Census language data shows where in Mississauga the most affected communities live.' },
 ]
 
-function Question({ to, title, body, status, live }: { to: string; title: string; body: string; status: ReactNode; live?: boolean }) {
+function Question({
+  to,
+  title,
+  body,
+  status,
+  live,
+  finding,
+}: {
+  to: string
+  title: string
+  body: string
+  status: ReactNode
+  live?: boolean
+  finding?: ReactNode
+}) {
   return (
     <li>
       <Link to={to} className="group grid gap-x-8 gap-y-1 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
         <div>
           <p className="text-[19px] font-semibold tracking-[-0.01em] group-hover:underline">{title}</p>
           <p className="mt-1 max-w-[65ch] text-ink-2">{body}</p>
+          {finding && <p className="mt-2 max-w-[65ch] text-[14px] font-medium text-ink">{finding}</p>}
         </div>
         <p className="flex items-center gap-2 text-[13px] text-ink-3">
           <span className={`h-2 w-2 rounded-full border border-ink ${live ? 'bg-ink' : ''}`} aria-hidden />

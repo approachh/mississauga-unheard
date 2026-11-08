@@ -27,3 +27,8 @@ dist-ssr
 .impeccable/review/
 .impeccable/questions/
 .impeccable/hook.cache.json
+
+# Census source archives and raw downloads stay local (never committed or deployed)
+data/census/archive/
+data/**/raw/
+*.zip

@@ -38,6 +38,8 @@ export interface WardProfile {
   population_language_base: number
   /** Home speakers of the 14 profiled non-official languages. */
   top14_total: number
+  /** True when the census team corrected this ward's figures (Ward 10 in the Nov 2026 release). */
+  corrected?: boolean
   /** Keyed by harmonised language name, e.g. "Mandarin". */
   home_speakers: Record<string, number>
 }
@@ -54,6 +56,17 @@ export interface SpeechCoverage {
   /** Speech-MASSIVE: spoken virtual-assistant commands. */
   speech_massive_commands: number
   has_service_request_audio: boolean
+  /** Census team flag; criterion not documented in the file. */
+  limited_speech_coverage?: boolean
+}
+
+/** `census_checks.json`: results of the converter's cross-file consistency checks. */
+export interface CensusChecks {
+  generated: string
+  languages_reconciled: number
+  languages_with_ward_data: number
+  summary_rows_checked: number
+  notes: string[]
 }
 
 export type DatasetStatus = 'loading' | 'ready' | 'missing' | 'error'

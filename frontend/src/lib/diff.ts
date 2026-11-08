@@ -73,6 +73,24 @@ export function diffWords(reference: string, hypothesis: string): DiffToken[] {
   return out.reverse()
 }
 
+/**
+ * Character Error Rate: character edit distance / reference length, after lowercasing,
+ * removing punctuation and collapsing whitespace. Null when the reference is empty.
+ */
+export function charErrorRate(reference: string, hypothesis: string): number | null {
+  const prep = (s: string) => [...s.toLowerCase().replace(/[\p{P}\p{S}]/gu, '').replace(/\s+/g, ' ').trim()]
+  const a = prep(reference)
+  const b = prep(hypothesis)
+  if (!a.length) return null
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j)
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i]
+    for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))
+    prev = cur
+  }
+  return prev[b.length] / a.length
+}
+
 export interface DiffSummary {
   substitutions: number
   deletions: number

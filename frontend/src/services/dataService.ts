@@ -1,4 +1,5 @@
 import type {
+  CensusChecks,
   CitywideLanguage,
   Dataset,
   LanguageResult,
@@ -46,6 +47,7 @@ export const isWardProfile: Validator<WardProfile> = (r): r is WardProfile =>
   isNum(r.population_total) &&
   isNum(r.population_language_base) &&
   isNum(r.top14_total) &&
+  (r.corrected === undefined || typeof r.corrected === 'boolean') &&
   isObj(r.home_speakers) &&
   Object.values(r.home_speakers).every(isNum)
 
@@ -56,9 +58,19 @@ export const isSpeechCoverage: Validator<SpeechCoverage> = (r): r is SpeechCover
   isNum(r.accent_archive_speakers) &&
   isNum(r.minds14_calls) &&
   isNum(r.speech_massive_commands) &&
-  typeof r.has_service_request_audio === 'boolean'
+  typeof r.has_service_request_audio === 'boolean' &&
+  (r.limited_speech_coverage === undefined || typeof r.limited_speech_coverage === 'boolean')
 
-const dataUrl =(file: string) => `${import.meta.env.BASE_URL}data/${file}`
+export const isCensusChecks: Validator<CensusChecks> = (r): r is CensusChecks =>
+  isObj(r) &&
+  isStr(r.generated) &&
+  isNum(r.languages_reconciled) &&
+  isNum(r.languages_with_ward_data) &&
+  isNum(r.summary_rows_checked) &&
+  Array.isArray(r.notes) &&
+  r.notes.every((n) => typeof n === 'string')
+
+const dataUrl = (file: string) => `${import.meta.env.BASE_URL}data/${file}`
 
 /** Returns parsed JSON array, or null if the file is absent / not JSON (SPA fallbacks return HTML). */
 async function fetchJsonArray(file: string): Promise<unknown[] | null> {
@@ -112,3 +124,4 @@ export const loadTranscriptions = () => cached('transcription_results', isTransc
 export const loadCitywideLanguages = () => cached('census_citywide_languages', isCitywideLanguage)
 export const loadWardProfiles = () => cached('census_ward_languages', isWardProfile)
 export const loadSpeechCoverage = () => cached('speech_dataset_coverage', isSpeechCoverage)
+export const loadCensusChecks = () => cached('census_checks', isCensusChecks)

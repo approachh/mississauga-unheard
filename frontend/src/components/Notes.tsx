@@ -26,7 +26,7 @@ export function Notes({ flags, sources, children }: NotesProps) {
                   {f === 'S' && ' Loaded from a *.sample.json file; replaced automatically when the real file is added.'}
                   {f === 'C' && ' Official figures come from the analysis pipeline.'}
                   {f === 'E' &&
-                    ' Ward 10 reports zero home speakers for several profiled languages. These may be gaps in the source data, not evidence that no speakers live there.'}
+                    ' A zero reported for Ward 10 may be a gap in the source data, not evidence that no speakers live there.'}
                 </dd>
               </div>
             ))}
