@@ -9,6 +9,8 @@ import type { ReactNode } from 'react'
  */
 export const CENSUS_DATASET_URL = 'https://www.arcgis.com/home/item.html?id=1db3b606ed2f466584409b8bbf8ebe9d'
 export const STATCAN_LICENCE_URL = 'https://www.statcan.gc.ca/en/terms-conditions/open-licence'
+const WARDS_DATASET_URL = 'https://www.arcgis.com/home/item.html?id=f1cad02b3a40422dac2ea99b59cc36a5'
+const WARDS_TERMS_URL = 'https://smartcity.mississauga.ca/wp-content/uploads/2021/04/CityofMississauga_TermsofUse.pdf'
 
 const SPEECH_DATASETS = [
   { name: 'FLEURS', by: 'Google', licence: 'CC BY 4.0', url: 'https://huggingface.co/datasets/google/fleurs' },
@@ -39,6 +41,11 @@ export function SourceAttribution() {
         <p className="mt-2">
           Modified: Ward 10 home-language counts for 14 languages were corrected by the VOXELO census team and differ
           from the published table. All other ward figures match it.
+        </p>
+        <h2 className="mt-5 mb-2 text-[13px] font-semibold text-ink">Ward boundaries</h2>
+        <p>
+          <Ext href={WARDS_DATASET_URL}>“Ward Boundaries”</Ext>, City of Mississauga Open Data, used under the City’s{' '}
+          <Ext href={WARDS_TERMS_URL}>Terms of Use</Ext>. Outlines simplified to within 4 metres for display.
         </p>
       </div>
       <div>

@@ -1,11 +1,14 @@
 import type {
+  AccentResults,
   CensusChecks,
   CitywideLanguage,
   Dataset,
   LanguageResult,
   SpeechCoverage,
   TranscriptionResult,
+  UnheardIndex,
   WardProfile,
+  WardShapes,
 } from '../types/data'
 
 /**
@@ -130,3 +133,99 @@ export const loadCitywideLanguages = () => cached('census_citywide_languages', i
 export const loadWardProfiles = () => cached('census_ward_languages', isWardProfile)
 export const loadSpeechCoverage = () => cached('speech_dataset_coverage', isSpeechCoverage)
 export const loadCensusChecks = () => cached('census_checks', isCensusChecks)
+
+const isWardShapes = (r: unknown): r is WardShapes =>
+  isObj(r) &&
+  isNum(r.width) &&
+  isNum(r.height) &&
+  isObj(r.source) &&
+  Array.isArray(r.wards) &&
+  r.wards.length > 0 &&
+  r.wards.every((w) => isObj(w) && isNum(w.ward) && isStr(w.d) && Array.isArray(w.label) && w.label.length === 2)
+
+/** Fetches one JSON document; null if it is missing, malformed or fails validation. */
+function loadDocument<T>(file: string, valid: (r: unknown) => r is T): Promise<T | null> {
+  return fetch(dataUrl(file), { cache: 'no-cache' })
+    .then((res) => (res.ok ? res.text() : null))
+    .then((text) => {
+      if (!text) return null
+      try {
+        const parsed: unknown = JSON.parse(text)
+        return valid(parsed) ? parsed : null
+      } catch {
+        return null // SPA fallback returned HTML
+      }
+    })
+    .catch(() => null)
+}
+
+let shapesPromise: Promise<WardShapes | null> | null = null
+/** Ward boundary shapes for the map, or null if the file is missing or malformed. */
+export function loadWardShapes(): Promise<WardShapes | null> {
+  shapesPromise ??= loadDocument('ward_shapes.json', isWardShapes)
+  return shapesPromise
+}
+
+const isPair = (v: unknown) => Array.isArray(v) && v.length === 2 && v.every(isNum)
+const isByMode = (v: unknown, check: (x: unknown) => boolean) => isObj(v) && check(v.auto) && check(v.forced)
+const isUnheardIndex = (r: unknown): r is UnheardIndex =>
+  isObj(r) &&
+  isObj(r.method) &&
+  isObj(r.coverage) &&
+  Array.isArray(r.languages) &&
+  Array.isArray(r.untested) &&
+  Array.isArray(r.wards) &&
+  r.wards.length === 11 &&
+  r.wards.every(
+    (w) =>
+      isObj(w) &&
+      isNum(w.ward) &&
+      isByMode(w.index, isNum) &&
+      isByMode(w.index_ci, isPair) &&
+      isByMode(w.rank, isNum) &&
+      isByMode(w.rank_range, isPair) &&
+      isByMode(w.drivers, Array.isArray) &&
+      isNum(w.tested_share) &&
+      isNum(w.untested_share),
+  ) &&
+  r.languages.every((l) => isObj(l) && isStr(l.language) && isNum(l.clips) && isByMode(l.cer, isNum))
+
+let indexPromise: Promise<UnheardIndex | null> | null = null
+/** The Unheard Index, or null if the file is missing or malformed. */
+export function loadUnheardIndex(): Promise<UnheardIndex | null> {
+  indexPromise ??= loadDocument('unheard_index.json', isUnheardIndex)
+  return indexPromise
+}
+
+const isAccentGroup = (g: unknown) =>
+  isObj(g) &&
+  isStr(g.language) &&
+  isNum(g.speakers) &&
+  isNum(g.wer) &&
+  isNum(g.median_wer) &&
+  isNum(g.highest_wer) &&
+  Array.isArray(g.speaker_wer) &&
+  g.speaker_wer.length > 0 &&
+  g.speaker_wer.every(isNum) &&
+  isObj(g.typical) &&
+  typeof g.typical.heard === 'string' &&
+  isObj(g.highest) &&
+  typeof g.highest.heard === 'string'
+const isAccentResults = (r: unknown): r is AccentResults =>
+  isObj(r) &&
+  isObj(r.passage) &&
+  isStr(r.passage.text) &&
+  isObj(r.english_recognised) &&
+  isObj(r.accented) &&
+  isNum(r.accented.wer) &&
+  isAccentGroup(r.native) &&
+  Array.isArray(r.groups) &&
+  r.groups.length > 0 &&
+  r.groups.every(isAccentGroup)
+
+let accentPromise: Promise<AccentResults | null> | null = null
+/** Accented-English results, or null if the file is missing or malformed (the section is then simply not shown). */
+export function loadAccentResults(): Promise<AccentResults | null> {
+  accentPromise ??= loadDocument('accent_results.json', isAccentResults)
+  return accentPromise
+}

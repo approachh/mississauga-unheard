@@ -10,6 +10,8 @@ Everything in this folder is served publicly with the site.
 | `census_ward_languages.json` | `npm run data:census` | ward profile: populations and home speakers per language |
 | `speech_dataset_coverage.json` | `npm run data:census` | per-language counts in FLEURS, Speech Accent Archive, MINDS-14, Speech-MASSIVE |
 | `census_checks.json` | `npm run data:census` | results of the cross-file consistency checks |
+| `accent_results.json` | `npm run data:accents` | accented English (Speech Accent Archive): per-group scores, every speaker's WER as an unlabelled list, and two example transcripts per group. No speaker metadata, no audio |
+| `unheard_index.json` | `npm run data:index` | Unheard Index per ward (both recognition modes), per-language CER, untested-language coverage; method in `scripts/build-unheard-index.mjs` |
 
 If `language_results.json` / `transcription_results.json` are missing, the app falls back to the
 `*.sample.json` placeholders and labels every figure as **sample data**.
@@ -17,3 +19,11 @@ If `language_results.json` / `transcription_results.json` are missing, the app f
 Census source CSVs are **not** kept here. They live in `frontend/data/census/` (not deployed);
 older releases are in `frontend/data/census/archive/`. Rows that fail validation are skipped and
 the UI reports how many. Do not put audio or raw datasets in this folder.
+
+To refresh the speech results and the index from the analysis branch:
+`npm run data:speech:pull && npm run data:speech && npm run data:accents && npm run data:index`
+
+The speech CSVs hold two datasets: FLEURS (language recognition, feeds `language_results.json`, `transcription_results.json` and the Unheard Index) and the Speech Accent Archive
+(feeds `accent_results.json` only). Each script keeps to its own dataset, so accent recordings never count as language-recognition results.
+(`data:speech:pull` copies `analysis/outputs/*.csv` from `origin/feature/speech-evaluation` into
+`frontend/data/speech/` and records the commit in `source.json`; nothing is checked out.)

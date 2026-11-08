@@ -1,75 +1,78 @@
 [
   {
-    "language": "Cantonese",
-    "language_code": "yue",
-    "mode": "auto",
-    "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": null,
-    "cer": 0.2902,
-    "wer_ci": null,
-    "cer_ci": [
-      0.1337,
-      0.4807
-    ],
-    "cer_script_neutral": 0.0538,
-    "pct_language_mismatch": 100,
-    "pct_script_mismatch": 80
-  },
-  {
     "language": "Urdu",
     "language_code": "ur",
     "mode": "auto",
     "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": 0.2965,
-    "cer": 0.2363,
+    "clips_tested": 40,
+    "wer": 0.2924,
+    "cer": 0.2402,
     "wer_ci": [
-      0.0687,
-      0.659
+      0.1898,
+      0.4124
     ],
     "cer_ci": [
-      0.0264,
-      0.6207
+      0.1259,
+      0.3678
     ],
-    "cer_script_neutral": 0.2363,
+    "cer_script_neutral": 0.2402,
     "pct_language_mismatch": 20,
     "pct_script_mismatch": 20
+  },
+  {
+    "language": "Cantonese",
+    "language_code": "yue",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 40,
+    "wer": null,
+    "cer": 0.2337,
+    "wer_ci": null,
+    "cer_ci": [
+      0.177,
+      0.2895
+    ],
+    "cer_script_neutral": 0.0283,
+    "pct_language_mismatch": 100,
+    "pct_script_mismatch": 65
+  },
+  {
+    "language": "Punjabi",
+    "language_code": "pa",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 40,
+    "wer": 0.137,
+    "cer": 0.0891,
+    "wer_ci": [
+      0.0826,
+      0.2121
+    ],
+    "cer_ci": [
+      0.0352,
+      0.1655
+    ],
+    "cer_script_neutral": 0.0891,
+    "pct_language_mismatch": 5,
+    "pct_script_mismatch": 5
   },
   {
     "language": "Hindi",
     "language_code": "hi",
     "mode": "auto",
     "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": 0.0686,
-    "cer": 0.0596,
+    "clips_tested": 40,
+    "wer": 0.0664,
+    "cer": 0.046,
     "wer_ci": [
-      0.034,
-      0.1007
+      0.0453,
+      0.0907
     ],
     "cer_ci": [
-      0.0179,
-      0.0967
+      0.0273,
+      0.0675
     ],
-    "cer_script_neutral": 0.0596,
-    "pct_language_mismatch": 0,
-    "pct_script_mismatch": 0
-  },
-  {
-    "language": "Mandarin",
-    "language_code": "zh",
-    "mode": "auto",
-    "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": null,
-    "cer": 0.0554,
-    "wer_ci": null,
-    "cer_ci": [
-      0.0216,
-      0.0913
-    ],
-    "cer_script_neutral": 0.0554,
+    "cer_script_neutral": 0.046,
     "pct_language_mismatch": 0,
     "pct_script_mismatch": 0
   },
@@ -94,6 +97,23 @@
     "pct_script_mismatch": 0
   },
   {
+    "language": "Mandarin",
+    "language_code": "zh",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 40,
+    "wer": null,
+    "cer": 0.0266,
+    "wer_ci": null,
+    "cer_ci": [
+      0.0148,
+      0.0409
+    ],
+    "cer_script_neutral": 0.0266,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
     "language": "Arabic",
     "language_code": "ar",
     "mode": "auto",
@@ -110,26 +130,6 @@
       0.054
     ],
     "cer_script_neutral": 0.0264,
-    "pct_language_mismatch": 0,
-    "pct_script_mismatch": 0
-  },
-  {
-    "language": "Punjabi",
-    "language_code": "pa",
-    "mode": "auto",
-    "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": 0.0778,
-    "cer": 0.0241,
-    "wer_ci": [
-      0.0288,
-      0.1297
-    ],
-    "cer_ci": [
-      0.0111,
-      0.0333
-    ],
-    "cer_script_neutral": 0.0241,
     "pct_language_mismatch": 0,
     "pct_script_mismatch": 0
   },
@@ -278,52 +278,75 @@
     "language_code": "yue",
     "mode": "forced",
     "dataset": "fleurs",
-    "clips_tested": 5,
+    "clips_tested": 40,
     "wer": null,
-    "cer": 0.2985,
+    "cer": 0.2102,
     "wer_ci": null,
     "cer_ci": [
-      0.1337,
-      0.5057
+      0.1509,
+      0.2737
     ],
-    "cer_script_neutral": 0.0621,
+    "cer_script_neutral": 0.0309,
     "pct_language_mismatch": 0,
-    "pct_script_mismatch": 80
+    "pct_script_mismatch": 55
+  },
+  {
+    "language": "Punjabi",
+    "language_code": "pa",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 40,
+    "wer": 0.1206,
+    "cer": 0.0717,
+    "wer_ci": [
+      0.0784,
+      0.1819
+    ],
+    "cer_ci": [
+      0.0327,
+      0.1356
+    ],
+    "cer_script_neutral": 0.0717,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 2.5
   },
   {
     "language": "Hindi",
     "language_code": "hi",
     "mode": "forced",
     "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": 0.0686,
-    "cer": 0.0596,
+    "clips_tested": 40,
+    "wer": 0.0695,
+    "cer": 0.0468,
     "wer_ci": [
-      0.034,
-      0.1007
+      0.0472,
+      0.0955
     ],
     "cer_ci": [
-      0.0179,
-      0.0967
+      0.028,
+      0.0684
     ],
-    "cer_script_neutral": 0.0596,
+    "cer_script_neutral": 0.0468,
     "pct_language_mismatch": 0,
     "pct_script_mismatch": 0
   },
   {
-    "language": "Mandarin",
-    "language_code": "zh",
+    "language": "Urdu",
+    "language_code": "ur",
     "mode": "forced",
     "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": null,
-    "cer": 0.0554,
-    "wer_ci": null,
-    "cer_ci": [
-      0.0216,
-      0.0913
+    "clips_tested": 40,
+    "wer": 0.1136,
+    "cer": 0.0403,
+    "wer_ci": [
+      0.0922,
+      0.1352
     ],
-    "cer_script_neutral": 0.0554,
+    "cer_ci": [
+      0.0266,
+      0.0558
+    ],
+    "cer_script_neutral": 0.0403,
     "pct_language_mismatch": 0,
     "pct_script_mismatch": 0
   },
@@ -348,26 +371,6 @@
     "pct_script_mismatch": 0
   },
   {
-    "language": "Urdu",
-    "language_code": "ur",
-    "mode": "forced",
-    "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": 0.0993,
-    "cer": 0.0287,
-    "wer_ci": [
-      0.0486,
-      0.1787
-    ],
-    "cer_ci": [
-      0.0126,
-      0.0545
-    ],
-    "cer_script_neutral": 0.0287,
-    "pct_language_mismatch": 0,
-    "pct_script_mismatch": 0
-  },
-  {
     "language": "Arabic",
     "language_code": "ar",
     "mode": "forced",
@@ -388,22 +391,19 @@
     "pct_script_mismatch": 0
   },
   {
-    "language": "Punjabi",
-    "language_code": "pa",
+    "language": "Mandarin",
+    "language_code": "zh",
     "mode": "forced",
     "dataset": "fleurs",
-    "clips_tested": 5,
-    "wer": 0.0778,
-    "cer": 0.0223,
-    "wer_ci": [
-      0.0288,
-      0.1297
-    ],
+    "clips_tested": 40,
+    "wer": null,
+    "cer": 0.026,
+    "wer_ci": null,
     "cer_ci": [
-      0.0104,
-      0.0322
+      0.0142,
+      0.0403
     ],
-    "cer_script_neutral": 0.0223,
+    "cer_script_neutral": 0.026,
     "pct_language_mismatch": 0,
     "pct_script_mismatch": 0
   },

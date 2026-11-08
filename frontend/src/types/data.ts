@@ -35,6 +35,8 @@ export interface TranscriptionResult {
   mode?: string
   detected_language?: string | null
   script_mismatch?: boolean
+  /** In auto mode: the model named a different language from the one spoken. */
+  language_mismatch?: boolean
   /** Text is split into characters for display (no word spaces in the script). */
   char_level?: boolean
 }
@@ -85,6 +87,15 @@ export interface CensusChecks {
   notes: string[]
 }
 
+/** `ward_shapes.json`: official ward boundaries, projected and simplified for SVG (see scripts/convert-wards.mjs). */
+export interface WardShapes {
+  source: { name: string; item: string; terms: string; simplification_m: number }
+  width: number
+  height: number
+  metres_per_unit: number
+  wards: { ward: number; d: string; label: [number, number] }[]
+}
+
 export type DatasetStatus = 'loading' | 'ready' | 'missing' | 'error'
 
 export interface Dataset<T> {
@@ -95,4 +106,89 @@ export interface Dataset<T> {
   /** Rows dropped because they failed validation. */
   skipped: number
   error?: string
+}
+
+export type RecognitionMode = 'auto' | 'forced'
+type ByMode<T> = Record<RecognitionMode, T>
+
+/** `unheard_index.json`: relative accessibility-priority score per ward (see scripts/build-unheard-index.mjs). */
+export interface UnheardIndex {
+  generated: string
+  source: {
+    speech: { file: string; ref?: string; commit?: string; dataset: string; clips_used: number; clips_dropped: number }
+    census: string
+  }
+  method: {
+    metric: 'cer'
+    formula: string
+    share_denominator: string
+    scale_reference: { mode: RecognitionMode; ward: number; raw: number }
+    bootstrap: { resamples: number; seed: number; interval: number }
+    small_sample_threshold: number
+  }
+  baseline: { language: string; clips: number; cer: ByMode<number> } | null
+  languages: {
+    language: string
+    clips: number
+    small_sample: boolean
+    citywide_speakers: number | null
+    cer: ByMode<number>
+    cer_ci: ByMode<[number, number] | null>
+    cer_script_neutral: ByMode<number>
+    pct_language_mismatch: ByMode<number>
+  }[]
+  untested: { language: string; citywide_speakers: number | null }[]
+  coverage: { tested_share: number; untested_share: number; note: string }
+  wards: UnheardWard[]
+}
+
+export interface UnheardWard {
+  ward: number
+  language_base: number
+  /** 0–100 on one scale for both modes: 100 = highest ward under auto-detect. */
+  index: ByMode<number>
+  index_ci: ByMode<[number, number]>
+  rank: ByMode<number>
+  rank_range: ByMode<[number, number]>
+  rank_script_neutral: ByMode<number>
+  /** Top three languages by share of the ward's score. */
+  drivers: ByMode<{ language: string; share_of_score: number }[]>
+  tested_share: number
+  untested_share: number
+  untested_unconfirmed_zero: string[]
+}
+
+/** One group of speakers in `accent_results.json`: scores only, nothing that identifies a person. */
+export interface AccentGroup {
+  /** Native language of the speakers ("English" is the native-speaker baseline). */
+  language: string
+  speakers: number
+  /** Word error rate, 0–1: the mean over the group's speakers. */
+  wer: number
+  /** 95% bootstrap range for the mean, when computed. */
+  wer_ci: [number, number] | null
+  median_wer: number
+  highest_wer: number
+  /** The mean without the single highest speaker. */
+  wer_without_highest: number | null
+  cer: number
+  /** Every speaker's WER, ascending and unlabelled. */
+  speaker_wer: number[]
+  /** What the AI wrote for the median speaker and for the highest one. */
+  typical: { wer: number; heard: string }
+  highest: { wer: number; heard: string }
+}
+
+/** `accent_results.json`: English read with an accent (Speech Accent Archive). See scripts/convert-accents.mjs. */
+export interface AccentResults {
+  generated: string
+  source: { dataset: string; url: string; model: string; commit?: string }
+  /** The paragraph every speaker read. */
+  passage: { text: string; words: number }
+  /** Recordings where the AI named English, out of all recordings. */
+  english_recognised: { correct: number; total: number }
+  native: AccentGroup
+  accented: { speakers: number; groups: number; wer: number; median_wer: number; cer: number }
+  /** Accent groups, highest mean WER first. */
+  groups: AccentGroup[]
 }
