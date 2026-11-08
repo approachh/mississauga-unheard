@@ -1,4 +1,17 @@
 ﻿dataset,mode,language,n_clips,n_errors,genders,mean_wer,wer_ci_low,wer_ci_high,median_wer,mean_cer,cer_ci_low,cer_ci_high,median_cer,mean_cer_script_neutral,mean_latin_word_share,detected_languages,pct_language_mismatch,pct_script_mismatch,audio_minutes
+accent,auto,Arabic,10,0,female/male,0.0855,0.0275,0.1812,0.0435,0.0458,0.0128,0.1022,0.0238,0.0458,,eng:10,0.0,0.0,4.8665
+accent,auto,Mandarin Chinese,10,0,female/male,0.0609,0.0174,0.1319,0.0217,0.0436,0.0121,0.0956,0.0165,0.0436,,eng:10,0.0,0.0,5.3538
+accent,auto,Punjabi,10,0,female/male,0.0435,0.0159,0.0768,0.0217,0.0275,0.0099,0.0487,0.0147,0.0275,,eng:10,0.0,0.0,4.8533
+accent,auto,Vietnamese,10,0,female/male,0.0275,0.0116,0.0464,0.0217,0.0161,0.0055,0.0286,0.0092,0.0161,,eng:10,0.0,0.0,5.5055
+accent,auto,Spanish,10,0,female/male,0.0217,0.0058,0.0435,0.0145,0.015,0.0033,0.03,0.0055,0.015,,eng:10,0.0,0.0,4.9323
+accent,auto,Cantonese,10,0,female/male,0.0232,0.0116,0.0333,0.029,0.0139,0.007,0.0205,0.0165,0.0139,,eng:10,0.0,0.0,4.8598
+accent,auto,Hindi,10,0,female/male,0.0203,0.0087,0.0333,0.0145,0.0132,0.0037,0.0242,0.0055,0.0132,,eng:10,0.0,0.0,4.209
+accent,auto,Tagalog,10,0,female/male,0.0246,0.0101,0.0406,0.0145,0.0128,0.0051,0.0231,0.011,0.0128,,eng:10,0.0,0.0,4.9008
+accent,auto,Urdu,10,0,female/male,0.0188,0.0072,0.0362,0.0145,0.0095,0.0037,0.0183,0.0073,0.0095,,eng:10,0.0,0.0,4.7348
+accent,auto,Polish,10,0,female/male,0.013,0.0014,0.0304,0.0,0.0077,0.0011,0.0183,0.0,0.0077,,eng:10,0.0,0.0,4.0168
+accent,auto,Portuguese,10,0,female/male,0.0072,0.0029,0.0116,0.0072,0.0044,0.0015,0.0073,0.0037,0.0044,,eng:10,0.0,0.0,4.1637
+accent,auto,Tamil,10,0,female/male,0.0072,0.0014,0.013,0.0,0.0037,0.0007,0.0066,0.0,0.0037,,eng:10,0.0,0.0,4.2108
+accent,auto,English,10,0,female/male,0.0014,0.0,0.0043,0.0,0.0018,0.0,0.0055,0.0,0.0018,,eng:10,0.0,0.0,3.5977
 fleurs,auto,Urdu,40,0,female,0.2924,0.1898,0.4124,0.1235,0.2402,0.1259,0.3678,0.0421,0.2402,0.0066,"urd:32, hin:8",20.0,20.0,6.351
 fleurs,auto,Cantonese,40,0,female/male,,,,,0.2337,0.177,0.2895,0.245,0.0283,0.0189,"zho:38, jpn:2",100.0,65.0,6.807
 fleurs,auto,Punjabi,40,0,female,0.137,0.0826,0.2121,0.0833,0.0891,0.0352,0.1655,0.0336,0.0891,0.0046,"pan:38, hin:2",5.0,5.0,6.599
