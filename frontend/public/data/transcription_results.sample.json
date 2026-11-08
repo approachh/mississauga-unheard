@@ -1,0 +1,37 @@
+[
+  {
+    "id": "sample-es-001",
+    "language": "spanish",
+    "language_code": "es",
+    "reference": "Buenos días, quisiera pedir una cita con el médico.",
+    "hypothesis": "Buenos días quisiera pedir una cita con medico"
+  },
+  {
+    "id": "sample-es-002",
+    "language": "spanish",
+    "language_code": "es",
+    "reference": "¿Dónde queda la biblioteca más cercana?",
+    "hypothesis": "¿Dónde queda la biblioteca más cercana?"
+  },
+  {
+    "id": "sample-fr-001",
+    "language": "french",
+    "language_code": "fr",
+    "reference": "Je voudrais renouveler ma carte de bibliothèque.",
+    "hypothesis": "Je voudrais renouveler la carte de bibliothèque"
+  },
+  {
+    "id": "sample-ar-001",
+    "language": "arabic",
+    "language_code": "ar",
+    "reference": "مرحبا كيف حالك اليوم",
+    "hypothesis": "مرحبا كيف حالك"
+  },
+  {
+    "id": "sample-hi-001",
+    "language": "hindi",
+    "language_code": "hi",
+    "reference": "आप कैसे हैं आज",
+    "hypothesis": "आप कैसे हो आज"
+  }
+]

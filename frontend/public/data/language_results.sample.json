@@ -1,0 +1,8 @@
+[
+  { "language": "arabic",  "language_code": "ar", "clips_tested": 40, "wer": 0.12, "cer": 0.07 },
+  { "language": "spanish", "language_code": "es", "clips_tested": 40, "wer": 0.08, "cer": 0.04 },
+  { "language": "french",  "language_code": "fr", "clips_tested": 40, "wer": 0.1,  "cer": 0.05 },
+  { "language": "hindi",   "language_code": "hi", "clips_tested": 40, "wer": 0.2,  "cer": 0.11 },
+  { "language": "urdu",    "language_code": "ur", "clips_tested": 40, "wer": 0.25, "cer": 0.14 },
+  { "language": "punjabi", "language_code": "pa", "clips_tested": 40, "wer": 0.3,  "cer": 0.17 }
+]

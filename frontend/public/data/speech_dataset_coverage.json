@@ -1,0 +1,137 @@
+[
+  {
+    "language": "Urdu",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 29,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Arabic",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 40,
+    "minds14_calls": 0,
+    "speech_massive_commands": 115,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": false
+  },
+  {
+    "language": "Mandarin",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 40,
+    "minds14_calls": 210,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": false
+  },
+  {
+    "language": "Punjabi",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 11,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Polish",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 38,
+    "minds14_calls": 210,
+    "speech_massive_commands": 115,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Cantonese",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 35,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Tagalog",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 29,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Spanish",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 40,
+    "minds14_calls": 210,
+    "speech_massive_commands": 115,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": false
+  },
+  {
+    "language": "Tamil",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 10,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Vietnamese",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 39,
+    "minds14_calls": 0,
+    "speech_massive_commands": 115,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Hindi",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 34,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Portuguese",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 40,
+    "minds14_calls": 210,
+    "speech_massive_commands": 115,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": false
+  },
+  {
+    "language": "Gujarati",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 17,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "Bengali",
+    "fleurs_clips": 0,
+    "accent_archive_speakers": 21,
+    "minds14_calls": 0,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": false,
+    "limited_speech_coverage": true
+  },
+  {
+    "language": "English",
+    "fleurs_clips": 40,
+    "accent_archive_speakers": 45,
+    "minds14_calls": 210,
+    "speech_massive_commands": 0,
+    "has_service_request_audio": true,
+    "limited_speech_coverage": false
+  }
+]

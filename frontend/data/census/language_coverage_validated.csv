@@ -1,0 +1,16 @@
+language,census_home_column,city_home_speakers,fleurs_clips,accent_archive_speakers,minds14_calls,speech_massive_commands,has_service_request_audio,home_speakers_citywide_validated,limited_speech_coverage
+Urdu,home_urdu,22535.0,40,29,0,0,False,22535.0,True
+Arabic,home_arabic,20570.0,40,40,0,115,True,20570.0,False
+Mandarin Chinese,home_mandarin,17730.0,40,40,210,0,True,17730.0,False
+Punjabi,home_punjabi,15025.0,40,11,0,0,False,15025.0,True
+Polish,home_polish,12565.0,40,38,210,115,True,12565.0,True
+Cantonese,home_cantonese,10765.0,40,35,0,0,False,10765.0,True
+Tagalog,home_tagalog,10695.0,40,29,0,0,False,10695.0,True
+Spanish,home_spanish,9360.0,40,40,210,115,True,9360.0,False
+Tamil,home_tamil,7420.0,40,10,0,0,False,7420.0,True
+Vietnamese,home_vietnamese,7315.0,40,39,0,115,True,7315.0,True
+Hindi,home_hindi,6640.0,40,34,0,0,False,6640.0,True
+Portuguese,home_portuguese,6000.0,40,40,210,115,True,6000.0,False
+Gujarati,home_gujarati,4345.0,40,17,0,0,False,4345.0,True
+Bengali,home_bengali,2515.0,0,21,0,0,False,2515.0,True
+English,,,40,45,210,0,True,,False

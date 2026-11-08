@@ -1,0 +1,12 @@
+[
+  {
+    "generated": "2026-11-08",
+    "languages_reconciled": 20,
+    "languages_with_ward_data": 20,
+    "summary_rows_checked": 220,
+    "notes": [
+      "ward 10: zero home speakers reported for Serbo-Croatian, Ukrainian, Italian",
+      "census_summary.csv pct_of_ward_population uses population_total, not population_language_base (121 of 220 rows only match total); VOXELO does not read it"
+    ]
+  }
+]

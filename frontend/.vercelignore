@@ -1,0 +1,15 @@
+# Never upload secrets (also covers `vercel` CLI deploys of a local working copy)
+.env
+.env.*
+!.env.example
+*.local
+
+# Source data and archives: not needed to build or serve the site
+data/
+
+# Local design-review captures and tool state
+.impeccable/
+
+# Build output and dependencies are produced on Vercel
+dist/
+node_modules/
