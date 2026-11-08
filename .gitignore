@@ -10,11 +10,22 @@
 venv/
 __pycache__/
 *.py[cod]
+.ipynb_checkpoints/
 
-# IDE files
-.idea/
-
-# Dataset and generated-output files
+# Datasets (the datathon pack lives outside the repo, see analysis/.env.example)
+/data/
 analysis/data/
 analysis/output/
+
+# Audio (too large for GitHub)...
 *.flac
+*.mp3
+*.wav
+*.m4a
+# ...except the showcase clips the dashboard needs
+!analysis/outputs/showcase_audio/*
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
