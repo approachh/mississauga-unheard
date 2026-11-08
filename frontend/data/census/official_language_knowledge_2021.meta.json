@@ -1,0 +1,15 @@
+{
+  "census": "2021 Census of Population, as published by the City of Mississauga (datathon pack 01_people_census)",
+  "source_files": [
+    "01_people_census/derived/ward_language_profile_2021_corrected.csv",
+    "01_people_census/neighbourhood_language_profile_2021.csv"
+  ],
+  "definition": "Residents who cannot conduct a conversation in either official language (English or French)",
+  "denominator": "population_language_base",
+  "rounding": "Counts are rounded to 5 by Statistics Canada",
+  "neighbourhood_totals": {
+    "knows_neither_english_nor_french": 24305,
+    "population_language_base": 712535
+  },
+  "extracted": "2026-11-08"
+}

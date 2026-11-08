@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { isCaution, shareOfWard, WARD10_PREVIOUS_ZEROS, CAUTION_WARD, type CensusModel } from '../../lib/census'
+import { isCaution, shareOfWard, WARD10_PREVIOUS_ZEROS, CAUTION_WARD, type CensusModel, type OfficialModel } from '../../lib/census'
 import { int, pct } from '../../lib/format'
 import { langKey } from '../../lib/language'
 import type { CensusChecks, CitywideLanguage } from '../../types/data'
@@ -13,11 +13,13 @@ import { CoverageGrid } from './CoverageGrid'
 export function DeepDive({
   model,
   checks,
+  official,
   selected,
   onSelect,
 }: {
   model: CensusModel
   checks?: CensusChecks
+  official?: OfficialModel | null
   selected: CitywideLanguage
   onSelect: (l: CitywideLanguage) => void
 }) {
@@ -36,10 +38,10 @@ export function DeepDive({
         <CoverageTable model={model} />
       </Disclosure>
       <Disclosure title="How we did this, and its limits" summary="Definitions, assumptions and what the data cannot show.">
-        <Methodology model={model} />
+        <Methodology model={model} official={official ?? null} />
       </Disclosure>
       <Disclosure title="Sources and data checks" summary="Where every number comes from, and how the files were verified.">
-        <Sources model={model} checks={checks} />
+        <Sources model={model} checks={checks} official={official ?? null} />
       </Disclosure>
     </div>
   )
@@ -209,7 +211,7 @@ function CoverageTable({ model }: { model: CensusModel }) {
   )
 }
 
-function Methodology({ model }: { model: CensusModel }) {
+function Methodology({ model, official }: { model: CensusModel; official: OfficialModel | null }) {
   const w10 = model.wards.find((w) => w.ward === CAUTION_WARD)
   const w10Zeros = w10 ? Object.entries(w10.home_speakers).filter(([, n]) => n === 0).map(([l]) => l) : []
   const resolved = w10 ? WARD10_PREVIOUS_ZEROS.filter((l) => (w10.home_speakers[l] ?? 0) > 0) : []
@@ -218,12 +220,30 @@ function Methodology({ model }: { model: CensusModel }) {
   const items: { title: string; body: ReactNode }[] = [
     {
       title: 'What “home speakers” means',
-      body: 'People who speak a language at home, as reported in the census. It does not measure English or French ability, so it does not show who would rely on their home language with a voice service.',
+      body: 'People who speak a language at home, as reported in the census. A home language does not say whether someone also speaks English or French. The separate count of residents with no English or French (below) is a ward total that is not split by home language.',
     },
     {
       title: 'How percentages are calculated',
       body: 'Home speakers divided by the ward’s language-base population, as defined in the census Data Dictionary.',
     },
+    ...(official
+      ? [
+          {
+            title: 'Residents with no English or French',
+            body: (
+              <>
+                The census counts residents who cannot conduct a conversation in either official language: {int(official.total)} across the 11 wards, {pct(official.share)} of the{' '}
+                {int(official.base)} people counted for language. Each ward’s percentage uses its own language-base population, like the home-language shares. Statistics Canada rounds
+                counts to 5. Recent immigrants are not part of any score here.
+              </>
+            ),
+          },
+          {
+            title: 'Experimental accessibility-weighted view',
+            body: 'On the Unheard Index map, an optional view multiplies each ward’s score by its share of residents with no English or French. It shows where hard-to-recognise languages overlap with people who have no official language to fall back on. It is a relative ranking, not a count of people the AI misunderstands: the share is a ward average, not broken down by language.',
+          },
+        ]
+      : []),
     {
       title: 'Counts are not unique people',
       body: 'Totals that add several languages count someone who speaks two of them twice. They are sums of language categories, not head counts.',
@@ -266,7 +286,10 @@ function Methodology({ model }: { model: CensusModel }) {
       title: 'Totals agree by construction',
       body: 'Citywide counts equal the sum of the 11 ward counts, so the files agree with each other. That is a consistency check, not validation against an independent source.',
     },
-    { title: 'No map', body: 'Ward boundary files were not supplied, so wards are shown as circles rather than drawn on a map.' },
+    {
+      title: 'Ward map',
+      body: 'Boundaries are the City of Mississauga’s official ward boundaries (Open Data), simplified by about 4 metres for display, so edges are approximate.',
+    },
   )
 
   return (
@@ -281,7 +304,7 @@ function Methodology({ model }: { model: CensusModel }) {
   )
 }
 
-function Sources({ model, checks }: { model: CensusModel; checks?: CensusChecks }) {
+function Sources({ model, checks, official }: { model: CensusModel; checks?: CensusChecks; official: OfficialModel | null }) {
   const disagreements = checks?.notes.filter((n) => !n.includes('zero home speakers')) ?? []
   const reconciled = model.ranking.filter((r) => {
     const name = model.wardName.get(langKey(r.language))
@@ -297,12 +320,20 @@ function Sources({ model, checks }: { model: CensusModel; checks?: CensusChecks 
         { label: 'Citywide', value: <><Code>citywide_language_ranking_VALIDATED.csv</Code>, census team (sum of wards)</> },
         { label: 'Wards', value: <><Code>ward_language_profile_2021_VALIDATED.csv</Code>, census team (Ward 10 adjusted)</> },
         { label: 'Coverage', value: <><Code>language_coverage_validated.csv</Code>, dataset columns only</> },
+        ...(official ? [{ label: 'Official languages', value: <><Code>official_language_knowledge_2021.csv</Code>, from the census ward and neighbourhood tables</> }] : []),
         { label: 'Cross-check', value: <><Code>census_summary.csv</Code>, used only to verify the files above</> },
         { label: 'Speech', value: <><Code>language_results.json</Code>, joined only once published</> },
       ]}
     >
       Converted with <Code>npm run data:census</Code>. “Mandarin Chinese” is treated as Mandarin. In the browser,{' '}
       {reconciled} of {model.wardName.size} languages’ ward counts add up exactly to their citywide figure.
+      {checks?.official_language && (
+        <>
+          {' '}
+          The official-language figures were checked at conversion: the ward counts sum to {int(checks.official_language.city_total)}, which matches the neighbourhood table, and Ward 10’s count matches what
+          the neighbourhoods imply.
+        </>
+      )}
       {checks && checks.summary_rows_checked > 0 && (
         <>
           {' '}

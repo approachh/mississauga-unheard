@@ -1,6 +1,6 @@
 import { ChevronDown } from 'lucide-react'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { isCaution, shareOfWard, topLanguagesInWard, wardSeries, type CensusModel, type WardPoint } from '../../lib/census'
+import { isCaution, shareOfWard, topLanguagesInWard, wardSeries, type CensusModel, type OfficialModel, type WardPoint } from '../../lib/census'
 import { int, pct } from '../../lib/format'
 import { langKey } from '../../lib/language'
 import { PAD, rampColor } from '../../lib/wardRamp'
@@ -9,16 +9,18 @@ import { Flag } from '../Flag'
 import { AnimatedNumber } from './AnimatedNumber'
 import { MapLegend, WardMap, type MapDatum } from './WardMap'
 
-export type MapView = 'index' | 'language'
+export type MapView = 'index' | 'language' | 'official'
 
 interface MapExplorerProps {
   model: CensusModel
   shapes: WardShapes | null
   index: UnheardIndex | null
+  official: OfficialModel | null
   view: MapView
   selected: CitywideLanguage
   onSelect: (l: CitywideLanguage) => void
   onIndex: () => void
+  onOfficial: () => void
 }
 
 const MODE_LABEL: Record<RecognitionMode, string> = { auto: 'Auto-detect', forced: 'Language given' }
@@ -28,14 +30,18 @@ const MODE_LABEL: Record<RecognitionMode, string> = { auto: 'Auto-detect', force
  * one language's speakers live. On wide screens the city figures float in the map's empty corners
  * and the ward card hangs off a leader line from the selected ward.
  */
-export function MapExplorer({ model, shapes, index, view, selected, onSelect, onIndex }: MapExplorerProps) {
-  const isIndex = view === 'index' && index !== null
-  const key = isIndex ? 'index' : langKey(selected.language)
+export function MapExplorer({ model, shapes, index, official, view, selected, onSelect, onIndex, onOfficial }: MapExplorerProps) {
+  const isOfficial = view === 'official' && official !== null
+  const isIndex = !isOfficial && view === 'index' && index !== null
+  const key = isOfficial ? 'official' : isIndex ? 'index' : langKey(selected.language)
   const series = useMemo(() => wardSeries(model, selected.language), [model, selected.language])
   const [mode, setMode] = useState<RecognitionMode>('auto')
+  // Experimental: weight the index by residents with no English or French.
+  const [weighted, setWeighted] = useState(false)
 
   const defaultWard = () => {
-    if (isIndex) return index.wards.find((w) => w.rank.auto === 1)?.ward ?? null
+    if (isOfficial) return official.topShare.ward
+    if (isIndex) return index.wards.find((w) => pickScore(w, weighted).rank.auto === 1)?.ward ?? null
     return series.length ? series.reduce((a, b) => (b.share > a.share ? b : a)).ward : null
   }
   // The selected ward resets to the top ward whenever the view or language changes.
@@ -46,20 +52,31 @@ export function MapExplorer({ model, shapes, index, view, selected, onSelect, on
     setWard(defaultWard())
   }
 
-  const data: MapDatum[] = isIndex ? indexData(index, mode) : languageData(series, selected.language)
+  const data: MapDatum[] = isOfficial ? officialData(official) : isIndex ? indexData(index, mode, weighted) : languageData(series, selected.language)
   const shape = shapes?.wards.find((w) => w.ward === ward)
   const anchor = shapes && shape ? (shape.label[1] - 24 + PAD) / (shapes.height + PAD * 2) : 0.5
   const { columnRef, cardRef, cardTop, stubTop } = useFloatingCard(anchor, !!shapes && data.length > 0)
 
-  const figures = isIndex ? (
-    <IndexSummary index={index} mode={mode} onMode={setMode} />
+  const figures = isOfficial ? (
+    <OfficialSummary official={official} />
+  ) : isIndex ? (
+    <IndexSummary index={index} mode={mode} onMode={setMode} weighted={weighted} onWeighted={setWeighted} />
   ) : (
     <CityFigures model={model} index={index} lang={selected} />
   )
 
   return (
     <div>
-      <ViewChips model={model} index={index} view={isIndex ? 'index' : 'language'} selected={selected} onSelect={onSelect} onIndex={onIndex} />
+      <ViewChips
+        model={model}
+        index={index}
+        official={official}
+        view={isOfficial ? 'official' : isIndex ? 'index' : 'language'}
+        selected={selected}
+        onSelect={onSelect}
+        onIndex={onIndex}
+        onOfficial={onOfficial}
+      />
 
       {shapes && data.length ? (
         <div className="mt-8 grid grid-cols-[minmax(0,1fr)] lg:mt-4 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
@@ -70,19 +87,25 @@ export function MapExplorer({ model, shapes, index, view, selected, onSelect, on
             <WardMap
               shapes={shapes}
               data={data}
-              description={isIndex ? `the Unheard Index (${MODE_LABEL[mode].toLowerCase()})` : `share of residents who speak ${selected.language} at home`}
+              description={
+                isOfficial
+                  ? 'share of residents who cannot hold a conversation in English or French'
+                  : isIndex
+                    ? `the ${weighted ? 'experimental weighted ' : ''}Unheard Index (${MODE_LABEL[mode].toLowerCase()})`
+                    : `share of residents who speak ${selected.language} at home`
+              }
               selected={ward}
               onSelect={setWard}
             >
               <div className="absolute top-[2%] left-0 hidden w-[36%] lg:block">{figures}</div>
               <div className="absolute bottom-[1%] left-0 hidden w-[38%] lg:block">
-                <Legend isIndex={isIndex} series={series} language={selected.language} mode={mode} />
+                <Legend isIndex={isIndex} isOfficial={isOfficial} official={official} weighted={weighted} series={series} language={selected.language} mode={mode} />
               </div>
             </WardMap>
           </div>
 
           <div className="mt-6 lg:hidden">
-            <Legend isIndex={isIndex} series={series} language={selected.language} mode={mode} />
+            <Legend isIndex={isIndex} isOfficial={isOfficial} official={official} weighted={weighted} series={series} language={selected.language} mode={mode} />
           </div>
 
           {/* Ward card: floats beside the map on wide screens, follows it below otherwise */}
@@ -90,10 +113,12 @@ export function MapExplorer({ model, shapes, index, view, selected, onSelect, on
             <span aria-hidden className="card-glide absolute left-0 hidden h-px w-8 -translate-y-1/2 bg-[rgb(176_228_255/0.55)] lg:block" style={{ top: stubTop }} />
             <div ref={cardRef} className="card-glide lg:absolute lg:right-0 lg:left-8 lg:-translate-y-1/2" style={{ top: cardTop }}>
               {ward !== null &&
-                (isIndex ? (
-                  <IndexCard index={index} ward={ward} mode={mode} onSelect={setWard} />
+                (isOfficial ? (
+                  <OfficialCard official={official} model={model} ward={ward} onSelect={setWard} />
+                ) : isIndex ? (
+                  <IndexCard index={index} ward={ward} mode={mode} weighted={weighted} onSelect={setWard} />
                 ) : (
-                  <WardCard model={model} lang={selected} series={series} ward={ward} onSelect={setWard} />
+                  <WardCard model={model} official={official} lang={selected} series={series} ward={ward} onSelect={setWard} />
                 ))}
             </div>
           </div>
@@ -130,19 +155,58 @@ function languageData(series: WardPoint[], language: string): MapDatum[] {
   }))
 }
 
+type Score = Pick<UnheardWard, 'index' | 'index_ci' | 'rank' | 'rank_range'>
+/** The primary Unheard Index, or the experimental weighted one. Both are on the same 0-100 scale. */
+const pickScore = (w: UnheardWard, weighted: boolean): Score => (weighted ? w.weighted : w)
+
 /** Both modes share one scale (100 = top ward, auto-detect), so switching mode recolours honestly. */
-function indexData(index: UnheardIndex, mode: RecognitionMode): MapDatum[] {
-  return index.wards.map((w) => ({
+function indexData(index: UnheardIndex, mode: RecognitionMode, weighted: boolean): MapDatum[] {
+  const name = weighted ? 'Weighted index (experimental)' : 'Unheard Index'
+  return index.wards.map((w) => {
+    const s = pickScore(w, weighted)
+    return {
+      ward: w.ward,
+      t: Math.min(1, s.index[mode] / 100),
+      label: Math.round(s.index[mode]).toString(),
+      tag: `${weighted ? 'Weighted ' : 'Index '}${Math.round(s.index[mode])} · rank ${s.rank[mode]}`,
+      aria: `${name} ${Math.round(s.index[mode])}, rank ${s.rank[mode]} of 11`,
+    }
+  })
+}
+
+/** Share of each ward's residents with no English or French. Linear ramp from 0 to the highest ward. */
+function officialData(official: OfficialModel): MapDatum[] {
+  const max = Math.max(0.0001, ...official.wards.map((w) => w.share))
+  return official.wards.map((w) => ({
     ward: w.ward,
-    t: Math.min(1, w.index[mode] / 100),
-    label: Math.round(w.index[mode]).toString(),
-    tag: `Index ${Math.round(w.index[mode])} · rank ${w.rank[mode]}`,
-    aria: `Unheard Index ${Math.round(w.index[mode])}, rank ${w.rank[mode]} of 11`,
+    t: w.share / max,
+    label: pct(w.share),
+    tag: `${int(w.knows_neither)} residents`,
+    aria: `${int(w.knows_neither)} residents with no English or French, ${pct(w.share)} of the ward, ${ordinal(official.rankByShare.get(w.ward) ?? 0)} highest of 11`,
   }))
 }
 
-function Legend({ isIndex, series, language, mode }: { isIndex: boolean; series: WardPoint[]; language: string; mode: RecognitionMode }) {
-  if (isIndex) return <MapLegend title={`Unheard Index · ${MODE_LABEL[mode].toLowerCase()}`} min="0" max="100" />
+function Legend({
+  isIndex,
+  isOfficial,
+  official,
+  weighted,
+  series,
+  language,
+  mode,
+}: {
+  isIndex: boolean
+  isOfficial: boolean
+  official: OfficialModel | null
+  weighted: boolean
+  series: WardPoint[]
+  language: string
+  mode: RecognitionMode
+}) {
+  if (isOfficial && official)
+    return <MapLegend title="Share of residents with no English or French" min="0%" max={pct(Math.max(...official.wards.map((w) => w.share)))} />
+  if (isIndex)
+    return <MapLegend title={`${weighted ? 'Weighted index, experimental' : 'Unheard Index'} · ${MODE_LABEL[mode].toLowerCase()}`} min="0" max="100" />
   const max = Math.max(0.0001, ...series.map((p) => p.share))
   return <MapLegend title={`Share of residents speaking ${language} at home`} min="0%" max={pct(max)} hatched={series.some((p) => p.caution)} />
 }
@@ -182,21 +246,25 @@ function useFloatingCard(anchor: number, ready: boolean) {
 function ViewChips({
   model,
   index,
+  official,
   view,
   selected,
   onSelect,
   onIndex,
+  onOfficial,
 }: {
   model: CensusModel
   index: UnheardIndex | null
+  official: OfficialModel | null
   view: MapView
   selected: CitywideLanguage
   onSelect: (l: CitywideLanguage) => void
   onIndex: () => void
+  onOfficial: () => void
 }) {
   const rowRef = useRef<HTMLDivElement>(null)
   const chipRefs = useRef(new Map<string, HTMLButtonElement>())
-  const active = view === 'index' ? '__index' : selected.language
+  const active = view === 'index' ? '__index' : view === 'official' ? '__official' : selected.language
 
   // Keep the active chip in view, scrolling the row only (never the page).
   useEffect(() => {
@@ -236,7 +304,18 @@ function ViewChips({
               <span aria-hidden className={`h-2 w-2 rounded-full ${view === 'index' ? 'bg-ink' : 'bg-[rgb(176_228_255)]'}`} />
               Unheard Index
             </>,
-            view === 'index' ? 'mr-2' : 'mr-2 text-paper ring-1 ring-[rgb(176_228_255/0.4)]',
+            view === 'index' ? 'mr-1' : 'mr-1 text-paper ring-1 ring-[rgb(176_228_255/0.4)]',
+          )}
+        {official &&
+          chip(
+            '__official',
+            view === 'official',
+            onOfficial,
+            <>
+              <span aria-hidden className={`h-2 w-2 rounded-full ${view === 'official' ? 'bg-ink' : 'bg-[rgb(176_228_255)]'}`} />
+              No English or French
+            </>,
+            view === 'official' ? 'mr-2' : 'mr-2 text-paper ring-1 ring-[rgb(176_228_255/0.4)]',
           )}
         {model.ranking.map((r) => {
           const missing = model.coverageBy.get(langKey(r.language))?.has_service_request_audio === false
@@ -288,14 +367,30 @@ function ModeToggle({ mode, onMode }: { mode: RecognitionMode; onMode: (m: Recog
   )
 }
 
-function IndexSummary({ index, mode, onMode }: { index: UnheardIndex; mode: RecognitionMode; onMode: (m: RecognitionMode) => void }) {
-  const avg = (m: RecognitionMode) => index.wards.reduce((n, w) => n + w.index[m], 0) / index.wards.length
+function IndexSummary({
+  index,
+  mode,
+  onMode,
+  weighted,
+  onWeighted,
+}: {
+  index: UnheardIndex
+  mode: RecognitionMode
+  onMode: (m: RecognitionMode) => void
+  weighted: boolean
+  onWeighted: (v: boolean) => void
+}) {
+  const avg = (m: RecognitionMode) => index.wards.reduce((n, w) => n + pickScore(w, weighted).index[m], 0) / index.wards.length
   const drop = 1 - avg('forced') / avg('auto')
   return (
     <div className="swap-in">
-      <p className="text-[12px] font-medium tracking-[0.12em] text-[rgb(176_228_255/0.75)] uppercase">Relative priority score</p>
+      <p className="text-[12px] font-medium tracking-[0.12em] text-[rgb(176_228_255/0.75)] uppercase">
+        {weighted ? 'Experimental weighted score' : 'Relative priority score'}
+      </p>
       <p className="mt-3 max-w-[34ch] text-[15px] leading-snug text-white/80">
-        Where speech AI makes the most errors in the languages people speak at home, weighted by how many residents speak them.
+        {weighted
+          ? 'The same score, multiplied by each ward’s share of residents with no English or French. A ranking, not a count of people misunderstood.'
+          : 'Where speech AI makes the most errors in the languages people speak at home, weighted by how many residents speak them.'}
       </p>
       <div className="mt-5">
         <ModeToggle mode={mode} onMode={onMode} />
@@ -304,6 +399,17 @@ function IndexSummary({ index, mode, onMode }: { index: UnheardIndex; mode: Reco
             ? 'The system guesses the language, as a phone line would when a caller just starts speaking.'
             : `The system is told the language. Ward scores fall by ${Math.round(drop * 100)}% on average.`}
         </p>
+        <label className="mt-4 flex max-w-[34ch] cursor-pointer items-start gap-2.5 text-[12.5px] leading-snug text-white/60">
+          <input
+            type="checkbox"
+            checked={weighted}
+            onChange={(e) => onWeighted(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 accent-[rgb(176_228_255)]"
+          />
+          <span>
+            <span className="font-medium text-white/85">Experimental:</span> weight by residents with no English or French
+          </span>
+        </label>
       </div>
       <dl className="mt-5 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 border-t border-white/12 pt-4 text-[12.5px] leading-snug lg:max-w-[88%]">
         <dt className="text-white/45">Scored</dt>
@@ -319,9 +425,22 @@ function IndexSummary({ index, mode, onMode }: { index: UnheardIndex; mode: Reco
   )
 }
 
-function IndexCard({ index, ward, mode, onSelect }: { index: UnheardIndex; ward: number; mode: RecognitionMode; onSelect: (w: number) => void }) {
-  const w = index.wards.find((x) => x.ward === ward)
-  if (!w) return null
+function IndexCard({
+  index,
+  ward,
+  mode,
+  weighted,
+  onSelect,
+}: {
+  index: UnheardIndex
+  ward: number
+  mode: RecognitionMode
+  weighted: boolean
+  onSelect: (w: number) => void
+}) {
+  const full = index.wards.find((x) => x.ward === ward)
+  if (!full) return null
+  const w = { ...full, ...pickScore(full, weighted) }
   const other: RecognitionMode = mode === 'auto' ? 'forced' : 'auto'
   const [lo, hi] = w.index_ci[mode]
   const [rLo, rHi] = w.rank_range[mode]
@@ -329,7 +448,10 @@ function IndexCard({ index, ward, mode, onSelect }: { index: UnheardIndex; ward:
     <article className="rounded-[24px] bg-[rgb(14_19_26/0.72)] p-6 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9),inset_0_1px_0_rgb(255_255_255/0.06)] ring-1 ring-white/10 backdrop-blur-xl sm:p-7">
       <div aria-live="polite">
         <div className="flex items-baseline justify-between gap-4">
-          <h3 className="text-[12px] font-medium tracking-[0.12em] text-[rgb(176_228_255/0.85)] uppercase">Ward {w.ward}</h3>
+          <h3 className="text-[12px] font-medium tracking-[0.12em] text-[rgb(176_228_255/0.85)] uppercase">
+            Ward {w.ward}
+            {weighted && <span className="ml-2 normal-case tracking-normal text-white/50">experimental</span>}
+          </h3>
           <span className="text-[12px] text-white/50">
             Rank {w.rank[mode]} of 11{rLo !== rHi ? ` · could be ${rLo}–${rHi}` : ''}
           </span>
@@ -357,9 +479,13 @@ function IndexCard({ index, ward, mode, onSelect }: { index: UnheardIndex; ward:
           . Not scored: {pct(w.untested_share)} of residents speak an untested language
           {w.untested_unconfirmed_zero.length > 0 && ' (possibly more: the zeros reported here for ' + w.untested_unconfirmed_zero.join(', ') + ' are unconfirmed)'}.
         </p>
+        <p className="mt-3 text-[13px] leading-relaxed text-white/50">
+          <span className="text-white/85 tabular-nums">{int(w.no_official_count)}</span> residents ({pct(w.no_official_share)}) have no English or French
+          {weighted ? ': this share weights the score.' : '.'}
+        </p>
       </div>
 
-      <Ranking index={index} ward={ward} mode={mode} onSelect={onSelect} />
+      <Ranking index={index} ward={ward} mode={mode} weighted={weighted} onSelect={onSelect} />
     </article>
   )
 }
@@ -367,30 +493,38 @@ function IndexCard({ index, ward, mode, onSelect }: { index: UnheardIndex; ward:
 const ROW = 26
 
 /** All 11 wards by rank. Rows glide to their new places when the mode changes. */
-function Ranking({ index, ward, mode, onSelect }: { index: UnheardIndex; ward: number; mode: RecognitionMode; onSelect: (w: number) => void }) {
+function Ranking({ index, ward, mode, weighted, onSelect }: { index: UnheardIndex; ward: number; mode: RecognitionMode; weighted: boolean; onSelect: (w: number) => void }) {
   return (
     <div className="mt-5 border-t border-white/10 pt-4">
       <p className="mb-2 flex justify-between text-[11px] tracking-[0.08em] text-white/40 uppercase">
         <span>Ranking</span>
-        <span>{MODE_LABEL[mode]}</span>
+        <span>
+          {weighted ? 'Experimental · ' : ''}
+          {MODE_LABEL[mode]}
+        </span>
       </p>
-      <ol className="relative" style={{ height: ROW * index.wards.length }} aria-label={`Wards ranked by Unheard Index, ${MODE_LABEL[mode].toLowerCase()}`}>
+      <ol
+        className="relative"
+        style={{ height: ROW * index.wards.length }}
+        aria-label={`Wards ranked by ${weighted ? 'the experimental weighted index' : 'Unheard Index'}, ${MODE_LABEL[mode].toLowerCase()}`}
+      >
         {index.wards.map((w) => (
-          <RankRow key={w.ward} w={w} mode={mode} on={w.ward === ward} onSelect={onSelect} />
+          <RankRow key={w.ward} w={w} mode={mode} weighted={weighted} on={w.ward === ward} onSelect={onSelect} />
         ))}
       </ol>
     </div>
   )
 }
 
-function RankRow({ w, mode, on, onSelect }: { w: UnheardWard; mode: RecognitionMode; on: boolean; onSelect: (w: number) => void }) {
+function RankRow({ w: ward, mode, weighted, on, onSelect }: { w: UnheardWard; mode: RecognitionMode; weighted: boolean; on: boolean; onSelect: (w: number) => void }) {
+  const w = { ward: ward.ward, ...pickScore(ward, weighted) }
   const v = w.index[mode]
   return (
     <li className="rank-row absolute inset-x-0" style={{ height: ROW, transform: `translateY(${(w.rank[mode] - 1) * ROW}px)` }}>
       <button
         type="button"
         aria-pressed={on}
-        aria-label={`Rank ${w.rank[mode]}: Ward ${w.ward}, index ${Math.round(v)}`}
+        aria-label={`Rank ${w.rank[mode]}: Ward ${w.ward}, ${weighted ? 'weighted index' : 'index'} ${Math.round(v)}`}
         onClick={() => onSelect(w.ward)}
         className={`grid h-full w-full grid-cols-[1.25rem_3.75rem_minmax(0,1fr)_2rem] items-center gap-2 rounded-md px-1 text-left text-[12.5px] ${on ? 'bg-white/[0.07]' : 'hover:bg-white/[0.04]'}`}
       >
@@ -445,10 +579,21 @@ function IndexMethod({ index }: { index: UnheardIndex }) {
                 on fewer than {index.method.small_sample_threshold} clips (marked below) are less certain than their range shows.
               </p>
             </MethodBlock>
+            <MethodBlock title="Experimental weighted view">
+              <p>
+                The checkbox multiplies each ward’s score by its share of residents who cannot hold a conversation in English or French (2021 census), then rescales so the highest
+                ward is 100. It asks where hard-to-recognise languages overlap with people who have no official language to fall back on.
+              </p>
+              <p className="mt-3 rounded-lg bg-white/[0.04] px-4 py-3 font-mono text-[12.5px] text-white/80">weighted = score × share with no English or French</p>
+              <p className="mt-3">
+                It is a relative ranking, not a count of people the AI misunderstands: the share is a ward average, not broken down by language, and counts are rounded to 5.
+                Recent immigrants are not used.
+              </p>
+            </MethodBlock>
             <MethodBlock title="Limits">
               <p>
-                Errors come from read-aloud sentences (FLEURS), not real calls to the City. The census records languages spoken at home, not whether people also speak English,
-                and one person can be counted under two languages. {index.untested.length} languages ({index.untested.map((u) => u.language).join(', ')}) have no speech
+                Errors come from read-aloud sentences (FLEURS), not real calls to the City. The census records languages spoken at home; the separate count of residents with no
+                English or French is a ward total, so the index cannot tell which language each of those residents speaks, and one person can be counted under two languages. {index.untested.length} languages ({index.untested.map((u) => u.language).join(', ')}) have no speech
                 results: they are left out of the score, not treated as zero.
               </p>
             </MethodBlock>
@@ -505,6 +650,99 @@ function MethodBlock({ title, children }: { title: string; children: ReactNode }
 }
 
 /* ------------------------------------------------------------------ */
+/* No English or French view                                           */
+/* ------------------------------------------------------------------ */
+
+/** Citywide figure for the map: residents who cannot hold a conversation in English or French. */
+function OfficialSummary({ official }: { official: OfficialModel }) {
+  return (
+    <div className="swap-in" aria-live="polite">
+      <p className="text-[12px] font-medium tracking-[0.12em] text-[rgb(176_228_255/0.75)] uppercase">Citywide · 2021 census</p>
+      <p className="mt-2 text-[clamp(2.5rem,4.4vw,3.75rem)] leading-none font-semibold tracking-[-0.04em]">
+        <AnimatedNumber value={Math.round(official.total / 100) * 100} />
+      </p>
+      <p className="mt-2 max-w-[24ch] text-[15px] leading-snug text-white/60">residents can’t hold a conversation in English or French</p>
+      <dl className="mt-5 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 border-t border-white/12 pt-4 text-[12.5px] leading-snug lg:max-w-[88%]">
+        <dt className="text-white/45">Share</dt>
+        <dd className="text-white/80">
+          {pct(official.share)} of {int(official.base)} counted for language
+        </dd>
+        <dt className="text-white/45">Counts</dt>
+        <dd className="text-white/80">Rounded to 5 by Statistics Canada; the 11 wards add up to {int(official.total)}</dd>
+      </dl>
+    </div>
+  )
+}
+
+function OfficialCard({ official, model, ward, onSelect }: { official: OfficialModel; model: CensusModel; ward: number; onSelect: (w: number) => void }) {
+  const w = official.byWard.get(ward)
+  if (!w) return null
+  const rank = official.rankByShare.get(ward) ?? 0
+  const share = (n: number) => pct(n)
+  const wardRow = model.wards.find((x) => x.ward === ward)
+  const max = Math.max(0.0001, ...official.wards.map((x) => x.share))
+  return (
+    <article
+      className="rounded-[24px] bg-[rgb(14_19_26/0.72)] p-6 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9),inset_0_1px_0_rgb(255_255_255/0.06)] ring-1 ring-white/10 backdrop-blur-xl sm:p-7"
+      aria-live="polite"
+    >
+      <div key={ward} className="swap-in">
+        <div className="flex items-baseline justify-between gap-4">
+          <h3 className="text-[12px] font-medium tracking-[0.12em] text-[rgb(176_228_255/0.85)] uppercase">Ward {w.ward}</h3>
+          {wardRow?.corrected && <span className="text-[11px] text-white/40">Ward 10 checked against neighbourhoods</span>}
+        </div>
+        <p className="mt-2 text-[2.5rem] leading-none font-semibold tracking-[-0.035em]">
+          <AnimatedNumber value={w.knows_neither} />
+        </p>
+        <p className="mt-2 text-[15px] text-white/60">
+          {share(w.share)} of {int(w.language_base)} residents · {rank === 1 ? 'highest of 11 wards' : `${ordinal(rank)} of 11 wards`}
+        </p>
+      </div>
+
+      <div role="group" aria-label="Compare wards" className="mt-6 grid grid-cols-11 gap-1">
+        {official.wards.map((x) => {
+          const on = x.ward === ward
+          return (
+            <button
+              key={x.ward}
+              type="button"
+              aria-pressed={on}
+              aria-label={`Ward ${x.ward}: ${share(x.share)}, ${int(x.knows_neither)} residents`}
+              onClick={() => onSelect(x.ward)}
+              className="group flex flex-col items-center gap-1.5 rounded-md pt-1 outline-offset-0"
+            >
+              <span className="flex h-12 w-full items-end justify-center">
+                <span
+                  className={`strip-bar block w-full max-w-[18px] rounded-t-[3px] ${on ? 'ring-1 ring-white' : 'opacity-80 group-hover:opacity-100'}`}
+                  style={{ height: `${Math.max(4, (x.share / max) * 100)}%`, background: rampColor(x.share / max) }}
+                />
+              </span>
+              <span className={`text-[11px] tabular-nums ${on ? 'font-semibold text-paper' : 'text-white/45 group-hover:text-white/80'}`}>{x.ward}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      <p className="mt-5 border-t border-white/10 pt-4 text-[13px] leading-relaxed text-white/50">
+        2021 census: residents who cannot conduct a conversation in English or French. The share uses the ward’s language-base population. The census does not say which
+        language they speak.
+      </p>
+    </article>
+  )
+}
+
+/** One line in the language view's ward card: residents with no English or French here. */
+function WardOfficialLine({ official, ward }: { official: OfficialModel | null; ward: number }) {
+  const w = official?.byWard.get(ward)
+  if (!official || !w) return null
+  return (
+    <p>
+      <span className="text-white/80 tabular-nums">{int(w.knows_neither)}</span> residents ({pct(w.share)}) have no English or French.
+    </p>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /* Language view                                                       */
 /* ------------------------------------------------------------------ */
 
@@ -557,12 +795,14 @@ function CityFigures({ model, index, lang }: { model: CensusModel; index: Unhear
 
 function WardCard({
   model,
+  official,
   lang,
   series,
   ward,
   onSelect,
 }: {
   model: CensusModel
+  official: OfficialModel | null
   lang: CitywideLanguage
   series: WardPoint[]
   ward: number
@@ -622,6 +862,7 @@ function WardCard({
           </p>
         )}
         <WardGapLine model={model} wardRow={wardRow} />
+        <WardOfficialLine official={official} ward={ward} />
       </div>
     </article>
   )

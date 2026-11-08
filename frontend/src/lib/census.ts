@@ -1,4 +1,4 @@
-import type { CitywideLanguage, LanguageResult, SpeechCoverage, WardProfile } from '../types/data'
+import type { CitywideLanguage, LanguageResult, OfficialLanguageWard, SpeechCoverage, WardProfile } from '../types/data'
 import { langKey } from './language'
 import { inMode, PRIMARY_MODE } from './speech'
 
@@ -90,4 +90,36 @@ export function topLanguagesInWard(ward: WardProfile, n = 3) {
     .sort((a, b) => b[1] - a[1])
     .slice(0, n)
     .map(([language, speakers]) => ({ language, speakers, share: shareOfWard(speakers, ward) }))
+}
+
+/**
+ * Residents who cannot conduct a conversation in English or French (2021 census), per ward and citywide.
+ * The citywide share uses the summed language bases, the same denominator as each ward's own share.
+ */
+export interface OfficialModel {
+  wards: OfficialLanguageWard[]
+  byWard: Map<number, OfficialLanguageWard>
+  total: number
+  base: number
+  share: number
+  /** 1 = highest share of residents without English or French. */
+  rankByShare: Map<number, number>
+  topShare: OfficialLanguageWard
+}
+
+export function buildOfficial(rows: OfficialLanguageWard[]): OfficialModel | null {
+  if (rows.length !== 11) return null // a partial table would give a wrong city total
+  const wards = [...rows].sort((a, b) => a.ward - b.ward)
+  const total = wards.reduce((n, w) => n + w.knows_neither, 0)
+  const base = wards.reduce((n, w) => n + w.language_base, 0)
+  const ranked = [...wards].sort((a, b) => b.share - a.share)
+  return {
+    wards,
+    byWard: new Map(wards.map((w) => [w.ward, w])),
+    total,
+    base,
+    share: base > 0 ? total / base : 0,
+    rankByShare: new Map(ranked.map((w, i) => [w.ward, i + 1])),
+    topShare: ranked[0],
+  }
 }

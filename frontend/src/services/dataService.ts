@@ -4,6 +4,7 @@ import type {
   CitywideLanguage,
   Dataset,
   LanguageResult,
+  OfficialLanguageWard,
   RoutingConfusion,
   RoutingData,
   RoutingLanguageCoverage,
@@ -87,6 +88,9 @@ export const isCensusChecks: Validator<CensusChecks> = (r): r is CensusChecks =>
   Array.isArray(r.notes) &&
   r.notes.every((n) => typeof n === 'string')
 
+export const isOfficialLanguageWard: Validator<OfficialLanguageWard> = (r): r is OfficialLanguageWard =>
+  isObj(r) && isNum(r.ward) && isNum(r.language_base) && isNum(r.knows_neither) && isNum(r.share) && r.share >= 0 && r.share <= 1
+
 const dataUrl = (file: string) => `${import.meta.env.BASE_URL}data/${file}`
 
 /** Returns parsed JSON array, or null if the file is absent / not JSON (SPA fallbacks return HTML). */
@@ -142,6 +146,7 @@ export const loadCitywideLanguages = () => cached('census_citywide_languages', i
 export const loadWardProfiles = () => cached('census_ward_languages', isWardProfile)
 export const loadSpeechCoverage = () => cached('speech_dataset_coverage', isSpeechCoverage)
 export const loadCensusChecks = () => cached('census_checks', isCensusChecks)
+export const loadOfficialLanguage = () => cached('census_official_language', isOfficialLanguageWard)
 
 const isWardShapes = (r: unknown): r is WardShapes =>
   isObj(r) &&
@@ -180,6 +185,7 @@ const isByMode = (v: unknown, check: (x: unknown) => boolean) => isObj(v) && che
 const isUnheardIndex = (r: unknown): r is UnheardIndex =>
   isObj(r) &&
   isObj(r.method) &&
+  isObj(r.weighted_method) &&
   isObj(r.coverage) &&
   Array.isArray(r.languages) &&
   Array.isArray(r.untested) &&
@@ -195,7 +201,14 @@ const isUnheardIndex = (r: unknown): r is UnheardIndex =>
       isByMode(w.rank_range, isPair) &&
       isByMode(w.drivers, Array.isArray) &&
       isNum(w.tested_share) &&
-      isNum(w.untested_share),
+      isNum(w.untested_share) &&
+      isNum(w.no_official_count) &&
+      isNum(w.no_official_share) &&
+      isObj(w.weighted) &&
+      isByMode(w.weighted.index, isNum) &&
+      isByMode(w.weighted.index_ci, isPair) &&
+      isByMode(w.weighted.rank, isNum) &&
+      isByMode(w.weighted.rank_range, isPair),
   ) &&
   r.languages.every((l) => isObj(l) && isStr(l.language) && isNum(l.clips) && isByMode(l.cer, isNum))
 

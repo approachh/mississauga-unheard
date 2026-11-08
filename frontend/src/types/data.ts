@@ -84,7 +84,26 @@ export interface CensusChecks {
   languages_reconciled: number
   languages_with_ward_data: number
   summary_rows_checked: number
+  /** Verification of the official-language figures (see scripts/convert-census.mjs). */
+  official_language?: {
+    city_total: number
+    language_base: number
+    matches_neighbourhood_total: boolean
+    ward10_matches_neighbourhoods: boolean
+  }
   notes: string[]
+}
+
+/**
+ * `census_official_language.json`: residents who cannot conduct a conversation in English or French,
+ * 2021 census, per ward. Counts are rounded to 5 by Statistics Canada. `share` uses the ward's
+ * language-base population as its denominator, like the home-language shares.
+ */
+export interface OfficialLanguageWard {
+  ward: number
+  language_base: number
+  knows_neither: number
+  share: number
 }
 
 /** `ward_shapes.json`: official ward boundaries, projected and simplified for SVG (see scripts/convert-wards.mjs). */
@@ -126,6 +145,8 @@ export interface UnheardIndex {
     bootstrap: { resamples: number; seed: number; interval: number }
     small_sample_threshold: number
   }
+  /** Experimental accessibility-weighted view. Not a head count; see `caveat`. */
+  weighted_method: { formula: string; caveat: string; scale_reference: { mode: RecognitionMode; ward: number } }
   baseline: { language: string; clips: number; cer: ByMode<number> } | null
   languages: {
     language: string
@@ -156,6 +177,16 @@ export interface UnheardWard {
   tested_share: number
   untested_share: number
   untested_unconfirmed_zero: string[]
+  /** Residents without English or French in this ward (2021 census) and their share of the language base. */
+  no_official_count: number
+  no_official_share: number
+  /** Experimental view: the same score multiplied by no_official_share (see `weighted_method`). */
+  weighted: {
+    index: ByMode<number>
+    index_ci: ByMode<[number, number]>
+    rank: ByMode<number>
+    rank_range: ByMode<[number, number]>
+  }
 }
 
 /** One group of speakers in `accent_results.json`: scores only, nothing that identifies a person. */

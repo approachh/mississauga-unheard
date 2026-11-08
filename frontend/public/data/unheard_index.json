@@ -9,7 +9,7 @@
       "clips_used": 760,
       "clips_dropped": 0
     },
-    "census": "census_ward_languages.json (2021 ward language profile)"
+    "census": "census_ward_languages.json (2021 ward language profile); census_official_language.json (2021 knowledge of official languages)"
   },
   "method": {
     "metric": "cer",
@@ -26,6 +26,14 @@
       "interval": 0.95
     },
     "small_sample_threshold": 20
+  },
+  "weighted_method": {
+    "formula": "Weighted(w, m) = 100 × Index raw(w, m) × p(w) / max over wards of the auto-detect weighted score, where p(w) = residents who know neither English nor French / language-base population",
+    "caveat": "Experimental. A relative ranking, not an estimate of how many people are misunderstood by AI: p is a ward-wide share, not broken down by language, and counts are rounded to 5.",
+    "scale_reference": {
+      "mode": "auto",
+      "ward": 5
+    }
   },
   "baseline": {
     "language": "English",
@@ -504,7 +512,39 @@
       },
       "tested_share": 0.0862,
       "untested_share": 0.0309,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 865,
+      "no_official_share": 0.02019,
+      "weighted": {
+        "index": {
+          "auto": 5.1,
+          "forced": 4.3
+        },
+        "index_ci": {
+          "auto": [
+            4.3,
+            6.1
+          ],
+          "forced": [
+            2.9,
+            6
+          ]
+        },
+        "rank": {
+          "auto": 11,
+          "forced": 11
+        },
+        "rank_range": {
+          "auto": [
+            11,
+            11
+          ],
+          "forced": [
+            11,
+            11
+          ]
+        }
+      }
     },
     {
       "ward": 2,
@@ -573,7 +613,39 @@
       },
       "tested_share": 0.1091,
       "untested_share": 0.0218,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 715,
+      "no_official_share": 0.0154,
+      "weighted": {
+        "index": {
+          "auto": 8.2,
+          "forced": 5.1
+        },
+        "index_ci": {
+          "auto": [
+            6.3,
+            10.3
+          ],
+          "forced": [
+            3.9,
+            6.5
+          ]
+        },
+        "rank": {
+          "auto": 10,
+          "forced": 10
+        },
+        "rank_range": {
+          "auto": [
+            10,
+            10
+          ],
+          "forced": [
+            10,
+            10
+          ]
+        }
+      }
     },
     {
       "ward": 3,
@@ -642,7 +714,39 @@
       },
       "tested_share": 0.1784,
       "untested_share": 0.0793,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 2345,
+      "no_official_share": 0.04176,
+      "weighted": {
+        "index": {
+          "auto": 37.4,
+          "forced": 21.6
+        },
+        "index_ci": {
+          "auto": [
+            27.6,
+            48.3
+          ],
+          "forced": [
+            16.2,
+            27.7
+          ]
+        },
+        "rank": {
+          "auto": 8,
+          "forced": 7
+        },
+        "rank_range": {
+          "auto": [
+            7,
+            8
+          ],
+          "forced": [
+            6,
+            8
+          ]
+        }
+      }
     },
     {
       "ward": 4,
@@ -711,7 +815,39 @@
       },
       "tested_share": 0.2398,
       "untested_share": 0.0442,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 2990,
+      "no_official_share": 0.04029,
+      "weighted": {
+        "index": {
+          "auto": 53.6,
+          "forced": 33.2
+        },
+        "index_ci": {
+          "auto": [
+            41.6,
+            66.7
+          ],
+          "forced": [
+            26.5,
+            40.2
+          ]
+        },
+        "rank": {
+          "auto": 4,
+          "forced": 4
+        },
+        "rank_range": {
+          "auto": [
+            3,
+            5
+          ],
+          "forced": [
+            3,
+            4
+          ]
+        }
+      }
     },
     {
       "ward": 5,
@@ -780,7 +916,39 @@
       },
       "tested_share": 0.2802,
       "untested_share": 0.0277,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 3675,
+      "no_official_share": 0.04726,
+      "weighted": {
+        "index": {
+          "auto": 100,
+          "forced": 64.3
+        },
+        "index_ci": {
+          "auto": [
+            70,
+            139.2
+          ],
+          "forced": [
+            45.5,
+            91.9
+          ]
+        },
+        "rank": {
+          "auto": 1,
+          "forced": 1
+        },
+        "rank_range": {
+          "auto": [
+            1,
+            2
+          ],
+          "forced": [
+            1,
+            2
+          ]
+        }
+      }
     },
     {
       "ward": 6,
@@ -849,7 +1017,39 @@
       },
       "tested_share": 0.2786,
       "untested_share": 0.0231,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 3250,
+      "no_official_share": 0.04303,
+      "weighted": {
+        "index": {
+          "auto": 98.1,
+          "forced": 56.3
+        },
+        "index_ci": {
+          "auto": [
+            74.4,
+            123.8
+          ],
+          "forced": [
+            46.1,
+            67.5
+          ]
+        },
+        "rank": {
+          "auto": 2,
+          "forced": 2
+        },
+        "rank_range": {
+          "auto": [
+            1,
+            2
+          ],
+          "forced": [
+            1,
+            2
+          ]
+        }
+      }
     },
     {
       "ward": 7,
@@ -918,7 +1118,39 @@
       },
       "tested_share": 0.24,
       "untested_share": 0.0373,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 3465,
+      "no_official_share": 0.04341,
+      "weighted": {
+        "index": {
+          "auto": 53.3,
+          "forced": 33.7
+        },
+        "index_ci": {
+          "auto": [
+            41.4,
+            65.9
+          ],
+          "forced": [
+            26.3,
+            41.6
+          ]
+        },
+        "rank": {
+          "auto": 5,
+          "forced": 3
+        },
+        "rank_range": {
+          "auto": [
+            3,
+            6
+          ],
+          "forced": [
+            3,
+            5
+          ]
+        }
+      }
     },
     {
       "ward": 8,
@@ -987,7 +1219,39 @@
       },
       "tested_share": 0.1788,
       "untested_share": 0.0231,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 2010,
+      "no_official_share": 0.02891,
+      "weighted": {
+        "index": {
+          "auto": 39,
+          "forced": 21.1
+        },
+        "index_ci": {
+          "auto": [
+            28.7,
+            50.4
+          ],
+          "forced": [
+            17,
+            25.2
+          ]
+        },
+        "rank": {
+          "auto": 7,
+          "forced": 8
+        },
+        "rank_range": {
+          "auto": [
+            7,
+            8
+          ],
+          "forced": [
+            6,
+            8
+          ]
+        }
+      }
     },
     {
       "ward": 9,
@@ -1056,7 +1320,39 @@
       },
       "tested_share": 0.1672,
       "untested_share": 0.0187,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 1310,
+      "no_official_share": 0.02296,
+      "weighted": {
+        "index": {
+          "auto": 27.2,
+          "forced": 14.3
+        },
+        "index_ci": {
+          "auto": [
+            19.6,
+            35.5
+          ],
+          "forced": [
+            11.6,
+            17.2
+          ]
+        },
+        "rank": {
+          "auto": 9,
+          "forced": 9
+        },
+        "rank_range": {
+          "auto": [
+            9,
+            9
+          ],
+          "forced": [
+            9,
+            9
+          ]
+        }
+      }
     },
     {
       "ward": 10,
@@ -1129,7 +1425,39 @@
         "Serbo-Croatian",
         "Ukrainian",
         "Italian"
-      ]
+      ],
+      "no_official_count": 1890,
+      "no_official_share": 0.0256,
+      "weighted": {
+        "index": {
+          "auto": 51.5,
+          "forced": 22.2
+        },
+        "index_ci": {
+          "auto": [
+            34.7,
+            70.5
+          ],
+          "forced": [
+            17.4,
+            27.3
+          ]
+        },
+        "rank": {
+          "auto": 6,
+          "forced": 6
+        },
+        "rank_range": {
+          "auto": [
+            3,
+            6
+          ],
+          "forced": [
+            6,
+            8
+          ]
+        }
+      }
     },
     {
       "ward": 11,
@@ -1198,7 +1526,39 @@
       },
       "tested_share": 0.2215,
       "untested_share": 0.0131,
-      "untested_unconfirmed_zero": []
+      "untested_unconfirmed_zero": [],
+      "no_official_count": 1790,
+      "no_official_share": 0.03001,
+      "weighted": {
+        "index": {
+          "auto": 55.7,
+          "forced": 29.2
+        },
+        "index_ci": {
+          "auto": [
+            40.5,
+            72.5
+          ],
+          "forced": [
+            23.6,
+            36
+          ]
+        },
+        "rank": {
+          "auto": 3,
+          "forced": 5
+        },
+        "rank_range": {
+          "auto": [
+            3,
+            5
+          ],
+          "forced": [
+            3,
+            5
+          ]
+        }
+      }
     }
   ]
 }

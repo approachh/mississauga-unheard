@@ -3,6 +3,12 @@
     "generated": "2026-11-08",
     "languages_reconciled": 20,
     "languages_with_ward_data": 20,
+    "official_language": {
+      "city_total": 24305,
+      "language_base": 712825,
+      "matches_neighbourhood_total": true,
+      "ward10_matches_neighbourhoods": true
+    },
     "summary_rows_checked": 220,
     "notes": [
       "ward 10: zero home speakers reported for Serbo-Croatian, Ukrainian, Italian",

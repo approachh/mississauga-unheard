@@ -30,6 +30,16 @@
 //
 // Languages without speech results are excluded from the score; the share of each ward's residents
 // who speak them is reported separately.
+//
+// Experimental accessibility-weighted view (published next to the index, never in its place):
+//
+//   weighted(w, m) = 100 × raw(w, m) × p(w) / max_w [raw(w, auto) × p(w)]      p = share of the ward's
+//                                                                              language base that knows
+//                                                                              neither English nor French
+//
+// It asks "where do hard-to-recognise languages overlap with residents who have no English or French
+// to fall back on?". It is a relative ranking, not an estimate of how many people the AI misunderstands:
+// p is a ward average and is not broken down by language. Recent immigrants are not used.
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -53,12 +63,16 @@ const harmonise = (name) => ALIASES[name.trim().toLowerCase()] ?? name.trim()
 const clips = onlyDataset(parseCsv(speechDir, 'speech_results.csv'), 'fleurs', 'speech_results.csv')
 const wards = JSON.parse(readFileSync(join(dataDir, 'census_ward_languages.json'), 'utf8')).sort((a, b) => a.ward - b.ward)
 const city = JSON.parse(readFileSync(join(dataDir, 'census_citywide_languages.json'), 'utf8'))
+const officialRows = JSON.parse(readFileSync(join(dataDir, 'census_official_language.json'), 'utf8')).sort((a, b) => a.ward - b.ward)
+if (officialRows.length !== 11) throw new Error('census_official_language.json must have 11 wards (run npm run data:census)')
 const sourcePath = join(speechDir, 'source.json')
 const source = existsSync(sourcePath) ? JSON.parse(readFileSync(sourcePath, 'utf8')) : null
 
 if (wards.length !== 11) throw new Error(`Expected 11 wards, found ${wards.length}`)
 const censusLanguages = Object.keys(wards[0].home_speakers)
-for (const w of wards) {
+for (const [i, w] of wards.entries()) {
+  if (officialRows[i].ward !== w.ward || officialRows[i].language_base !== w.population_language_base)
+    throw new Error(`Ward ${w.ward}: official-language file does not match the ward profile (run npm run data:census)`)
   if (!(w.population_language_base > 0)) throw new Error(`Ward ${w.ward}: no language-base population`)
   const keys = Object.keys(w.home_speakers)
   if (keys.length !== censusLanguages.length || !censusLanguages.every((l) => keys.includes(l)))
@@ -109,6 +123,13 @@ const point = Object.fromEntries(MODES.map((m) => [m, rawScores(errOf(m))]))
 const scaleRef = Math.max(...point.auto)
 const scaled = (raw) => (100 * raw) / scaleRef
 
+// Experimental view: each ward's score times its share of residents with no English or French.
+const noOfficial = officialRows.map((o) => o.share)
+const weigh = (raw) => raw.map((r, i) => r * noOfficial[i])
+const wPoint = Object.fromEntries(MODES.map((m) => [m, weigh(point[m])]))
+const wScaleRef = Math.max(...wPoint.auto)
+const wScaled = (raw) => (100 * raw) / wScaleRef
+
 // Seeded bootstrap (mulberry32)
 let seed = SEED
 const rand = () => {
@@ -123,7 +144,7 @@ const resampleMean = (v) => {
   for (let i = 0; i < v.length; i++) s += v[Math.floor(rand() * v.length)]
   return s / v.length
 }
-const boot = Object.fromEntries(MODES.map((m) => [m, { idx: wards.map(() => []), rank: wards.map(() => []) }]))
+const boot = Object.fromEntries(MODES.map((m) => [m, { idx: wards.map(() => []), rank: wards.map(() => []), widx: wards.map(() => []), wrank: wards.map(() => []) }]))
 for (let b = 0; b < RESAMPLES; b++) {
   for (const m of MODES) {
     const err = Object.fromEntries(tested.map((l) => [l, resampleMean(byLang.get(l)[m].cer)]))
@@ -133,6 +154,12 @@ for (let b = 0; b < RESAMPLES; b++) {
       boot[m].idx[i].push(scaled(r))
       boot[m].rank[i].push(rank[i])
     })
+    const wRaw = weigh(raw)
+    const wRank = ranksOf(wRaw)
+    wRaw.forEach((r, i) => {
+      boot[m].widx[i].push(wScaled(r))
+      boot[m].wrank[i].push(wRank[i])
+    })
   }
 }
 const interval = (v) => {
@@ -141,6 +168,7 @@ const interval = (v) => {
 }
 
 const rank = Object.fromEntries(MODES.map((m) => [m, ranksOf(point[m])]))
+const wRank = Object.fromEntries(MODES.map((m) => [m, ranksOf(wPoint[m])]))
 const neutralRank = Object.fromEntries(MODES.map((m) => [m, ranksOf(rawScores(errOf(m, 'neutral')))]))
 
 // ---------------------------------------------------------------- output
@@ -159,7 +187,7 @@ const out = {
       clips_used: tested.reduce((n, l) => n + MODES.reduce((k, m) => k + byLang.get(l)[m].cer.length, 0), 0),
       clips_dropped: dropped,
     },
-    census: 'census_ward_languages.json (2021 ward language profile)',
+    census: 'census_ward_languages.json (2021 ward language profile); census_official_language.json (2021 knowledge of official languages)',
   },
   method: {
     metric: 'cer',
@@ -168,6 +196,11 @@ const out = {
     scale_reference: { mode: 'auto', ward: wards[point.auto.indexOf(scaleRef)].ward, raw: round(scaleRef, 6) },
     bootstrap: { resamples: RESAMPLES, seed: SEED, interval: 0.95 },
     small_sample_threshold: SMALL_SAMPLE,
+  },
+  weighted_method: {
+    formula: 'Weighted(w, m) = 100 × Index raw(w, m) × p(w) / max over wards of the auto-detect weighted score, where p(w) = residents who know neither English nor French / language-base population',
+    caveat: 'Experimental. A relative ranking, not an estimate of how many people are misunderstood by AI: p is a ward-wide share, not broken down by language, and counts are rounded to 5.',
+    scale_reference: { mode: 'auto', ward: wards[wPoint.auto.indexOf(wScaleRef)].ward },
   },
   baseline: baseline
     ? { language: BASELINE, clips: baseline.auto.cer.length, cer: Object.fromEntries(MODES.map((m) => [m, round(mean(baseline[m].cer))])) }
@@ -214,6 +247,14 @@ const out = {
       tested_share: round(tested.reduce((s, l) => s + share(w, l), 0)),
       untested_share: round(untested.reduce((s, l) => s + share(w, l), 0)),
       untested_unconfirmed_zero: w.ward === CAUTION_WARD ? untested.filter((l) => w.home_speakers[l] === 0) : [],
+      no_official_count: officialRows[i].knows_neither,
+      no_official_share: round(noOfficial[i], 5),
+      weighted: {
+        index: Object.fromEntries(MODES.map((m) => [m, round(wScaled(wPoint[m][i]), 1)])),
+        index_ci: Object.fromEntries(MODES.map((m) => [m, interval(boot[m].widx[i]).map((x) => round(x, 1))])),
+        rank: Object.fromEntries(MODES.map((m) => [m, wRank[m][i]])),
+        rank_range: Object.fromEntries(MODES.map((m) => [m, interval(boot[m].wrank[i])])),
+      },
     }
   }),
 }
@@ -224,8 +265,8 @@ writeFileSync(join(dataDir, 'unheard_index.json'), JSON.stringify(out, null, 2) 
 console.log(`Unheard Index: ${tested.length} tested languages, ${untested.length} untested, ${out.source.speech.clips_used} clips${dropped ? `, ${dropped} dropped` : ''}`)
 if (speechOnly.length) console.log(`  Speech results without ward data (not scored): ${speechOnly.join(', ')}`)
 console.log(`  Untested: ${untested.join(', ')}  (${(100 * out.coverage.untested_share).toFixed(1)}% of residents, counts may overlap)`)
-console.log('  ward  auto (95%)          forced (95%)        rank  range  untested')
+console.log('  ward  auto (95%)          forced (95%)        rank  range  untested   | experimental weighted (auto): score  rank  range')
 for (const w of [...out.wards].sort((a, b) => a.rank.auto - b.rank.auto))
   console.log(
-    `  ${String(w.ward).padStart(4)}  ${w.index.auto.toFixed(1).padStart(5)} (${w.index_ci.auto.join('–').padEnd(11)})  ${w.index.forced.toFixed(1).padStart(5)} (${w.index_ci.forced.join('–').padEnd(11)})  ${String(w.rank.auto).padStart(4)}  ${w.rank_range.auto.join('–').padEnd(5)}  ${(100 * w.untested_share).toFixed(1)}%`,
+    `  ${String(w.ward).padStart(4)}  ${w.index.auto.toFixed(1).padStart(5)} (${w.index_ci.auto.join('–').padEnd(11)})  ${w.index.forced.toFixed(1).padStart(5)} (${w.index_ci.forced.join('–').padEnd(11)})  ${String(w.rank.auto).padStart(4)}  ${w.rank_range.auto.join('–').padEnd(5)}  ${(100 * w.untested_share).toFixed(1)}%   | ${w.weighted.index.auto.toFixed(1).padStart(5)}  ${String(w.weighted.rank.auto).padStart(4)}  ${w.weighted.rank_range.auto.join('–')}`,
   )

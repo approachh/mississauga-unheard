@@ -1,0 +1,68 @@
+[
+  {
+    "ward": 1,
+    "language_base": 42850,
+    "knows_neither": 865,
+    "share": 0.02019
+  },
+  {
+    "ward": 2,
+    "language_base": 46420,
+    "knows_neither": 715,
+    "share": 0.0154
+  },
+  {
+    "ward": 3,
+    "language_base": 56160,
+    "knows_neither": 2345,
+    "share": 0.04176
+  },
+  {
+    "ward": 4,
+    "language_base": 74220,
+    "knows_neither": 2990,
+    "share": 0.04029
+  },
+  {
+    "ward": 5,
+    "language_base": 77755,
+    "knows_neither": 3675,
+    "share": 0.04726
+  },
+  {
+    "ward": 6,
+    "language_base": 75535,
+    "knows_neither": 3250,
+    "share": 0.04303
+  },
+  {
+    "ward": 7,
+    "language_base": 79825,
+    "knows_neither": 3465,
+    "share": 0.04341
+  },
+  {
+    "ward": 8,
+    "language_base": 69530,
+    "knows_neither": 2010,
+    "share": 0.02891
+  },
+  {
+    "ward": 9,
+    "language_base": 57045,
+    "knows_neither": 1310,
+    "share": 0.02296
+  },
+  {
+    "ward": 10,
+    "language_base": 73830,
+    "knows_neither": 1890,
+    "share": 0.0256
+  },
+  {
+    "ward": 11,
+    "language_base": 59655,
+    "knows_neither": 1790,
+    "share": 0.03001
+  }
+]

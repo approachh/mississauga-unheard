@@ -14,6 +14,8 @@
 // - census_summary.csv is used only to verify the other files; nothing is read from it.
 // - Language names are harmonised ("Mandarin Chinese" -> "Mandarin").
 // - Values are copied as published; nothing is imputed.
+// - official_language_knowledge_2021.csv (residents who know neither English nor French) comes from the
+//   same census tables as the ward profile; every row is verified here before it is published (see 4).
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
@@ -90,10 +92,48 @@ const coverage = parseCsv('language_coverage_validated.csv').map((r) => {
   }
 })
 
+// 4. Knowledge of official languages (2021): residents who cannot conduct a conversation in English or French.
+//    Verified against the ward profile (same denominator) and the neighbourhood table (same city total).
+//    A failed check stops the build: this figure is published as a headline number.
+const officialRaw = parseCsv('official_language_knowledge_2021.csv')
+const officialMeta = JSON.parse(readFileSync(join(inDir, 'official_language_knowledge_2021.meta.json'), 'utf8'))
+const official = officialRaw
+  .map((r) => ({
+    ward: num(r.ward, 'official ward'),
+    language_base: num(r.population_language_base, `official ward ${r.ward} language base`),
+    knows_neither: num(r.knows_neither_english_nor_french, `official ward ${r.ward} count`),
+    published_pct: num(r.pct_knows_neither_english_nor_french, `official ward ${r.ward} pct`),
+  }))
+  .sort((a, b) => a.ward - b.ward)
+if (official.length !== wards.length || official.some((o, i) => o.ward !== wards[i].ward || o.ward !== i + 1))
+  throw new Error('official_language_knowledge_2021.csv must have exactly one row for each of the 11 wards')
+for (const o of official) {
+  const w = wards.find((x) => x.ward === o.ward)
+  if (o.language_base !== w.population_language_base)
+    throw new Error(`official-language ward ${o.ward}: language base ${o.language_base} differs from the ward profile (${w.population_language_base})`)
+  if (!(o.knows_neither >= 0 && o.knows_neither <= o.language_base)) throw new Error(`official-language ward ${o.ward}: count out of range`)
+  const pct = Math.round((o.knows_neither / o.language_base) * 10000) / 100
+  if (Math.abs(pct - o.published_pct) > 0.0051) throw new Error(`official-language ward ${o.ward}: published ${o.published_pct}% but ${o.knows_neither}/${o.language_base} = ${pct}%`)
+}
+const officialTotal = official.reduce((n, o) => n + o.knows_neither, 0)
+const officialBase = official.reduce((n, o) => n + o.language_base, 0)
+if (officialTotal !== officialMeta.neighbourhood_totals.knows_neither_english_nor_french)
+  throw new Error(`official-language city total ${officialTotal} differs from the neighbourhood table total ${officialMeta.neighbourhood_totals.knows_neither_english_nor_french}`)
+const w10Official = official.find((o) => o.ward === 10)
+const w10Implied = officialMeta.neighbourhood_totals.knows_neither_english_nor_french - official.filter((o) => o.ward !== 10).reduce((n, o) => n + o.knows_neither, 0)
+if (w10Implied !== w10Official.knows_neither) throw new Error(`Ward 10: ${w10Official.knows_neither} published but the neighbourhoods imply ${w10Implied}`)
+const officialOut = official.map((o) => ({
+  ward: o.ward,
+  language_base: o.language_base,
+  knows_neither: o.knows_neither,
+  share: Math.round((o.knows_neither / o.language_base) * 100000) / 100000,
+}))
+
 const write = (name, data) => writeFileSync(join(outDir, name), JSON.stringify(data, null, 2) + '\n')
 write('census_citywide_languages.json', citywide)
 write('census_ward_languages.json', wards)
 write('speech_dataset_coverage.json', coverage)
+write('census_official_language.json', officialOut)
 
 // ---------------------------------------------------------------------------
 // Consistency report (printed only)
@@ -101,6 +141,7 @@ write('speech_dataset_coverage.json', coverage)
 const issues = []
 const note = (msg) => issues.push(msg)
 console.log(`citywide: ${citywide.length} languages · wards: ${wards.length} · coverage: ${coverage.length} rows`)
+console.log(`official languages: ${officialTotal} residents know neither English nor French (${((100 * officialTotal) / officialBase).toFixed(2)}% of ${officialBase}); matches the neighbourhood table; Ward 10 ${w10Official.knows_neither} matches the neighbourhoods`)
 
 // a) Ward sums vs citywide
 const cityBy = new Map(citywide.map((c) => [c.language, c]))
@@ -192,6 +233,12 @@ write('census_checks.json', [
     generated: new Date().toISOString().slice(0, 10),
     languages_reconciled: wardLangs.filter((l) => cityBy.get(l)?.home_speakers === wards.reduce((n, w) => n + w.home_speakers[l], 0)).length,
     languages_with_ward_data: wardLangs.length,
+    official_language: {
+      city_total: officialTotal,
+      language_base: officialBase,
+      matches_neighbourhood_total: true,
+      ward10_matches_neighbourhoods: true,
+    },
     summary_rows_checked: existsSync(join(inDir, 'census_summary.csv')) ? parseCsv('census_summary.csv').length : 0,
     notes: issues,
   },
