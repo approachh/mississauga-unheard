@@ -1,0 +1,9 @@
+{
+  "ref": "origin/feature/speech-evaluation",
+  "commit": "64b7a05b41ff5352c187eff2f34da42014272e39",
+  "files": [
+    "analysis/outputs/speech_results.csv",
+    "analysis/outputs/speech_summary.csv"
+  ],
+  "pulled": "2026-11-08"
+}

@@ -9,7 +9,11 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "data:census": "node scripts/convert-census.mjs",
-    "data:speech": "node scripts/convert-speech.mjs"
+    "data:speech": "node scripts/convert-speech.mjs",
+    "data:wards": "node scripts/convert-wards.mjs",
+    "data:speech:pull": "node scripts/pull-speech.mjs",
+    "data:index": "node scripts/build-unheard-index.mjs",
+    "data:accents": "node scripts/convert-accents.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.70.0",

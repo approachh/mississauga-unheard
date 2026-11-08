@@ -1,9 +1,9 @@
 import { Users } from 'lucide-react'
-import { useMemo, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { DeepDive } from '../components/community/DeepDive'
 import { Discovery } from '../components/community/Discovery'
-import { LanguageExplorer } from '../components/community/LanguageExplorer'
+import { MapExplorer } from '../components/community/MapExplorer'
 import { SourceAttribution } from '../components/community/SourceAttribution'
 import { DataIssues } from '../components/DataIssues'
 import { Code, EmptyState, Skeleton } from '../components/EmptyState'
@@ -18,8 +18,10 @@ import {
   loadLanguageResults,
   loadSpeechCoverage,
   loadWardProfiles,
+  loadUnheardIndex,
+  loadWardShapes,
 } from '../services/dataService'
-import type { CitywideLanguage } from '../types/data'
+import type { CitywideLanguage, UnheardIndex, WardShapes } from '../types/data'
 
 /**
  * Community Intelligence as a story in chapters: the finding, one language at a time,
@@ -37,15 +39,34 @@ export function CommunityIntelligence() {
     [city.data, wards.data, coverage.data, speech.data, speech.isSample],
   )
 
+  const [shapes, setShapes] = useState<WardShapes | null>(null)
+  // undefined while loading, null if the index file is missing or invalid
+  const [index, setIndex] = useState<UnheardIndex | null | undefined>(undefined)
+  useEffect(() => {
+    let live = true
+    loadWardShapes().then((s) => {
+      if (live) setShapes(s)
+    })
+    loadUnheardIndex().then((i) => {
+      if (live) setIndex(i)
+    })
+    return () => {
+      live = false
+    }
+  }, [])
+
   const [params, setParams] = useSearchParams()
-  const selected = model.ranking.find((r) => langKey(r.language) === params.get('lang')) ?? model.ranking[0]
+  const langParam = params.get('lang')
+  const selected = model.ranking.find((r) => langKey(r.language) === langParam) ?? model.ranking[0]
+  // The map opens on the Unheard Index; choosing a language (here or elsewhere on the page) switches to it.
+  const view = index && !langParam ? 'index' : 'language'
 
   const select = (lang: CitywideLanguage, scroll = false) => {
     setParams({ lang: langKey(lang.language) }, { replace: true, preventScrollReset: true })
     if (scroll) document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  const loading = city.status === 'loading' || wards.status === 'loading' || coverage.status === 'loading'
+  const loading = city.status === 'loading' || wards.status === 'loading' || coverage.status === 'loading' || index === undefined
   const w10 = model.wards.find((w) => w.ward === CAUTION_WARD)
   const w10Zeros = w10 ? Object.entries(w10.home_speakers).filter(([, n]) => n === 0).map(([l]) => l) : []
 
@@ -88,21 +109,45 @@ export function CommunityIntelligence() {
         </Container>
       ) : (
         <>
+          <Chapter tone="ink" size="l" id="explore" label="Ward map" className="map-atmosphere overflow-hidden">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+              {view === 'index' ? (
+                <h2 key="index" className="reveal display-m swap-in max-w-[18ch]">
+                  The <span className="text-[rgb(176_228_255)]">Unheard</span> Index.
+                </h2>
+              ) : (
+                <h2 key="language" className="reveal display-m max-w-[18ch]">
+                  Where <span key={selected.language} className="swap-in inline-block text-[rgb(176_228_255)]">{selected.language}</span> speakers
+                  live.
+                </h2>
+              )}
+              <p className="max-w-[30ch] text-[14px] leading-relaxed text-white/45">
+                {view === 'index'
+                  ? 'Which wards to prioritise for speech-AI accessibility. Choose a ward, or a language to see where it is spoken.'
+                  : 'Choose a language, then a ward. City of Mississauga ward boundaries, 2021 census.'}
+              </p>
+            </div>
+            <MapExplorer
+              model={model}
+              shapes={shapes}
+              index={index ?? null}
+              view={view}
+              selected={selected}
+              onSelect={(l) => select(l)}
+              onIndex={() => setParams({}, { replace: true, preventScrollReset: true })}
+            />
+          </Chapter>
+
           {model.assessed.length > 0 && (
-            <Chapter size="m" className="pt-4 sm:pt-8" label="The finding">
+            <Chapter size="l" label="The finding">
               <Discovery model={model} onSelect={(l) => select(l, true)} />
             </Chapter>
           )}
 
-          <Chapter tone="wash" size="l" id="explore" label="Explore a language">
-            <h2 className="reveal display-m mb-14 max-w-[16ch] sm:mb-20">One language at a time.</h2>
-            <LanguageExplorer model={model} selected={selected} onSelect={(l) => select(l)} />
-          </Chapter>
-
           <Chapter tone="ink" size="l" label="What we don't know yet">
             <h2 className="reveal display-m max-w-[14ch]">What we don’t know yet.</h2>
             <ul className="mt-14 grid gap-x-14 gap-y-12 sm:grid-cols-2">
-              <Unknown title="How well AI understands them">Accuracy tests are still running.</Unknown>
+              <Unknown title="How AI handles real requests">Results so far use a few read-aloud clips per language, not real service calls.</Unknown>
               <Unknown title="Who relies on their home language">The census doesn’t say who also speaks English.</Unknown>
               <Unknown title="Exact head counts">Adding languages can count one person twice.</Unknown>
               {w10Zeros.length > 0 ? (

@@ -72,10 +72,15 @@ export function useRecorder(onComplete: (blob: Blob) => void, meterRef: RefObjec
         analyser.getByteFrequencyData(buf)
         const bars = meterRef.current?.querySelectorAll<HTMLElement>('[data-bar]')
         if (bars?.length) {
-          const per = Math.floor(buf.length / 2 / bars.length) || 1 // voice energy sits in the lower half
+          // Voice energy sits in the lower half of the spectrum. Mirror it: lowest frequencies in the
+          // middle, rising towards both edges, so the waveform stays symmetric around the record button.
+          const usable = Math.floor(buf.length / 2)
+          const per = Math.max(1, Math.floor(usable / (bars.length / 2)))
+          const mid = (bars.length - 1) / 2
           bars.forEach((bar, i) => {
+            const from = Math.min(usable - per, Math.floor((Math.abs(i - mid) / mid) * (usable - per)))
             let sum = 0
-            for (let k = 0; k < per; k++) sum += buf[i * per + k]
+            for (let k = 0; k < per; k++) sum += buf[from + k]
             bar.style.transform = `scaleY(${Math.max(0.08, Math.min(1, sum / per / 160))})`
           })
         }

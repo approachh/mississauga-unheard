@@ -1,0 +1,1204 @@
+{
+  "generated": "2026-11-08",
+  "source": {
+    "speech": {
+      "file": "analysis/outputs/speech_results.csv",
+      "ref": "origin/feature/speech-evaluation",
+      "commit": "64b7a05b41ff5352c187eff2f34da42014272e39",
+      "dataset": "FLEURS read speech",
+      "clips_used": 480,
+      "clips_dropped": 0
+    },
+    "census": "census_ward_languages.json (2021 ward language profile)"
+  },
+  "method": {
+    "metric": "cer",
+    "formula": "Index(w, m) = 100 × Σ share(w, l) × CER(l, m) / max over wards of the auto-detect score",
+    "share_denominator": "population_language_base",
+    "scale_reference": {
+      "mode": "auto",
+      "ward": 6,
+      "raw": 0.025064
+    },
+    "bootstrap": {
+      "resamples": 2000,
+      "seed": 20211,
+      "interval": 0.95
+    },
+    "small_sample_threshold": 20
+  },
+  "baseline": {
+    "language": "English",
+    "clips": 5,
+    "cer": {
+      "auto": 0.0017,
+      "forced": 0.0017
+    }
+  },
+  "languages": [
+    {
+      "language": "Urdu",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 22535,
+      "cer": {
+        "auto": 0.2402,
+        "forced": 0.0403
+      },
+      "cer_ci": {
+        "auto": [
+          0.1281,
+          0.3702
+        ],
+        "forced": [
+          0.0273,
+          0.0564
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.2402,
+        "forced": 0.0403
+      },
+      "pct_language_mismatch": {
+        "auto": 20,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Cantonese",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 10765,
+      "cer": {
+        "auto": 0.2337,
+        "forced": 0.2102
+      },
+      "cer_ci": {
+        "auto": [
+          0.1768,
+          0.2893
+        ],
+        "forced": [
+          0.1465,
+          0.2747
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0283,
+        "forced": 0.0309
+      },
+      "pct_language_mismatch": {
+        "auto": 100,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Punjabi",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 15025,
+      "cer": {
+        "auto": 0.0891,
+        "forced": 0.0717
+      },
+      "cer_ci": {
+        "auto": [
+          0.0347,
+          0.165
+        ],
+        "forced": [
+          0.0326,
+          0.1339
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0891,
+        "forced": 0.0717
+      },
+      "pct_language_mismatch": {
+        "auto": 5,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Hindi",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 6640,
+      "cer": {
+        "auto": 0.046,
+        "forced": 0.0468
+      },
+      "cer_ci": {
+        "auto": [
+          0.0277,
+          0.0659
+        ],
+        "forced": [
+          0.0275,
+          0.0688
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.046,
+        "forced": 0.0468
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Tamil",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 7420,
+      "cer": {
+        "auto": 0.0324,
+        "forced": 0.0324
+      },
+      "cer_ci": {
+        "auto": [
+          0.0118,
+          0.0558
+        ],
+        "forced": [
+          0.0118,
+          0.0558
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0324,
+        "forced": 0.0324
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Mandarin",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 17730,
+      "cer": {
+        "auto": 0.0266,
+        "forced": 0.026
+      },
+      "cer_ci": {
+        "auto": [
+          0.0146,
+          0.0401
+        ],
+        "forced": [
+          0.0141,
+          0.0392
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0266,
+        "forced": 0.026
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Arabic",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 20570,
+      "cer": {
+        "auto": 0.0264,
+        "forced": 0.0264
+      },
+      "cer_ci": {
+        "auto": [
+          0.0018,
+          0.054
+        ],
+        "forced": [
+          0.0018,
+          0.054
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0264,
+        "forced": 0.0264
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Vietnamese",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 7315,
+      "cer": {
+        "auto": 0.02,
+        "forced": 0.02
+      },
+      "cer_ci": {
+        "auto": [
+          0,
+          0.0459
+        ],
+        "forced": [
+          0,
+          0.0459
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.02,
+        "forced": 0.02
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Polish",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 12565,
+      "cer": {
+        "auto": 0.0186,
+        "forced": 0.0186
+      },
+      "cer_ci": {
+        "auto": [
+          0,
+          0.0558
+        ],
+        "forced": [
+          0,
+          0.0558
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0186,
+        "forced": 0.0186
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Tagalog",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 10695,
+      "cer": {
+        "auto": 0.0138,
+        "forced": 0.0138
+      },
+      "cer_ci": {
+        "auto": [
+          0,
+          0.0349
+        ],
+        "forced": [
+          0,
+          0.0349
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0138,
+        "forced": 0.0138
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Spanish",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 9360,
+      "cer": {
+        "auto": 0.0121,
+        "forced": 0.0121
+      },
+      "cer_ci": {
+        "auto": [
+          0,
+          0.0321
+        ],
+        "forced": [
+          0,
+          0.0321
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0121,
+        "forced": 0.0121
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Portuguese",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 6000,
+      "cer": {
+        "auto": 0.0052,
+        "forced": 0.0052
+      },
+      "cer_ci": {
+        "auto": [
+          0,
+          0.0156
+        ],
+        "forced": [
+          0,
+          0.0156
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0052,
+        "forced": 0.0052
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Gujarati",
+      "clips": 5,
+      "small_sample": true,
+      "citywide_speakers": 4345,
+      "cer": {
+        "auto": 0.0016,
+        "forced": 0.0016
+      },
+      "cer_ci": {
+        "auto": [
+          0,
+          0.0049
+        ],
+        "forced": [
+          0,
+          0.0049
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0016,
+        "forced": 0.0016
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    }
+  ],
+  "untested": [
+    {
+      "language": "Serbo-Croatian",
+      "citywide_speakers": 4240
+    },
+    {
+      "language": "Russian",
+      "citywide_speakers": 3815
+    },
+    {
+      "language": "Ukrainian",
+      "citywide_speakers": 3235
+    },
+    {
+      "language": "Korean",
+      "citywide_speakers": 3075
+    },
+    {
+      "language": "Italian",
+      "citywide_speakers": 2535
+    },
+    {
+      "language": "Bengali",
+      "citywide_speakers": 2515
+    },
+    {
+      "language": "Malayalam",
+      "citywide_speakers": 2200
+    }
+  ],
+  "coverage": {
+    "tested_share": 0.2118,
+    "untested_share": 0.0303,
+    "note": "Sums of home-language counts over the language-base population; one person can be counted twice."
+  },
+  "wards": [
+    {
+      "ward": 1,
+      "language_base": 42850,
+      "index": {
+        "auto": 11.8,
+        "forced": 9.3
+      },
+      "index_ci": {
+        "auto": [
+          8.5,
+          15.9
+        ],
+        "forced": [
+          6.3,
+          13.2
+        ]
+      },
+      "rank": {
+        "auto": 11,
+        "forced": 11
+      },
+      "rank_range": {
+        "auto": [
+          11,
+          11
+        ],
+        "forced": [
+          11,
+          11
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 11,
+        "forced": 11
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.221
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.209
+          },
+          {
+            "language": "Polish",
+            "share_of_score": 0.148
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.254
+          },
+          {
+            "language": "Polish",
+            "share_of_score": 0.189
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.121
+          }
+        ]
+      },
+      "tested_share": 0.0862,
+      "untested_share": 0.0309,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 2,
+      "language_base": 46420,
+      "index": {
+        "auto": 24.1,
+        "forced": 14.7
+      },
+      "index_ci": {
+        "auto": [
+          17.9,
+          31
+        ],
+        "forced": [
+          11.1,
+          18.5
+        ]
+      },
+      "rank": {
+        "auto": 10,
+        "forced": 10
+      },
+      "rank_range": {
+        "auto": [
+          10,
+          10
+        ],
+        "forced": [
+          10,
+          10
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 10,
+        "forced": 10
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.429
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.2
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.091
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.296
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.146
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.118
+          }
+        ]
+      },
+      "tested_share": 0.1091,
+      "untested_share": 0.0218,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 3,
+      "language_base": 56160,
+      "index": {
+        "auto": 40.6,
+        "forced": 22.6
+      },
+      "index_ci": {
+        "auto": [
+          29.1,
+          53.7
+        ],
+        "forced": [
+          17,
+          29.3
+        ]
+      },
+      "rank": {
+        "auto": 9,
+        "forced": 9
+      },
+      "rank_range": {
+        "auto": [
+          9,
+          9
+        ],
+        "forced": [
+          9,
+          9
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 9,
+        "forced": 9
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.498
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.186
+          },
+          {
+            "language": "Polish",
+            "share_of_score": 0.068
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.3
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.15
+          },
+          {
+            "language": "Polish",
+            "share_of_score": 0.122
+          }
+        ]
+      },
+      "tested_share": 0.1784,
+      "untested_share": 0.0793,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 4,
+      "language_base": 74220,
+      "index": {
+        "auto": 59.1,
+        "forced": 36.1
+      },
+      "index_ci": {
+        "auto": [
+          44.8,
+          74.9
+        ],
+        "forced": [
+          29,
+          43.8
+        ]
+      },
+      "rank": {
+        "auto": 6,
+        "forced": 5
+      },
+      "rank_range": {
+        "auto": [
+          5,
+          6
+        ],
+        "forced": [
+          4,
+          5
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 6,
+        "forced": 5
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.425
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.239
+          },
+          {
+            "language": "Arabic",
+            "share_of_score": 0.074
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.352
+          },
+          {
+            "language": "Arabic",
+            "share_of_score": 0.122
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.117
+          }
+        ]
+      },
+      "tested_share": 0.2398,
+      "untested_share": 0.0442,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 5,
+      "language_base": 77755,
+      "index": {
+        "auto": 92.2,
+        "forced": 59.7
+      },
+      "index_ci": {
+        "auto": [
+          64.4,
+          126.6
+        ],
+        "forced": [
+          43,
+          85.3
+        ]
+      },
+      "rank": {
+        "auto": 2,
+        "forced": 1
+      },
+      "rank_range": {
+        "auto": [
+          1,
+          4
+        ],
+        "forced": [
+          1,
+          2
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 1,
+        "forced": 1
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Punjabi",
+            "share_of_score": 0.402
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.309
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.165
+          }
+        ],
+        "forced": [
+          {
+            "language": "Punjabi",
+            "share_of_score": 0.499
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.229
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.08
+          }
+        ]
+      },
+      "tested_share": 0.2802,
+      "untested_share": 0.0277,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 6,
+      "language_base": 75535,
+      "index": {
+        "auto": 100,
+        "forced": 57.3
+      },
+      "index_ci": {
+        "auto": [
+          74.9,
+          126.8
+        ],
+        "forced": [
+          46.8,
+          68.7
+        ]
+      },
+      "rank": {
+        "auto": 1,
+        "forced": 2
+      },
+      "rank_range": {
+        "auto": [
+          1,
+          2
+        ],
+        "forced": [
+          1,
+          2
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 3,
+        "forced": 2
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.456
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.311
+          },
+          {
+            "language": "Punjabi",
+            "share_of_score": 0.08
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.488
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.133
+          },
+          {
+            "language": "Punjabi",
+            "share_of_score": 0.112
+          }
+        ]
+      },
+      "tested_share": 0.2786,
+      "untested_share": 0.0231,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 7,
+      "language_base": 79825,
+      "index": {
+        "auto": 54.5,
+        "forced": 34
+      },
+      "index_ci": {
+        "auto": [
+          41.3,
+          69.4
+        ],
+        "forced": [
+          26.6,
+          42
+        ]
+      },
+      "rank": {
+        "auto": 7,
+        "forced": 6
+      },
+      "rank_range": {
+        "auto": [
+          6,
+          8
+        ],
+        "forced": [
+          5,
+          7
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 7,
+        "forced": 6
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.413
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.231
+          },
+          {
+            "language": "Arabic",
+            "share_of_score": 0.091
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.334
+          },
+          {
+            "language": "Arabic",
+            "share_of_score": 0.146
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.111
+          }
+        ]
+      },
+      "tested_share": 0.24,
+      "untested_share": 0.0373,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 8,
+      "language_base": 69530,
+      "index": {
+        "auto": 59.9,
+        "forced": 31.9
+      },
+      "index_ci": {
+        "auto": [
+          43.7,
+          77.9
+        ],
+        "forced": [
+          25.9,
+          38.3
+        ]
+      },
+      "rank": {
+        "auto": 5,
+        "forced": 7
+      },
+      "rank_range": {
+        "auto": [
+          5,
+          7
+        ],
+        "forced": [
+          6,
+          7
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 5,
+        "forced": 7
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.518
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.248
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.063
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.417
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.163
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.115
+          }
+        ]
+      },
+      "tested_share": 0.1788,
+      "untested_share": 0.0231,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 9,
+      "language_base": 57045,
+      "index": {
+        "auto": 52.5,
+        "forced": 27.4
+      },
+      "index_ci": {
+        "auto": [
+          37.8,
+          69
+        ],
+        "forced": [
+          22.3,
+          32.7
+        ]
+      },
+      "rank": {
+        "auto": 8,
+        "forced": 8
+      },
+      "rank_range": {
+        "auto": [
+          7,
+          8
+        ],
+        "forced": [
+          8,
+          8
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 8,
+        "forced": 8
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.541
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.229
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.064
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.395
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.174
+          },
+          {
+            "language": "Mandarin",
+            "share_of_score": 0.12
+          }
+        ]
+      },
+      "tested_share": 0.1672,
+      "untested_share": 0.0187,
+      "untested_unconfirmed_zero": []
+    },
+    {
+      "ward": 10,
+      "language_base": 73830,
+      "index": {
+        "auto": 88.9,
+        "forced": 38.1
+      },
+      "index_ci": {
+        "auto": [
+          60.1,
+          121.7
+        ],
+        "forced": [
+          30.3,
+          46.9
+        ]
+      },
+      "rank": {
+        "auto": 3,
+        "forced": 4
+      },
+      "rank_range": {
+        "auto": [
+          2,
+          4
+        ],
+        "forced": [
+          3,
+          5
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 2,
+        "forced": 4
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.66
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.145
+          },
+          {
+            "language": "Arabic",
+            "share_of_score": 0.068
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.304
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.259
+          },
+          {
+            "language": "Arabic",
+            "share_of_score": 0.159
+          }
+        ]
+      },
+      "tested_share": 0.2331,
+      "untested_share": 0.0165,
+      "untested_unconfirmed_zero": [
+        "Serbo-Croatian",
+        "Ukrainian",
+        "Italian"
+      ]
+    },
+    {
+      "ward": 11,
+      "language_base": 59655,
+      "index": {
+        "auto": 80.9,
+        "forced": 42.7
+      },
+      "index_ci": {
+        "auto": [
+          58.9,
+          105.8
+        ],
+        "forced": [
+          34.9,
+          52.7
+        ]
+      },
+      "rank": {
+        "auto": 4,
+        "forced": 3
+      },
+      "rank_range": {
+        "auto": [
+          3,
+          4
+        ],
+        "forced": [
+          3,
+          4
+        ]
+      },
+      "rank_script_neutral": {
+        "auto": 4,
+        "forced": 3
+      },
+      "drivers": {
+        "auto": [
+          {
+            "language": "Urdu",
+            "share_of_score": 0.508
+          },
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.211
+          },
+          {
+            "language": "Punjabi",
+            "share_of_score": 0.14
+          }
+        ],
+        "forced": [
+          {
+            "language": "Cantonese",
+            "share_of_score": 0.36
+          },
+          {
+            "language": "Punjabi",
+            "share_of_score": 0.214
+          },
+          {
+            "language": "Urdu",
+            "share_of_score": 0.161
+          }
+        ]
+      },
+      "tested_share": 0.2215,
+      "untested_share": 0.0131,
+      "untested_unconfirmed_zero": []
+    }
+  ]
+}

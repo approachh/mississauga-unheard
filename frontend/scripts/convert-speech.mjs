@@ -8,63 +8,23 @@
 //   speech_summary.csv  -> language_results.json      (one row per language x mode)
 //   speech_results.csv  -> transcription_results.json (one row per clip x mode)
 //
+// Only the FLEURS rows are used; the Speech Accent Archive rows go through convert-accents.mjs.
+//
 // Rules:
 // - Values are copied as computed by the analysis pipeline; nothing is re-scored here.
 // - Empty WER (languages written without spaces, e.g. Chinese) stays null: CER is the metric there.
 // - For those languages the transcript text is split into characters so the said/heard view can
 //   align character by character. This only affects display, never the metrics.
 
-import { readFileSync, writeFileSync } from 'node:fs'
+import { writeFileSync } from 'node:fs'
 import { dirname, join, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { onlyDataset, parseCsv as readCsv } from './lib/csv.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const inDir = process.argv[2] ?? join(here, '..', 'data', 'speech')
 const outDir = process.argv[3] ?? join(here, '..', 'public', 'data')
-
-/** RFC 4180 CSV parser: quoted fields, escaped quotes, commas and newlines inside quotes. */
-function parseCsv(file) {
-  const text = readFileSync(join(inDir, file), 'utf8').replace(/^﻿/, '')
-  const rows = []
-  let row = []
-  let field = ''
-  let quoted = false
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i]
-    if (quoted) {
-      if (c === '"' && text[i + 1] === '"') {
-        field += '"'
-        i++
-      } else if (c === '"') {
-        quoted = false
-      } else {
-        field += c
-      }
-    } else if (c === '"') {
-      quoted = true
-    } else if (c === ',') {
-      row.push(field)
-      field = ''
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++
-      row.push(field)
-      field = ''
-      if (row.some((v) => v !== '')) rows.push(row)
-      row = []
-    } else {
-      field += c
-    }
-  }
-  if (field !== '' || row.length) {
-    row.push(field)
-    rows.push(row)
-  }
-  const [header, ...data] = rows
-  return data.map((r, n) => {
-    if (r.length !== header.length) throw new Error(`${file} row ${n + 2}: ${r.length} fields, expected ${header.length}`)
-    return Object.fromEntries(header.map((h, i) => [h.trim(), r[i]]))
-  })
-}
+const parseCsv = (file) => readCsv(inDir, file)
 
 const num = (v) => (v === '' || v === undefined ? null : Number.isFinite(Number(v)) ? Number(v) : null)
 const bool = (v) => /^true$/i.test(v)
@@ -74,8 +34,9 @@ const harmonise = (name) => ALIASES[name.trim().toLowerCase()] ?? name.trim()
 /** Characters separated by spaces (punctuation and spaces removed) for character-level alignment. */
 const charSpaced = (s) => [...s.replace(/[\s\p{P}\p{S}]/gu, '')].join(' ')
 
-const results = parseCsv('speech_results.csv')
-const summary = parseCsv('speech_summary.csv')
+// FLEURS only: accent recordings (data:accents) must never reach the language results.
+const results = onlyDataset(parseCsv('speech_results.csv'), 'fleurs', 'speech_results.csv')
+const summary = onlyDataset(parseCsv('speech_summary.csv'), 'fleurs', 'speech_summary.csv')
 
 // ISO 639-1 code per language, from the per-clip file.
 const codeOf = new Map(results.map((r) => [harmonise(r.language), r.iso639_1]))
@@ -114,6 +75,7 @@ const transcriptionResults = results.map((r) => {
     ...(num(r.cer) !== null ? { cer: num(r.cer) } : {}),
     detected_language: r.detected_language || null,
     script_mismatch: bool(r.script_mismatch),
+    language_mismatch: bool(r.language_mismatch),
     char_level: charLevel,
   }
 })

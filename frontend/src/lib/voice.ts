@@ -33,8 +33,17 @@ export const VOICE_LANGUAGES: { code: string; name: string }[] = [
   { code: 'ml', name: 'Malayalam' },
 ]
 
-export const languageName = (code: string | null | undefined) =>
-  VOICE_LANGUAGES.find((l) => l.code === code)?.name ?? (code ? code.toUpperCase() : 'Unknown')
+/** The service reports ISO 639-3 codes (e.g. "hin"); the picker uses ISO 639-1 (e.g. "hi"). */
+const ISO3: Record<string, string> = {
+  eng: 'en', ara: 'ar', urd: 'ur', zho: 'zh', cmn: 'zh', pan: 'pa', pol: 'pl', yue: 'yue', fil: 'fil', tgl: 'fil',
+  spa: 'es', vie: 'vi', tam: 'ta', hin: 'hi', por: 'pt', guj: 'gu', hrv: 'hr', srp: 'sr', rus: 'ru', ukr: 'uk',
+  kor: 'ko', ben: 'bn', ita: 'it', mal: 'ml',
+}
+
+export const languageName = (code: string | null | undefined) => {
+  const c = code ? (ISO3[code.toLowerCase()] ?? code) : code
+  return VOICE_LANGUAGES.find((l) => l.code === c)?.name ?? (code ? code.toUpperCase() : 'Unknown')
+}
 
 export interface TranscriptionResponse {
   text: string

@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react'
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { DataIssues } from '../components/DataIssues'
 import { Disclosure } from '../components/Disclosure'
 import { Code, Skeleton } from '../components/EmptyState'
@@ -7,23 +7,42 @@ import { ErrorRateChart, type Metric } from '../components/ErrorRateChart'
 import { Flag } from '../components/Flag'
 import { Notes } from '../components/Notes'
 import { Segmented } from '../components/Segmented'
-import { CountUp } from '../components/story/CountUp'
-import { Chapter, Container, Waveform, Words } from '../components/story/Story'
+import { AccentDetails, AccentSection } from '../components/speech/Accents'
+import { Compare } from '../components/speech/Compare'
+import { LanguageGap } from '../components/speech/LanguageGap'
+import { Chapter, Container, Words } from '../components/story/Story'
 import { DiffLegend, ProofLines } from '../components/TranscriptDiff'
 import { useDataset } from '../hooks/useDataset'
+import { buildPairs, FULL_TEST_CLIPS, summarySentence } from '../lib/compare'
 import { diffWords, summarise } from '../lib/diff'
 import type { FlagKind } from '../lib/flags'
-import { int, pct, titleCase } from '../lib/format'
-import { inMode, meanOf, MODE_LABEL, modesOf, orMinus, PRIMARY_MODE, rate } from '../lib/speech'
-import { loadLanguageResults, loadTranscriptions } from '../services/dataService'
+import { pct, titleCase } from '../lib/format'
+import { inMode, MODE_LABEL, modesOf, PRIMARY_MODE, rate } from '../lib/speech'
+import { loadAccentResults, loadLanguageResults, loadTranscriptions } from '../services/dataService'
+import type { AccentResults } from '../types/data'
 
 type TranscriptFilter = 'all' | 'errors' | 'exact'
 const PREVIEW = 3
+/** The dark opening stage is wider than the reading column: the comparison needs the room. */
+const STAGE = 'mx-auto w-full max-w-[1100px] px-5 sm:px-8'
 
 export function SpeechIntelligence() {
   const langs = useDataset(loadLanguageResults)
   const trans = useDataset(loadTranscriptions)
 
+  // Accented English is a separate test: its own file, shown only when it loads.
+  const [accents, setAccents] = useState<AccentResults | null>(null)
+  useEffect(() => {
+    let live = true
+    loadAccentResults().then((a) => {
+      if (live) setAccents(a)
+    })
+    return () => {
+      live = false
+    }
+  }, [])
+
+  // The detail section below shows one way of asking the AI at a time.
   const [selected, setSelected] = useState<string | null>(null)
   const [metric, setMetric] = useState<Metric>('wer')
   const [query, setQuery] = useState('')
@@ -31,10 +50,16 @@ export function SpeechIntelligence() {
   const [showAll, setShowAll] = useState(false)
   const [mode, setMode] = useState<string>(PRIMARY_MODE)
 
-  // Each clip was run twice (language detected / language given); show one mode at a time.
   const modes = useMemo(() => modesOf(langs.data), [langs.data])
   const L = useMemo(() => inMode(langs.data, modes.length ? mode : null), [langs.data, modes, mode])
   const T = useMemo(() => inMode(trans.data, modes.length ? mode : null), [trans.data, modes, mode])
+
+  // The comparison: languages run both ways. Fully tested ones get the main view; small tests are summarised.
+  const pairs = useMemo(() => buildPairs(langs.data), [langs.data])
+  const full = pairs.filter((p) => p.clips >= FULL_TEST_CLIPS)
+  const small = pairs.filter((p) => p.clips < FULL_TEST_CLIPS)
+  const identical = small.filter((p) => Math.abs(p.auto.cer - p.forced.cer) < 0.005)
+  const smallClips = [...new Set(small.map((p) => p.clips))]
 
   // Union of languages from both files so transcript-only languages are still selectable.
   const languages = useMemo(() => {
@@ -65,15 +90,7 @@ export function SpeechIntelligence() {
   }, [diffs, selected, query, filter])
 
   const toggle = (code: string) => setSelected((s) => (s === code ? null : code))
-  const selRow = L.find((l) => l.language_code === selected)
-  const selName = languages.find((l) => l.code === selected)?.name
-  const rank = selRow && selRow[metric] !== null ? [...L].sort((a, b) => orMinus(b[metric]) - orMinus(a[metric])).indexOf(selRow) + 1 : 0
-  const S = langs.isSample ? <Flag kind="S" /> : null
-  const meanWer = meanOf(L.map((l) => l.wer))
-  const meanCer = meanOf(L.map((l) => l.cer))
-  const werLangs = L.filter((l) => l.wer !== null).length
   const shown = showAll ? visible : visible.slice(0, PREVIEW)
-  const clipsPerLanguage = L[0]?.clips_tested
 
   const flags: FlagKind[] = []
   if (langs.isSample || trans.isSample) flags.push('S')
@@ -81,89 +98,45 @@ export function SpeechIntelligence() {
 
   return (
     <>
-      {/* Intro + headline numbers: the selected language, or all languages */}
-      <Chapter tone="ink" size="l" label="Introduction">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <h1 className="text-[clamp(2.5rem,5vw,4.25rem)] leading-none font-semibold tracking-[-0.04em]">
-              <Words text="Understood?" />
+      {/* The whole point, in one screen */}
+      <section aria-label="Same speech, two results" className="voice-atmosphere relative overflow-hidden bg-ink pt-12 pb-24 text-paper sm:pt-12 sm:pb-36">
+        <div className={STAGE}>
+          <header className="text-center">
+            <p className="text-[12px] font-medium tracking-[0.14em] text-[rgb(176_228_255/0.8)] uppercase">Speech test</p>
+            <h1 className="mt-4 text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
+              <Words text="Same voice." />
+              <br />
+              <Words text="Different result." offset={2} />
             </h1>
-            <p className="mt-4 max-w-[38ch] text-[17px] text-white/60">
-              How accurately AI writes down each language. Lower is better.
-              {clipsPerLanguage && !langs.isSample ? ` Early results: ${clipsPerLanguage} read-speech clips per language.` : ''}
-            </p>
-          </div>
-          {modes.length > 1 ? (
-            <div className="flex flex-col items-start gap-2 sm:items-end">
-              <span className="text-[13px] text-white/50">How the AI was asked</span>
-              <div role="radiogroup" aria-label="Transcription mode" className="inline-flex rounded-full bg-white/10 p-1">
-                {modes.map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    role="radio"
-                    aria-checked={mode === m}
-                    onClick={() => setMode(m)}
-                    className={`h-9 rounded-full px-4 text-[14px] font-medium transition-colors duration-200 ${mode === m ? 'bg-paper text-ink' : 'text-white/70 hover:text-paper'}`}
-                  >
-                    {MODE_LABEL[m] ?? m}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <Waveform bars={28} tone="ink" misheard={[6, 7, 19]} className="!h-12 w-full max-w-[280px] opacity-80" />
-          )}
-        </div>
-        <div key={`${mode}-${selected ?? 'all'}`} className="swap-in mt-16 border-t border-white/15 pt-8">
-          <p className="text-[15px] text-white/60">
-            {selName ? titleCase(selName) : 'All languages'}
-            {modes.length > 1 && ` · ${MODE_LABEL[mode] ?? mode}`}
-          </p>
-          {langs.status === 'loading' ? (
-            <Skeleton className="mt-6 h-24 bg-white/10" />
-          ) : selRow ? (
-            <dl className="mt-6 grid grid-cols-2 gap-x-10 gap-y-10 lg:grid-cols-4">
-              <Big
-                label={selRow.wer === null ? 'no WER: written without spaces' : 'of words wrong (WER)'}
-                value={<>{rate(selRow.wer)}{selRow.wer !== null && S}</>}
-                note={selRow.wer_ci ? `95% range ${rate(selRow.wer_ci[0], 0)}–${rate(selRow.wer_ci[1], 0)}` : undefined}
-              />
-              <Big
-                label="of characters wrong (CER)"
-                value={<>{rate(selRow.cer)}{S}</>}
-                note={selRow.cer_ci ? `95% range ${rate(selRow.cer_ci[0], 0)}–${rate(selRow.cer_ci[1], 0)}` : undefined}
-              />
-              <Big label="recordings tested" value={<>{int(selRow.clips_tested)}{S}</>} />
-              {selRow.pct_script_mismatch ? (
-                <Big
-                  label="of clips written in the wrong script"
-                  value={`${Math.round(selRow.pct_script_mismatch)}%`}
-                  note={selRow.cer_script_neutral != null ? `CER ignoring script: ${rate(selRow.cer_script_neutral)}` : undefined}
-                />
-              ) : (
-                <Big label={`rank by ${metric.toUpperCase()}, worst first`} value={rank ? `${rank}/${L.length}` : '–'} />
-              )}
-            </dl>
-          ) : selected ? (
-            <p className="mt-6 text-[17px] text-white/70">No overall results for this language yet. Its recordings are below.</p>
-          ) : L.length ? (
-            <dl className="mt-6 grid grid-cols-2 gap-x-10 gap-y-10 lg:grid-cols-4">
-              <Big
-                label={werLangs < L.length ? `of words wrong, average of ${werLangs} languages` : 'of words wrong, on average'}
-                value={meanWer === null ? '–' : <><CountUp value={meanWer} format={(n) => pct(n)} />{S}</>}
-              />
-              <Big label="of characters wrong, on average" value={meanCer === null ? '–' : <><CountUp value={meanCer} format={(n) => pct(n)} />{S}</>} />
-              <Big label="recordings tested" value={<><CountUp value={L.reduce((n, l) => n + l.clips_tested, 0)} />{S}</>} />
-              <Big label="languages" value={<><CountUp value={L.length} duration={600} />{S}</>} />
-            </dl>
-          ) : (
-            <p className="mt-6 text-white/70">No results yet.</p>
-          )}
-        </div>
-      </Chapter>
+            <p className="mx-auto mt-4 max-w-[62ch] text-[clamp(1.0625rem,1.4vw,1.1875rem)] leading-[1.5] text-white/60">Whether AI knows the language can change what it hears. Real recordings, tested both ways.</p>
+            {langs.isSample && (
+              <p className="mt-6 inline-flex items-center gap-1 rounded-full bg-white/10 px-4 py-1.5 text-[13px] text-white/70">
+                Sample data, not real results <Flag kind="S" />
+              </p>
+            )}
+          </header>
 
-      <Container className="pt-8 empty:hidden">
+          <div className="mt-8 sm:mt-9">
+            {langs.status === 'loading' ? (
+              <div className="space-y-5">
+                <Skeleton className="mx-auto h-12 max-w-md bg-white/10" />
+                <div className="grid gap-5 md:grid-cols-2">
+                  <Skeleton className="h-96 bg-white/10" />
+                  <Skeleton className="h-96 bg-white/10" />
+                </div>
+              </div>
+            ) : full.length ? (
+              <Compare pairs={full} clips={trans.data} />
+            ) : (
+              <p className="mx-auto max-w-[44ch] text-center text-[17px] text-white/60">
+                The side-by-side comparison appears here once results are published for both ways of asking the AI.
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <Container className="empty:hidden">
         <DataIssues
           datasets={[
             { label: 'Language results', file: 'language_results.json', ds: langs },
@@ -172,154 +145,192 @@ export function SpeechIntelligence() {
         />
       </Container>
 
-      {/* The chart */}
-      <Chapter size="l" label="Error rate by language">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <h2 className="reveal display-m max-w-[14ch]">Every language, side by side.</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            <Segmented
-              label="Rank by"
-              value={metric}
-              onChange={setMetric}
-              options={[
-                { value: 'wer', label: 'Words' },
-                { value: 'cer', label: 'Characters' },
-              ]}
-            />
+      {/* Not every language changes: the honest overview */}
+      {full.length > 1 && (
+        <Chapter size="l" label="Language by language">
+          <h2 className="reveal display-m max-w-[16ch]">It depends on the language.</h2>
+          <p className="lede mt-6 max-w-[48ch] text-ink-2">{summarySentence(full)}</p>
+          <div className="reveal mt-16 sm:mt-20">
+            <LanguageGap pairs={full} />
+          </div>
+          {small.length > 0 && (
+            <p className="mt-12 max-w-[62ch] text-[15px] leading-relaxed text-ink-3">
+              {small.length} more languages ({small.map((p) => p.language).join(', ')}) were tested on {smallClips.join(' or ')} recordings each.{' '}
+              {identical.length === small.length
+                ? 'Telling the AI the language made no difference in any of them, but that is too few recordings to be sure.'
+                : `Telling the AI the language made no difference in ${identical.length} of them. With so few recordings, read these as early signs.`}
+            </p>
+          )}
+        </Chapter>
+      )}
+
+      {/* A different question: even when the language is right, does the accent matter? */}
+      {accents && <AccentSection data={accents} />}
+
+      {/* Everything else, for anyone who wants it */}
+      <Chapter tone="wash" size="l" label="All the data">
+        <h2 className="reveal display-m">Go deeper.</h2>
+        <p className="lede mt-5 max-w-[44ch] text-ink-2">Every language, every recording, and how it was measured.</p>
+
+        <div className="mt-20 sm:mt-28">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <h3 className="text-[1.75rem] font-semibold tracking-[-0.02em]">Every language, side by side.</h3>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              {modes.length > 1 && (
+                <Segmented
+                  label="How the AI was asked"
+                  value={mode}
+                  onChange={setMode}
+                  options={modes.map((m) => ({ value: m, label: MODE_LABEL[m] ?? m }))}
+                />
+              )}
+              <Segmented
+                label="Rank by"
+                value={metric}
+                onChange={setMetric}
+                options={[
+                  { value: 'wer', label: 'Words' },
+                  { value: 'cer', label: 'Characters' },
+                ]}
+              />
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Focus a language">
+            <Chip active={selected === null} onClick={() => setSelected(null)}>
+              All
+            </Chip>
+            {languages.map((l) => (
+              <Chip key={l.code} active={selected === l.code} onClick={() => toggle(l.code)}>
+                {titleCase(l.name)}
+              </Chip>
+            ))}
+          </div>
+
+          <div className="mt-10">
+            {langs.status === 'loading' ? (
+              <Skeleton className="h-80" />
+            ) : L.length ? (
+              <ErrorRateChart data={L} rankBy={metric} selected={selected} onSelect={toggle} />
+            ) : (
+              <p className="text-ink-2">Results appear here once the analysis is published.</p>
+            )}
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap gap-2" role="group" aria-label="Focus a language">
-          <Chip active={selected === null} onClick={() => setSelected(null)}>
-            All
-          </Chip>
-          {languages.map((l) => (
-            <Chip key={l.code} active={selected === l.code} onClick={() => toggle(l.code)}>
-              {titleCase(l.name)}
-            </Chip>
-          ))}
-        </div>
+        <div className="mt-20 border-t border-ink sm:mt-28">
+          <Disclosure title="Every recording" summary={`Search all ${int0(T.length)} transcripts, what was said and what AI heard.`}>
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <label className="relative block md:w-80">
+                <span className="sr-only">Search transcripts</span>
+                <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-ink-3" aria-hidden />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search words or languages"
+                  className="h-11 w-full rounded-full border border-rule-2 bg-paper pr-10 pl-10 text-[15px] transition-colors hover:border-ink-3 focus:border-ink focus:outline-none [&::-webkit-search-cancel-button]:hidden"
+                />
+                {query && (
+                  <button type="button" onClick={() => setQuery('')} aria-label="Clear search" className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 text-ink-3 hover:text-ink">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </label>
+              <Segmented
+                label="Show"
+                value={filter}
+                onChange={setFilter}
+                options={[
+                  { value: 'all', label: 'All' },
+                  { value: 'errors', label: 'With mistakes' },
+                  { value: 'exact', label: 'Perfect' },
+                ]}
+              />
+            </div>
+            <div className="mt-6">
+              <DiffLegend />
+            </div>
 
-        <div className="reveal mt-12">
-          {langs.status === 'loading' ? (
-            <Skeleton className="h-80" />
-          ) : L.length ? (
-            <ErrorRateChart data={L} rankBy={metric} selected={selected} onSelect={toggle} />
-          ) : (
-            <p className="text-ink-2">Results appear here once the analysis is published.</p>
+            {trans.status === 'loading' ? (
+              <Skeleton className="mt-8 h-40" />
+            ) : !T.length ? (
+              <p className="mt-8 text-ink-2">Transcripts appear here once they are published.</p>
+            ) : visible.length ? (
+              <>
+                <ul className="mt-8 space-y-4">
+                  {shown.map(({ t, tokens, s }) => (
+                    <li key={t.id} className="rounded-2xl bg-wash p-6 sm:p-8">
+                      <div className="mb-6 flex items-baseline justify-between gap-4">
+                        <p className="flex flex-wrap items-center gap-2 text-[17px] font-semibold">
+                          {titleCase(t.language)}
+                          {t.script_mismatch && <span className="rounded-full bg-proof-soft px-2.5 py-0.5 text-[12px] font-medium text-proof-ink">Wrong script</span>}
+                        </p>
+                        <p className="text-[15px] text-ink-2">
+                          {s.errors === 0 ? (
+                            'Perfect'
+                          ) : t.char_level ? (
+                            <>
+                              <span className="text-[22px] font-semibold tracking-[-0.02em] text-ink tabular-nums">{rate(t.cer, 0)}</span> characters wrong
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-[22px] font-semibold tracking-[-0.02em] text-ink tabular-nums">
+                                {t.wer !== undefined ? pct(t.wer, 0) : s.wer === null ? 'n/a' : pct(s.wer, 0)}
+                              </span>{' '}
+                              words wrong
+                            </>
+                          )}
+                          {trans.isSample && <Flag kind="S" />}
+                          {t.wer === undefined && !t.char_level && s.errors > 0 && <Flag kind="C" />}
+                        </p>
+                      </div>
+                      {t.char_level && <p className="-mt-3 mb-4 text-[13px] text-ink-3">Compared character by character: this language is written without spaces.</p>}
+                      <ProofLines tokens={tokens} size="lg" />
+                    </li>
+                  ))}
+                </ul>
+                {visible.length > PREVIEW && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAll((v) => !v)}
+                    className="mt-8 inline-flex h-11 items-center rounded-full border border-rule-2 bg-paper px-6 text-[15px] font-medium transition-colors hover:border-ink"
+                  >
+                    {showAll ? 'Show fewer' : `Show all ${visible.length}`}
+                  </button>
+                )}
+              </>
+            ) : (
+              <p className="mt-8 text-ink-2">No matching recordings{selected ? '. Try “All” languages' : ''}.</p>
+            )}
+          </Disclosure>
+
+          {accents && (
+            <Disclosure title="Accent test details" summary="How the accent comparison works, every group, and its limits.">
+              <AccentDetails data={accents} />
+            </Disclosure>
           )}
-        </div>
-      </Chapter>
 
-      {/* Transcripts */}
-      <Chapter tone="wash" size="l" label="Transcripts">
-        <h2 className="reveal display-m max-w-[16ch]">What was said. What AI heard.</h2>
-        <div className="mt-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <label className="relative block md:w-80">
-            <span className="sr-only">Search transcripts</span>
-            <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-ink-3" aria-hidden />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search words or languages"
-              className="h-11 w-full rounded-full border border-rule-2 bg-paper pr-10 pl-10 text-[15px] transition-colors hover:border-ink-3 focus:border-ink focus:outline-none [&::-webkit-search-cancel-button]:hidden"
-            />
-            {query && (
-              <button type="button" onClick={() => setQuery('')} aria-label="Clear search" className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 text-ink-3 hover:text-ink">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </label>
-          <Segmented
-            label="Show"
-            value={filter}
-            onChange={setFilter}
-            options={[
-              { value: 'all', label: 'All' },
-              { value: 'errors', label: 'With mistakes' },
-              { value: 'exact', label: 'Perfect' },
-            ]}
-          />
-        </div>
-        <div className="mt-6">
-          <DiffLegend />
-        </div>
-
-        {trans.status === 'loading' ? (
-          <Skeleton className="mt-8 h-40" />
-        ) : !T.length ? (
-          <p className="mt-8 text-ink-2">Transcripts appear here once they are published.</p>
-        ) : visible.length ? (
-          <>
-            <ul className="mt-8 space-y-4">
-              {shown.map(({ t, tokens, s }) => (
-                <li key={t.id} className="reveal lift rounded-2xl bg-paper p-6 sm:p-8">
-                  <div className="mb-6 flex items-baseline justify-between gap-4">
-                    <p className="flex flex-wrap items-center gap-2 text-[17px] font-semibold">
-                      {titleCase(t.language)}
-                      {t.script_mismatch && (
-                        <span className="rounded-full bg-proof-soft px-2.5 py-0.5 text-[12px] font-medium text-proof-ink">Wrong script</span>
-                      )}
-                    </p>
-                    <p className="text-[15px] text-ink-2">
-                      {s.errors === 0 ? (
-                        'Perfect'
-                      ) : t.char_level ? (
-                        <>
-                          <span className="text-[22px] font-semibold tracking-[-0.02em] text-ink tabular-nums">{rate(t.cer, 0)}</span> characters
-                          wrong
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-[22px] font-semibold tracking-[-0.02em] text-ink tabular-nums">
-                            {t.wer !== undefined ? pct(t.wer, 0) : s.wer === null ? 'n/a' : pct(s.wer, 0)}
-                          </span>{' '}
-                          words wrong
-                        </>
-                      )}
-                      {trans.isSample && <Flag kind="S" />}
-                      {t.wer === undefined && !t.char_level && s.errors > 0 && <Flag kind="C" />}
-                    </p>
-                  </div>
-                  {t.char_level && <p className="-mt-3 mb-4 text-[13px] text-ink-3">Compared character by character: this language is written without spaces.</p>}
-                  <ProofLines tokens={tokens} size="lg" />
-                </li>
-              ))}
-            </ul>
-            {visible.length > PREVIEW && (
-              <button
-                type="button"
-                onClick={() => setShowAll((v) => !v)}
-                className="mt-8 inline-flex h-11 items-center rounded-full border border-rule-2 bg-paper px-6 text-[15px] font-medium transition-colors hover:border-ink"
-              >
-                {showAll ? 'Show fewer' : `Show all ${visible.length}`}
-              </button>
-            )}
-          </>
-        ) : (
-          <p className="mt-8 text-ink-2">No matching recordings{selected ? '. Try “All” languages' : ''}.</p>
-        )}
-      </Chapter>
-
-      <Container className="pt-16 pb-20">
-        <div className="border-t border-ink">
-          <Disclosure title="What do WER and CER mean?" summary="The two error rates, in one minute.">
+          <Disclosure title="How the numbers are measured" summary="In plain terms, and the two technical names.">
             <div className="max-w-[62ch] space-y-3 text-[15px] leading-relaxed text-ink-2">
-              <p className="rounded-md bg-wash px-4 py-3 font-mono text-[14px] text-ink">WER = (substituted + missed + added words) / words said</p>
               <p>
-                Word Error Rate is the share of words the AI got wrong. 0% is a perfect transcript. Character Error Rate is
-                the same idea counted in letters, which is fairer for languages written without spaces.
+                The big numbers above count <strong className="font-semibold text-ink">letters wrong out of every 100</strong>: the share of what was said that AI wrote
+                differently, missed or added. 0 is a perfect copy. This is called Character Error Rate (CER), and it works for every language, including Chinese languages
+                written without spaces.
               </p>
-              <p>Both describe words, not people: a 20% WER does not mean 20% of speakers are affected.</p>
+              <p className="rounded-md bg-paper px-4 py-3 font-mono text-[14px] text-ink">WER = (substituted + missed + added words) / words said</p>
+              <p>Word Error Rate (WER) is the same idea counted in words. It is shown in the charts above for languages that are written with spaces.</p>
+              {accents && <p>The accent section counts words instead of letters (WER), because English is written with spaces.</p>}
+              <p>Both describe text, not people: a 20% error rate does not mean 20% of speakers are affected.</p>
             </div>
           </Disclosure>
-          <Disclosure title="About the data" summary="Sources and how figures are calculated.">
+          <Disclosure title="About the data" summary="Sources, limits and how figures are calculated.">
             <Notes
               flags={flags}
               sources={[
                 { label: 'Results', value: <><Code>language_results.json</Code>, <Code>transcription_results.json</Code>, analysis team pipeline</> },
-                { label: 'Model', value: 'ElevenLabs Scribe, run with language detected and with language given' },
+                { label: 'Model', value: 'ElevenLabs Scribe, run twice on every recording: language guessed, and language given' },
+                ...(accents ? [{ label: 'Accents', value: <>{accents.source.dataset} (<a href={accents.source.url} target="_blank" rel="noopener noreferrer" className="underline">accent.gmu.edu</a>): one English paragraph read by {accents.native.speakers + accents.accented.speakers} people</> }] : []),
                 {
                   label: 'Audio',
                   value: (
@@ -333,27 +344,17 @@ export function SpeechIntelligence() {
                 },
               ]}
             >
-              Averages are over a small number of clips per language, with 95% ranges shown where available. Treat them as
-              early signals, not definitive rankings.{' '}
-              Word matching in the browser ignores case and punctuation. Scripts without spaces between words match as a
-              single word; read CER for those languages.
+              Five languages were tested on 40 recordings each; the rest on 5, which is too few for firm conclusions. The side-by-side view calls a gap under one
+              percentage point “about the same”. Word matching in the browser ignores case and punctuation.
             </Notes>
           </Disclosure>
         </div>
-      </Container>
+      </Chapter>
     </>
   )
 }
 
-function Big({ label, value, note }: { label: string; value: ReactNode; note?: string }) {
-  return (
-    <div className="flex flex-col-reverse">
-      {note && <dd className="mt-1 text-[13px] text-white/45">{note}</dd>}
-      <dt className="mt-2 text-[15px] text-white/60">{label}</dt>
-      <dd className="text-[clamp(2.5rem,6vw,4.5rem)] leading-none font-semibold tracking-[-0.04em] tabular-nums">{value}</dd>
-    </div>
-  )
-}
+const int0 = (n: number) => n.toLocaleString('en-CA')
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
