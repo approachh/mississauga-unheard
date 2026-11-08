@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "data:census": "node scripts/convert-census.mjs"
+    "data:census": "node scripts/convert-census.mjs",
+    "data:speech": "node scripts/convert-speech.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.70.0",

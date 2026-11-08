@@ -4,8 +4,10 @@
 !.env.example
 *.local
 
-# Source data and archives: not needed to build or serve the site
-data/
+# Source data and archives: not needed to build or serve the site.
+# Anchored with a leading slash: an unanchored `data/` also matched public/data/,
+# which silently dropped every published JSON file from the deployment.
+/data/
 
 # Local design-review captures and tool state
 .impeccable/

@@ -1,0 +1,550 @@
+[
+  {
+    "language": "Cantonese",
+    "language_code": "yue",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": null,
+    "cer": 0.2902,
+    "wer_ci": null,
+    "cer_ci": [
+      0.1337,
+      0.4807
+    ],
+    "cer_script_neutral": 0.0538,
+    "pct_language_mismatch": 100,
+    "pct_script_mismatch": 80
+  },
+  {
+    "language": "Urdu",
+    "language_code": "ur",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.2965,
+    "cer": 0.2363,
+    "wer_ci": [
+      0.0687,
+      0.659
+    ],
+    "cer_ci": [
+      0.0264,
+      0.6207
+    ],
+    "cer_script_neutral": 0.2363,
+    "pct_language_mismatch": 20,
+    "pct_script_mismatch": 20
+  },
+  {
+    "language": "Hindi",
+    "language_code": "hi",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0686,
+    "cer": 0.0596,
+    "wer_ci": [
+      0.034,
+      0.1007
+    ],
+    "cer_ci": [
+      0.0179,
+      0.0967
+    ],
+    "cer_script_neutral": 0.0596,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Mandarin",
+    "language_code": "zh",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": null,
+    "cer": 0.0554,
+    "wer_ci": null,
+    "cer_ci": [
+      0.0216,
+      0.0913
+    ],
+    "cer_script_neutral": 0.0554,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Tamil",
+    "language_code": "ta",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.153,
+    "cer": 0.0324,
+    "wer_ci": [
+      0.05,
+      0.2459
+    ],
+    "cer_ci": [
+      0.0118,
+      0.053
+    ],
+    "cer_script_neutral": 0.0324,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Arabic",
+    "language_code": "ar",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0613,
+    "cer": 0.0264,
+    "wer_ci": [
+      0.008,
+      0.12
+    ],
+    "cer_ci": [
+      0.0018,
+      0.054
+    ],
+    "cer_script_neutral": 0.0264,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Punjabi",
+    "language_code": "pa",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0778,
+    "cer": 0.0241,
+    "wer_ci": [
+      0.0288,
+      0.1297
+    ],
+    "cer_ci": [
+      0.0111,
+      0.0333
+    ],
+    "cer_script_neutral": 0.0241,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Vietnamese",
+    "language_code": "vi",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0202,
+    "cer": 0.02,
+    "wer_ci": [
+      0,
+      0.0452
+    ],
+    "cer_ci": [
+      0,
+      0.0459
+    ],
+    "cer_script_neutral": 0.02,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Polish",
+    "language_code": "pl",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0087,
+    "cer": 0.0186,
+    "wer_ci": [
+      0,
+      0.0261
+    ],
+    "cer_ci": [
+      0,
+      0.0558
+    ],
+    "cer_script_neutral": 0.0186,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Tagalog",
+    "language_code": "tl",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0144,
+    "cer": 0.0138,
+    "wer_ci": [
+      0,
+      0.0287
+    ],
+    "cer_ci": [
+      0,
+      0.0349
+    ],
+    "cer_script_neutral": 0.0138,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Spanish",
+    "language_code": "es",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0186,
+    "cer": 0.0121,
+    "wer_ci": [
+      0,
+      0.0436
+    ],
+    "cer_ci": [
+      0,
+      0.03
+    ],
+    "cer_script_neutral": 0.0121,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Portuguese",
+    "language_code": "pt",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0133,
+    "cer": 0.0052,
+    "wer_ci": [
+      0,
+      0.04
+    ],
+    "cer_ci": [
+      0,
+      0.0156
+    ],
+    "cer_script_neutral": 0.0052,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "English",
+    "language_code": "en",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.008,
+    "cer": 0.0017,
+    "wer_ci": [
+      0,
+      0.024
+    ],
+    "cer_ci": [
+      0,
+      0.005
+    ],
+    "cer_script_neutral": 0.0017,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Gujarati",
+    "language_code": "gu",
+    "mode": "auto",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0369,
+    "cer": 0.0016,
+    "wer_ci": [
+      0,
+      0.094
+    ],
+    "cer_ci": [
+      0,
+      0.0049
+    ],
+    "cer_script_neutral": 0.0016,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Cantonese",
+    "language_code": "yue",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": null,
+    "cer": 0.2985,
+    "wer_ci": null,
+    "cer_ci": [
+      0.1337,
+      0.5057
+    ],
+    "cer_script_neutral": 0.0621,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 80
+  },
+  {
+    "language": "Hindi",
+    "language_code": "hi",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0686,
+    "cer": 0.0596,
+    "wer_ci": [
+      0.034,
+      0.1007
+    ],
+    "cer_ci": [
+      0.0179,
+      0.0967
+    ],
+    "cer_script_neutral": 0.0596,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Mandarin",
+    "language_code": "zh",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": null,
+    "cer": 0.0554,
+    "wer_ci": null,
+    "cer_ci": [
+      0.0216,
+      0.0913
+    ],
+    "cer_script_neutral": 0.0554,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Tamil",
+    "language_code": "ta",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.153,
+    "cer": 0.0324,
+    "wer_ci": [
+      0.05,
+      0.2459
+    ],
+    "cer_ci": [
+      0.0118,
+      0.053
+    ],
+    "cer_script_neutral": 0.0324,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Urdu",
+    "language_code": "ur",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0993,
+    "cer": 0.0287,
+    "wer_ci": [
+      0.0486,
+      0.1787
+    ],
+    "cer_ci": [
+      0.0126,
+      0.0545
+    ],
+    "cer_script_neutral": 0.0287,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Arabic",
+    "language_code": "ar",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0613,
+    "cer": 0.0264,
+    "wer_ci": [
+      0.008,
+      0.12
+    ],
+    "cer_ci": [
+      0.0018,
+      0.054
+    ],
+    "cer_script_neutral": 0.0264,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Punjabi",
+    "language_code": "pa",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0778,
+    "cer": 0.0223,
+    "wer_ci": [
+      0.0288,
+      0.1297
+    ],
+    "cer_ci": [
+      0.0104,
+      0.0322
+    ],
+    "cer_script_neutral": 0.0223,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Vietnamese",
+    "language_code": "vi",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0202,
+    "cer": 0.02,
+    "wer_ci": [
+      0,
+      0.0452
+    ],
+    "cer_ci": [
+      0,
+      0.0459
+    ],
+    "cer_script_neutral": 0.02,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Polish",
+    "language_code": "pl",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0087,
+    "cer": 0.0186,
+    "wer_ci": [
+      0,
+      0.0261
+    ],
+    "cer_ci": [
+      0,
+      0.0558
+    ],
+    "cer_script_neutral": 0.0186,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Tagalog",
+    "language_code": "tl",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0144,
+    "cer": 0.0138,
+    "wer_ci": [
+      0,
+      0.0287
+    ],
+    "cer_ci": [
+      0,
+      0.0349
+    ],
+    "cer_script_neutral": 0.0138,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Spanish",
+    "language_code": "es",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0186,
+    "cer": 0.0121,
+    "wer_ci": [
+      0,
+      0.0436
+    ],
+    "cer_ci": [
+      0,
+      0.03
+    ],
+    "cer_script_neutral": 0.0121,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Portuguese",
+    "language_code": "pt",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0133,
+    "cer": 0.0052,
+    "wer_ci": [
+      0,
+      0.04
+    ],
+    "cer_ci": [
+      0,
+      0.0156
+    ],
+    "cer_script_neutral": 0.0052,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "English",
+    "language_code": "en",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.008,
+    "cer": 0.0017,
+    "wer_ci": [
+      0,
+      0.024
+    ],
+    "cer_ci": [
+      0,
+      0.005
+    ],
+    "cer_script_neutral": 0.0017,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  },
+  {
+    "language": "Gujarati",
+    "language_code": "gu",
+    "mode": "forced",
+    "dataset": "fleurs",
+    "clips_tested": 5,
+    "wer": 0.0369,
+    "cer": 0.0016,
+    "wer_ci": [
+      0,
+      0.094
+    ],
+    "cer_ci": [
+      0,
+      0.0049
+    ],
+    "cer_script_neutral": 0.0016,
+    "pct_language_mismatch": 0,
+    "pct_script_mismatch": 0
+  }
+]

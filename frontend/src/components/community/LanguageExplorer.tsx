@@ -63,16 +63,20 @@ function Picker({ model, selected, onSelect }: { model: CensusModel; selected: C
   const index = model.ranking.findIndex((r) => r.language === selected.language)
   const max = model.ranking[0]?.home_speakers ?? 1
   const chipRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+  const chipRowRef = useRef<HTMLDivElement>(null)
 
   // Keep the selected chip in view on small screens.
   useEffect(() => {
-    chipRefs.current.get(selected.language)?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' })
+    // Scroll only the chip row sideways; scrollIntoView would also scroll the page vertically.
+    const chip = chipRefs.current.get(selected.language)
+    const row = chipRowRef.current
+    if (chip && row) row.scrollTo({ left: chip.offsetLeft - row.clientWidth / 2 + chip.offsetWidth / 2, behavior: 'smooth' })
   }, [selected.language])
 
   return (
     <nav aria-label="Choose a language">
       {/* Small screens: scrollable chips */}
-      <div className="-mx-5 flex snap-x gap-1.5 overflow-x-auto px-5 pb-1 lg:hidden">
+      <div ref={chipRowRef} className="relative -mx-5 flex snap-x gap-1.5 overflow-x-auto px-5 pb-1 lg:hidden">
         {model.ranking.map((r) => {
           const on = r.language === selected.language
           return (
@@ -101,7 +105,7 @@ function Picker({ model, selected, onSelect }: { model: CensusModel; selected: C
           <span>People</span>
         </p>
         <ul className="relative">
-          <li aria-hidden className="select-indicator pointer-events-none absolute inset-x-0 top-0 rounded-md bg-wash" style={{ height: ROW, transform: `translateY(${index * ROW}px)` }} />
+          <li aria-hidden className="select-indicator pointer-events-none absolute inset-x-0 top-0 rounded-md bg-paper shadow-[0_1px_2px_rgb(0_0_0/0.06)]" style={{ height: ROW, transform: `translateY(${index * ROW}px)` }} />
           {model.ranking.map((r) => {
             const on = r.language === selected.language
             return (
@@ -178,7 +182,7 @@ function LanguageStory({ model, lang, largest }: { model: CensusModel; lang: Cit
                 <p className="mt-3 text-[14px] leading-relaxed text-ink-2">
                   {coverage.has_service_request_audio
                     ? `Service-style requests in ${lang.language} can be tested.`
-                    : `No service-request recordings, so everyday requests in ${lang.language} can’t be tested yet.`}
+                    : `No service-request recordings in the datasets we reviewed, so we can’t test everyday requests in ${lang.language} with them.`}
                 </p>
               </>
             ) : (
@@ -191,9 +195,12 @@ function LanguageStory({ model, lang, largest }: { model: CensusModel; lang: Cit
           <dd className="mt-3 text-[14px] leading-relaxed text-ink-2">
             {speech ? (
               <>
-                <span className="text-[1.75rem] leading-none font-semibold tracking-[-0.02em] text-ink">{pct(speech.wer)}</span>{' '}
-                word error rate across {int(speech.clips_tested)} test clips. It describes words transcribed wrongly, not
-                how many residents are affected.
+                <span className="text-[1.75rem] leading-none font-semibold tracking-[-0.02em] text-ink">
+                  {speech.wer !== null ? pct(speech.wer) : pct(speech.cer)}
+                </span>{' '}
+                of {speech.wer !== null ? 'words' : 'characters'} transcribed wrongly in {int(speech.clips_tested)} read-speech
+                test clips, language detected automatically. A small sample: indicative, not definitive. It describes
+                words, not how many residents are affected.
               </>
             ) : (
               <>

@@ -64,31 +64,35 @@ export function AppLayout() {
             <Tab key={n.to} {...n} />
           ))}
         </nav>
-        {showSample && (
-          <div className="border-b border-sample-line bg-sample-bg text-sample">
-            <div className="mx-auto flex max-w-[1200px] items-start gap-2.5 px-5 py-2 text-[13px] leading-snug sm:items-center sm:px-8">
-              <FlaskConical className="mt-px h-3.5 w-3.5 shrink-0 sm:mt-0" aria-hidden />
-              <p>
-                <strong className="font-semibold">Sample data.</strong> Figures marked{' '}
-                <span className="flag flag-s ml-0 align-baseline">S</span> are placeholders for layout, not research
-                findings.{' '}
-                <a href="#notes" className="font-medium underline">
-                  About the data
-                </a>
-              </p>
-            </div>
-          </div>
-        )}
       </header>
 
-      <main id="main" className="mx-auto w-full max-w-[1200px] flex-1 px-5 pt-10 pb-16 sm:px-8 sm:pt-14">
+      {showSample && (
+        <div className="border-b border-sample-line bg-sample-bg text-sample">
+          <div className="mx-auto flex max-w-[1200px] items-center gap-2.5 px-5 py-2.5 text-[13px] leading-snug sm:px-8">
+            <FlaskConical className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            <p>
+              <strong className="font-semibold">Sample data.</strong> Speech figures marked{' '}
+              <span className="flag flag-s ml-0 align-baseline">S</span> are placeholders until real results arrive.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <main id="main" className="w-full flex-1">
         <Outlet />
       </main>
 
-      <footer className="border-t border-rule">
-        <div className="mx-auto flex max-w-[1200px] flex-wrap justify-between gap-2 px-5 py-5 text-[13px] text-ink-3 sm:px-8">
-          <span>VOXELO · What you say. What AI hears.</span>
-          <span>Sheridan Datathon 2026 · ElevenLabs Track: Mississauga, Unheard</span>
+      <footer className="bg-ink text-paper">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-5 pt-20 pb-10 sm:px-8 sm:pt-28">
+          <p className="display-m max-w-[14ch]">
+            What you say.
+            <br />
+            <span className="text-white/45">What AI hears.</span>
+          </p>
+          <div className="flex flex-wrap items-end justify-between gap-4 border-t border-white/15 pt-5 text-[13px] text-white/55">
+            <Logo />
+            <span>Sheridan Datathon 2026 · ElevenLabs Track: Mississauga, Unheard</span>
+          </div>
         </div>
       </footer>
     </div>

@@ -1,9 +1,10 @@
-import { AlertTriangle, FileAudio, Loader2, Mic, RotateCcw, Square, Trash2, Upload } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent, type ReactNode } from 'react'
+import { AlertTriangle, ChevronDown, FileAudio, Loader2, Mic, RotateCcw, Square, Trash2, Upload } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
+import { Disclosure } from '../components/Disclosure'
 import { Code } from '../components/EmptyState'
 import { Flag } from '../components/Flag'
 import { Notes } from '../components/Notes'
-import { PageTitle } from '../components/Section'
+import { Waveform, Words } from '../components/story/Story'
 import { DiffLegend, ProofLines } from '../components/TranscriptDiff'
 import { useRecorder } from '../hooks/useRecorder'
 import { charErrorRate, diffWords, summarise } from '../lib/diff'
@@ -34,12 +35,16 @@ type Phase =
   | { kind: 'error'; error: TranscriptionError }
 
 const fmtTime = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
+const METER_BARS = 36
+/** The whole page lives in one narrow, centred column. */
+const COLUMN = 'mx-auto w-full max-w-[600px] px-5'
 
 export function VoiceExperience() {
   const [language, setLanguage] = useState('auto')
   const [clip, setClip] = useState<Clip | null>(null)
   const [clipError, setClipError] = useState<string | null>(null)
   const [reference, setReference] = useState('')
+  const [showReference, setShowReference] = useState(false)
   const [phase, setPhase] = useState<Phase>({ kind: 'idle' })
   const [service, setService] = useState<ServiceStatus | null | 'checking'>('checking')
   const [dragging, setDragging] = useState(false)
@@ -69,16 +74,19 @@ export function VoiceExperience() {
   useEffect(() => {
     clipRef.current = clip
   }, [clip])
-  useEffect(() => () => {
-    if (clipRef.current) URL.revokeObjectURL(clipRef.current.url)
-    abortRef.current?.abort()
-  }, [])
+  useEffect(
+    () => () => {
+      if (clipRef.current) URL.revokeObjectURL(clipRef.current.url)
+      abortRef.current?.abort()
+    },
+    [],
+  )
 
   const onRecorded = useCallback(
     (blob: Blob) => {
       const err = checkAudio(blob, 'recording.webm')
       setClipError(err)
-      replaceClip(err ? null : { blob, url: URL.createObjectURL(blob), name: 'Microphone recording', source: 'recording' })
+      replaceClip(err ? null : { blob, url: URL.createObjectURL(blob), name: 'Your recording', source: 'recording' })
     },
     [replaceClip],
   )
@@ -97,7 +105,7 @@ export function VoiceExperience() {
     const ac = new AbortController()
     abortRef.current = ac
     setPhase({ kind: 'sending' })
-    if (window.matchMedia('(max-width: 1023px)').matches) resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    requestAnimationFrame(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
     try {
       const result = await transcribe(clip.blob, language, ac.signal, clip.source === 'upload' ? clip.name : 'recording.webm')
       if (!ac.signal.aborted) setPhase({ kind: 'done', result, language })
@@ -113,34 +121,51 @@ export function VoiceExperience() {
   }
 
   const configured = service !== 'checking' && service?.configured === true
-  const recording = recorder.state === 'recording' || recorder.state === 'requesting'
+  const isRecording = recorder.state === 'recording'
+  const recording = isRecording || recorder.state === 'requesting'
   const canSubmit = !!clip && configured && phase.kind !== 'sending' && !recording
 
   return (
-    <div className="space-y-10 sm:space-y-12">
-      <PageTitle
-        title="Hear yourself through AI"
-        lede="Speak in your language and see exactly what ElevenLabs Scribe recognised. Add what you meant to say and every difference is marked."
-      />
+    <>
+      <div className={`${COLUMN} pt-16 pb-10 text-center sm:pt-24`}>
+        <Waveform bars={24} misheard={[8, 15]} className="mx-auto !h-10 max-w-[180px]" />
+        <h1 className="mt-8 text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.02] font-semibold tracking-[-0.04em]">
+          <Words text="Hear yourself through AI." />
+        </h1>
+        <p className="mt-4 text-[17px] text-ink-2">Say a sentence in your language. See what AI hears.</p>
+      </div>
 
-      <ServiceNotice service={service} />
+      <div className={`${COLUMN} pb-12`}>
+        <ServiceNotice service={service} />
 
-      <div className="grid items-start gap-x-14 gap-y-10 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)]">
-        {/* Controls */}
         <form
-          className="space-y-8"
+          className={`relative mt-4 rounded-[32px] px-6 py-10 text-center transition-colors duration-200 sm:px-10 sm:py-12 ${dragging ? 'bg-rule' : 'bg-wash'}`}
           onSubmit={(e) => {
             e.preventDefault()
             if (canSubmit) void run()
           }}
+          onDragOver={(e: DragEvent) => {
+            e.preventDefault()
+            if (!recording) setDragging(true)
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e: DragEvent) => {
+            e.preventDefault()
+            setDragging(false)
+            if (!recording) acceptFile(e.dataTransfer.files[0])
+          }}
         >
-          <Step n={1} title="Language" htmlFor="voice-language">
+          {/* Language */}
+          <label htmlFor="voice-language" className="sr-only">
+            Language
+          </label>
+          <div className="relative mx-auto inline-flex">
             <select
               id="voice-language"
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               disabled={phase.kind === 'sending'}
-              className="h-10 w-full rounded-md border border-rule-2 bg-paper px-3 text-[14px] transition-colors hover:border-ink-3 focus:border-ink focus:outline-none"
+              className="h-11 appearance-none rounded-full border border-rule-2 bg-paper pr-10 pl-5 text-[15px] font-medium transition-colors hover:border-ink-3 focus:border-ink focus:outline-none"
             >
               {VOICE_LANGUAGES.map((l) => (
                 <option key={l.code} value={l.code}>
@@ -148,140 +173,145 @@ export function VoiceExperience() {
                 </option>
               ))}
             </select>
-            <p className="mt-1.5 text-[13px] text-ink-3">Choosing the language you speak usually gives the most accurate result.</p>
-          </Step>
+            <ChevronDown className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-ink-3" aria-hidden />
+          </div>
 
-          <Step n={2} title="Your voice">
-            {clip && !recording ? (
-              <div className="rounded-md border border-rule-2">
-                <div className="flex items-center justify-between gap-3 border-b border-rule px-3 py-2.5 text-[14px]">
-                  <span className="flex min-w-0 items-center gap-2">
-                    {clip.source === 'recording' ? <Mic className="h-4 w-4 shrink-0 text-ink-3" aria-hidden /> : <FileAudio className="h-4 w-4 shrink-0 text-ink-3" aria-hidden />}
-                    <span className="truncate">{clip.name}</span>
-                    <span className="shrink-0 text-[12px] text-ink-3">{(clip.blob.size / 1024).toFixed(0)} KB</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => replaceClip(null)}
-                    disabled={phase.kind === 'sending'}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-[13px] text-ink-2 hover:bg-wash hover:text-ink disabled:opacity-40"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" aria-hidden /> Remove
-                  </button>
-                </div>
-                <audio controls src={clip.url} className="block h-10 w-full px-1 py-1" aria-label="Play back your audio" />
+          {clip && !recording ? (
+            /* Recorded / uploaded clip */
+            <div className="mx-auto mt-12 max-w-[520px] rounded-2xl bg-paper p-5 text-left shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
+              <div className="flex items-center justify-between gap-3">
+                <span className="flex min-w-0 items-center gap-2.5 text-[15px] font-medium">
+                  {clip.source === 'recording' ? <Mic className="h-4 w-4 shrink-0" aria-hidden /> : <FileAudio className="h-4 w-4 shrink-0" aria-hidden />}
+                  <span className="truncate">{clip.name}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => replaceClip(null)}
+                  disabled={phase.kind === 'sending'}
+                  className="inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] text-ink-2 hover:bg-wash hover:text-ink disabled:opacity-40"
+                >
+                  <Trash2 className="h-3.5 w-3.5" aria-hidden /> Start over
+                </button>
               </div>
-            ) : (
-              <div
-                onDragOver={(e: DragEvent) => {
-                  e.preventDefault()
-                  if (!recording) setDragging(true)
+              <audio controls src={clip.url} className="mt-4 block h-10 w-full" aria-label="Play back your audio" />
+            </div>
+          ) : (
+            /* Recorder */
+            <div className="mt-12 flex flex-col items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  if (isRecording) return recorder.stop()
+                  setClipError(null)
+                  void recorder.start()
                 }}
-                onDragLeave={() => setDragging(false)}
-                onDrop={(e: DragEvent) => {
-                  e.preventDefault()
-                  setDragging(false)
-                  if (!recording) acceptFile(e.dataTransfer.files[0])
-                }}
-                className={`rounded-md border px-4 py-5 transition-colors ${dragging ? 'border-ink bg-wash' : 'border-rule-2'}`}
+                disabled={recorder.state === 'unsupported' || recorder.state === 'requesting' || phase.kind === 'sending'}
+                aria-label={isRecording ? 'Stop recording' : 'Start recording'}
+                className="group relative grid h-28 w-28 place-items-center rounded-full bg-ink text-paper transition-transform duration-200 ease-out hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:bg-rule-2 disabled:text-ink-3 sm:h-32 sm:w-32"
               >
-                <div className="flex items-center gap-4">
-                  {recorder.state === 'recording' ? (
-                    <button
-                      type="button"
-                      onClick={recorder.stop}
-                      className="inline-flex h-11 shrink-0 items-center gap-2 rounded-md bg-ink px-4 text-[14px] font-medium text-paper hover:bg-ink-2"
-                    >
-                      <Square className="h-3.5 w-3.5 fill-current" aria-hidden /> Stop
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setClipError(null)
-                        void recorder.start()
-                      }}
-                      disabled={recorder.state === 'unsupported' || recorder.state === 'requesting' || phase.kind === 'sending'}
-                      className="inline-flex h-11 shrink-0 items-center gap-2 rounded-md bg-ink px-4 text-[14px] font-medium text-paper hover:bg-ink-2 disabled:cursor-not-allowed disabled:bg-rule-2 disabled:text-ink-3"
-                    >
-                      {recorder.state === 'requesting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Mic className="h-4 w-4" aria-hidden />}
-                      {recorder.state === 'requesting' ? 'Allow microphone' : 'Record'}
-                    </button>
-                  )}
-                  <div ref={meterRef} className="flex h-9 flex-1 items-center gap-[3px]" aria-hidden>
-                    {Array.from({ length: 24 }, (_, i) => (
-                      <span
-                        key={i}
-                        data-bar
-                        className={`h-full flex-1 origin-center rounded-[1px] transition-transform duration-75 ${recorder.state === 'recording' ? 'bg-ink' : 'bg-rule-2'}`}
-                        style={{ transform: 'scaleY(0.08)' }}
-                      />
-                    ))}
-                  </div>
-                  <span className="w-[74px] shrink-0 text-right text-[13px] text-ink-3" aria-live="polite">
-                    {recorder.state === 'recording' ? (
-                      <>
-                        <span className="font-medium text-ink">{fmtTime(recorder.elapsed)}</span> / {fmtTime(MAX_RECORDING_SECONDS)}
-                      </>
-                    ) : (
-                      `max ${fmtTime(MAX_RECORDING_SECONDS)}`
-                    )}
-                  </span>
-                </div>
-
-                <RecorderMessage state={recorder.state} />
-
-                <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-rule pt-4 text-[13px] text-ink-3">
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={recording || phase.kind === 'sending'}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-rule-2 px-2.5 font-medium text-ink hover:border-ink-3 disabled:opacity-40"
-                  >
-                    <Upload className="h-3.5 w-3.5" aria-hidden /> Upload a file
-                  </button>
-                  <span>or drop one here. WebM, OGG, MP3, M4A, WAV or FLAC, up to 4 MB.</span>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="audio/*,.webm,.ogg,.mp3,.m4a,.wav,.flac"
-                    className="sr-only"
-                    tabIndex={-1}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      acceptFile(e.target.files?.[0])
-                      e.target.value = ''
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-            {clipError && (
-              <p role="alert" className="mt-2 flex items-start gap-2 text-[13px] text-ink">
-                <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden /> {clipError}
+                {isRecording && <span className="absolute inset-0 animate-ping rounded-full bg-ink/25 [animation-duration:1.6s]" aria-hidden />}
+                {recorder.state === 'requesting' ? (
+                  <Loader2 className="h-8 w-8 animate-spin" aria-hidden />
+                ) : isRecording ? (
+                  <Square className="h-7 w-7 fill-current" aria-hidden />
+                ) : (
+                  <Mic className="h-9 w-9" aria-hidden />
+                )}
+              </button>
+              <p className="mt-5 text-[15px] text-ink-2" aria-live="polite">
+                {isRecording ? (
+                  <>
+                    <span className="font-semibold text-ink tabular-nums">{fmtTime(recorder.elapsed)}</span> of {fmtTime(MAX_RECORDING_SECONDS)} · tap to stop
+                  </>
+                ) : recorder.state === 'requesting' ? (
+                  'Allow microphone access'
+                ) : (
+                  'Tap to record'
+                )}
               </p>
-            )}
-          </Step>
 
-          <Step n={3} title="What you said" optional htmlFor="voice-reference">
-            <textarea
-              id="voice-reference"
-              value={reference}
-              onChange={(e) => setReference(e.target.value)}
-              rows={3}
-              dir="auto"
-              placeholder="Type the exact words you spoke"
-              className="block w-full resize-y rounded-md border border-rule-2 bg-paper px-3 py-2.5 text-[15px] leading-relaxed transition-colors hover:border-ink-3 focus:border-ink focus:outline-none"
-            />
-            <p className="mt-1.5 text-[13px] text-ink-3">Needed only for the comparison and error rates. You can add it after transcribing.</p>
-          </Step>
+              {/* Live microphone level */}
+              <div ref={meterRef} className="mt-8 flex h-16 w-full max-w-[520px] items-center gap-[3px]" aria-hidden>
+                {Array.from({ length: METER_BARS }, (_, i) => (
+                  <span
+                    key={i}
+                    data-bar
+                    className={`h-full flex-1 origin-center rounded-full transition-transform duration-75 ${isRecording ? 'bg-ink' : 'bg-rule-2'}`}
+                    style={{ transform: 'scaleY(0.08)' }}
+                  />
+                ))}
+              </div>
 
-          <div className="space-y-3 border-t border-ink pt-5">
+              <RecorderMessage state={recorder.state} />
+
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                disabled={recording || phase.kind === 'sending'}
+                className="mt-8 inline-flex items-center gap-2 text-[14px] font-medium text-ink-2 underline decoration-rule-2 underline-offset-4 hover:text-ink hover:decoration-ink disabled:opacity-40"
+              >
+                <Upload className="h-4 w-4" aria-hidden /> or upload an audio file
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="audio/*,.webm,.ogg,.mp3,.m4a,.wav,.flac"
+                className="sr-only"
+                tabIndex={-1}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  acceptFile(e.target.files?.[0])
+                  e.target.value = ''
+                }}
+              />
+            </div>
+          )}
+
+          {clipError && (
+            <p role="alert" className="mx-auto mt-6 flex max-w-[48ch] items-start justify-center gap-2 text-[14px] text-ink">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> {clipError}
+            </p>
+          )}
+
+          {/* Optional reference text */}
+          <div className="mx-auto mt-12 max-w-[520px] text-left">
+            <button
+              type="button"
+              aria-expanded={showReference}
+              aria-controls="voice-reference-panel"
+              onClick={() => setShowReference((v) => !v)}
+              className="flex w-full items-center justify-between gap-4 border-t border-rule-2 py-4 text-[15px] font-medium"
+            >
+              <span>
+                What did you say? <span className="font-normal text-ink-3">Optional</span>
+              </span>
+              <ChevronDown className={`h-4 w-4 text-ink-3 transition-transform duration-300 ${showReference ? 'rotate-180' : ''}`} aria-hidden />
+            </button>
+            <div id="voice-reference-panel" className="disclosure-body" data-open={showReference} inert={!showReference}>
+              <div>
+                <label htmlFor="voice-reference" className="sr-only">
+                  What you said
+                </label>
+                <textarea
+                  id="voice-reference"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  rows={3}
+                  dir="auto"
+                  placeholder="Type the exact words to compare"
+                  className="mb-2 block w-full resize-y rounded-2xl border border-rule-2 bg-paper px-4 py-3 text-[16px] leading-relaxed transition-colors hover:border-ink-3 focus:border-ink focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="mt-8 flex flex-col items-center gap-3">
             {phase.kind === 'sending' ? (
               <div className="flex gap-2">
-                <button type="button" disabled className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-md bg-ink-2 text-[14px] font-medium text-paper">
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Transcribing
-                </button>
-                <button type="button" onClick={cancel} className="h-11 rounded-md border border-rule-2 px-4 text-[14px] font-medium hover:border-ink-3">
+                <span className="inline-flex h-14 items-center gap-2 rounded-full bg-ink-2 px-8 text-[16px] font-medium text-paper">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Listening…
+                </span>
+                <button type="button" onClick={cancel} className="h-14 rounded-full border border-rule-2 bg-paper px-6 text-[15px] font-medium hover:border-ink">
                   Cancel
                 </button>
               </div>
@@ -289,87 +319,82 @@ export function VoiceExperience() {
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-ink text-[14px] font-medium text-paper transition-colors hover:bg-ink-2 disabled:cursor-not-allowed disabled:bg-rule-2 disabled:text-ink-3"
+                className="inline-flex h-14 items-center rounded-full bg-ink px-10 text-[16px] font-medium text-paper transition-transform duration-150 hover:scale-[1.03] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-rule-2 disabled:text-ink-3 disabled:hover:scale-100"
               >
-                Transcribe with ElevenLabs
+                Show me what AI heard
               </button>
             )}
-            <p className="text-[12px] leading-relaxed text-ink-3">
+            <p className="text-[13px] text-ink-3">
               {!clip
-                ? 'Record or upload audio to continue.'
+                ? 'Record or upload up to a minute of audio.'
                 : !configured && service !== 'checking'
-                  ? 'Transcription is unavailable until the server is configured.'
-                  : 'Your audio is sent to ElevenLabs for transcription. VOXELO does not store it.'}
+                  ? 'Transcription is not available on this server yet.'
+                  : 'Sent to ElevenLabs for transcription. VOXELO keeps nothing.'}
             </p>
           </div>
         </form>
+      </div>
 
-        {/* Results */}
-        <div ref={resultRef} className="scroll-mt-32" aria-live="polite">
-          <Results phase={phase} reference={reference} onRetry={() => void run()} canRetry={canSubmit} />
+      {/* Results */}
+      <div ref={resultRef} className={`${COLUMN} scroll-mt-20`} aria-live="polite">
+        {phase.kind !== 'idle' && (
+          <section
+            aria-label="Result"
+            className={`swap-in mb-12 rounded-[32px] p-7 sm:p-10 ${phase.kind === 'error' ? 'border border-rule-2' : 'bg-ink text-paper'}`}
+          >
+            <Results phase={phase} reference={reference} onRetry={() => void run()} canRetry={canSubmit} onAddReference={() => setShowReference(true)} />
+          </section>
+        )}
+      </div>
+
+      <div className={`${COLUMN} pt-4 pb-20`}>
+        <div className="border-t border-ink">
+          <Disclosure title="About this demo" summary="Privacy, limits and what one recording can tell you.">
+            <Notes
+              flags={phase.kind === 'done' && reference.trim() ? ['C'] : []}
+              sources={[
+                { label: 'Transcription', value: <>ElevenLabs Scribe, through the server endpoint <Code>/api/transcribe</Code></> },
+                { label: 'Privacy', value: 'Audio is processed in memory and discarded. Nothing is stored or logged by VOXELO.' },
+                { label: 'Limits', value: 'Up to 4 MB or one minute. WebM, OGG, MP3, M4A, WAV or FLAC.' },
+              ]}
+            >
+              One recording is a demonstration, not a measurement. Results vary with microphone, background noise,
+              speaking style and the words chosen.
+            </Notes>
+          </Disclosure>
         </div>
       </div>
-
-      <Notes
-        flags={phase.kind === 'done' && reference.trim() ? ['C'] : []}
-        sources={[
-          { label: 'Transcription', value: <>ElevenLabs Scribe, through the server endpoint <Code>/api/transcribe</Code></> },
-          { label: 'Privacy', value: 'Audio is processed in memory and discarded. Nothing is written to disk or logged by VOXELO.' },
-        ]}
-      >
-        A single recording does not measure a model’s accuracy for a language. Results vary with microphone, background
-        noise, speaking style and the words chosen. Population-level findings come from the Speech Intelligence dataset.
-      </Notes>
-    </div>
-  )
-}
-
-function Step({ n, title, optional, htmlFor, children }: { n: number; title: string; optional?: boolean; htmlFor?: string; children: ReactNode }) {
-  const Title = htmlFor ? 'label' : 'p'
-  return (
-    <section className="grid grid-cols-[24px_minmax(0,1fr)] gap-x-2">
-      <span className="pt-px font-semibold text-ink-3" aria-hidden>
-        {n}
-      </span>
-      <div>
-        <Title {...(htmlFor ? { htmlFor } : {})} className="mb-2 block font-semibold">
-          {title}
-          {optional && <span className="ml-2 text-[13px] font-normal text-ink-3">Optional</span>}
-        </Title>
-        {children}
-      </div>
-    </section>
+    </>
   )
 }
 
 function RecorderMessage({ state }: { state: string }) {
   const msg =
     state === 'denied'
-      ? 'Microphone access was blocked. Allow it in your browser’s site settings, or upload a file instead.'
+      ? 'Microphone access was blocked. Allow it in your browser settings, or upload a file.'
       : state === 'unsupported'
-        ? 'Recording is not available in this browser or on an insecure connection. Upload a file instead.'
+        ? 'Recording isn’t available in this browser. Upload a file instead.'
         : state === 'error'
-          ? 'No microphone could be opened. Check that one is connected, or upload a file.'
+          ? 'No microphone found. Connect one, or upload a file.'
           : null
-  return msg ? <p className="mt-3 text-[13px] text-ink-2">{msg}</p> : null
+  return msg ? <p className="mt-6 max-w-[44ch] text-[14px] text-ink-2">{msg}</p> : null
 }
 
 function ServiceNotice({ service }: { service: ServiceStatus | null | 'checking' }) {
   if (service === 'checking' || service?.configured) return null
   return (
-    <div role="status" className="flex items-start gap-2.5 rounded-md border border-rule-2 bg-wash px-4 py-3 text-[14px] text-ink-2">
+    <div role="status" className="mx-auto flex max-w-[780px] items-start gap-2.5 rounded-2xl border border-rule-2 px-5 py-4 text-[14px] text-ink-2">
       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-ink-3" aria-hidden />
       <p>
         {service === null ? (
           <>
-            <strong className="font-semibold text-ink">Transcription endpoint not available.</strong> This deployment
-            has no <Code>/api/transcribe</Code> server function. Recording and upload still work; transcription does not.
+            <strong className="font-semibold text-ink">Transcription isn’t available on this deployment.</strong> You can
+            still record and play back.
           </>
         ) : (
           <>
-            <strong className="font-semibold text-ink">Live transcription is not configured.</strong> The server has no
-            ElevenLabs API key, so recordings cannot be transcribed yet. Set <Code>ELEVENLABS_API_KEY</Code> on the
-            server to enable it.
+            <strong className="font-semibold text-ink">Live transcription is not set up yet.</strong> The server needs an
+            ElevenLabs API key (<Code>ELEVENLABS_API_KEY</Code>).
           </>
         )}
       </p>
@@ -377,7 +402,19 @@ function ServiceNotice({ service }: { service: ServiceStatus | null | 'checking'
   )
 }
 
-function Results({ phase, reference, onRetry, canRetry }: { phase: Phase; reference: string; onRetry: () => void; canRetry: boolean }) {
+function Results({
+  phase,
+  reference,
+  onRetry,
+  canRetry,
+  onAddReference,
+}: {
+  phase: Phase
+  reference: string
+  onRetry: () => void
+  canRetry: boolean
+  onAddReference: () => void
+}) {
   const hyp = phase.kind === 'done' ? phase.result.text : ''
   const ref = reference.trim()
   const comparison = useMemo(() => {
@@ -386,48 +423,31 @@ function Results({ phase, reference, onRetry, canRetry }: { phase: Phase; refere
     return { tokens, s: summarise(tokens), cer: charErrorRate(ref, hyp) }
   }, [phase.kind, ref, hyp])
 
-  if (phase.kind === 'idle')
-    return (
-      <div className="rounded-lg border border-dashed border-rule-2 bg-wash px-6 py-10">
-        <p className="text-[19px] font-semibold tracking-[-0.01em]">What AI heard appears here</p>
-        <p className="mt-2 max-w-[52ch] text-ink-2">
-          Choose a language, record a sentence or upload a clip, then transcribe. Add the words you said to see every
-          substitution, omission and insertion marked.
-        </p>
-      </div>
-    )
+  if (phase.kind === 'idle') return null
 
   if (phase.kind === 'sending')
     return (
-      <div className="rounded-lg border border-rule-2 px-6 py-8" aria-busy="true">
-        <p className="flex items-center gap-2 text-[14px] text-ink-2">
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Sending to ElevenLabs Scribe
-        </p>
-        <div className="mt-5 space-y-3">
-          <div className="h-5 w-11/12 animate-pulse rounded bg-wash" />
-          <div className="h-5 w-3/4 animate-pulse rounded bg-wash" />
+      <div aria-busy="true">
+        <p className="text-[15px] text-white/60">Listening to your recording…</p>
+        <div className="mt-8 space-y-4">
+          <div className="h-10 w-11/12 animate-pulse rounded-lg bg-white/10" />
+          <div className="h-10 w-2/3 animate-pulse rounded-lg bg-white/10" />
         </div>
       </div>
     )
 
   if (phase.kind === 'error')
     return (
-      <div role="alert" className="rounded-lg border border-ink px-6 py-6">
-        <p className="flex items-center gap-2 font-semibold">
-          <AlertTriangle className="h-4 w-4" aria-hidden /> Transcription failed
-        </p>
-        <p className="mt-1.5 max-w-[60ch] text-ink-2">{phase.error.message}</p>
-        <p className="mt-1 text-[12px] text-ink-3">
-          Code: <span className="font-mono">{phase.error.code}</span>
-          {phase.error.retryAfter ? ` · retry after ${phase.error.retryAfter}s` : ''}
+      <div role="alert" className="max-w-[60ch]">
+        <p className="text-[1.75rem] font-semibold tracking-[-0.02em]">That didn’t work.</p>
+        <p className="mt-4 text-[17px] text-ink-2">{phase.error.message}</p>
+        <p className="mt-2 text-[13px] text-ink-3">
+          Code <span className="font-mono">{phase.error.code}</span>
+          {phase.error.retryAfter ? ` · try again in ${phase.error.retryAfter}s` : ''}
         </p>
         {canRetry && !['not_configured', 'no_endpoint', 'upstream_auth'].includes(phase.error.code) && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-md border border-rule-2 px-3 text-[14px] font-medium hover:border-ink-3"
-          >
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden /> Try again
+          <button type="button" onClick={onRetry} className="mt-8 inline-flex h-12 items-center gap-2 rounded-full border border-rule-2 px-6 text-[15px] font-medium hover:border-ink">
+            <RotateCcw className="h-4 w-4" aria-hidden /> Try again
           </button>
         )}
       </div>
@@ -438,95 +458,63 @@ function Results({ phase, reference, onRetry, canRetry }: { phase: Phase; refere
   const mismatch = language !== 'auto' && detected && !detected.startsWith(language) && !language.startsWith(detected)
 
   return (
-    <article className="space-y-8">
-      <section>
-        <h2 className="text-xl font-semibold tracking-[-0.015em]">What AI heard</h2>
-        <dl className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[13px]">
-          <Meta label="Selected">{languageName(language)}</Meta>
-          <Meta label="Detected">
-            {detected ? languageName(detected) : 'n/a'}
-            {result.language_probability !== null && <span className="text-ink-3"> · {pct(result.language_probability, 0)} confidence</span>}
-          </Meta>
-          <Meta label="Model">
-            <span className="font-mono text-[12px]">{result.model}</span>
-          </Meta>
-        </dl>
-        <div className="mt-4 rounded-lg border border-rule-2 px-5 py-5">
-          {result.text.trim() ? (
-            <p dir="auto" className="text-[20px] leading-[1.6]">
-              {result.text}
-            </p>
-          ) : (
-            <p className="text-ink-2">No speech was recognised in this recording.</p>
-          )}
-        </div>
-        {mismatch && (
-          <p className="mt-2 text-[13px] text-ink-2">
-            The detected language differs from the one you selected. The recording may contain another language, or
-            recognition may be uncertain.
-          </p>
-        )}
-      </section>
+    <article className="swap-in">
+      <p className="text-[15px] text-white/60">AI heard</p>
+      {result.text.trim() ? (
+        <p dir="auto" className="mt-4 text-[clamp(1.5rem,3vw,2.125rem)] leading-[1.25] font-medium tracking-[-0.02em]">
+          “{result.text.trim()}”
+        </p>
+      ) : (
+        <p className="mt-4 text-[1.5rem] font-medium text-white/70">No speech recognised.</p>
+      )}
+      <p className="mt-8 text-[14px] text-white/50">
+        {language === 'auto' ? 'Language detected' : `You chose ${languageName(language)}`}
+        {detected && ` · heard as ${languageName(detected)}`}
+        {result.language_probability !== null && ` (${pct(result.language_probability, 0)} sure)`}
+      </p>
+      {mismatch && <p className="mt-2 text-[14px] text-white/70">That’s a different language from the one you chose.</p>}
 
-      <section>
-        <h2 className="text-xl font-semibold tracking-[-0.015em]">Said and heard</h2>
-        {comparison ? (
-          <>
-            <div className="mt-4 rounded-lg border border-rule-2">
-              <div className="px-5 py-5">
-                <ProofLines tokens={comparison.tokens} size="lg" />
-              </div>
-              <div className="border-t border-rule px-5 py-3">
-                <DiffLegend />
-              </div>
+      {comparison ? (
+        <div className="mt-10 border-t border-white/15 pt-8">
+          <div className="rounded-2xl bg-paper p-5 text-ink sm:p-7">
+            <ProofLines tokens={comparison.tokens} size="lg" />
+            <div className="mt-6 border-t border-rule pt-4">
+              <DiffLegend />
             </div>
-            <dl className="mt-4 grid grid-cols-2 border-y border-ink sm:grid-cols-4">
-              <Metric label="Word Error Rate" value={comparison.s.wer === null ? 'n/a' : pct(comparison.s.wer)} />
-              <Metric label="Character Error Rate" value={comparison.cer === null ? 'n/a' : pct(comparison.cer)} />
-              <Metric label="Words compared" value={String(comparison.s.refWords)} plain />
-              <Metric
-                label="Differences"
-                value={String(comparison.s.errors)}
-                hint={`${comparison.s.substitutions} sub · ${comparison.s.deletions} missed · ${comparison.s.insertions} added`}
-                plain
-              />
-            </dl>
-          </>
-        ) : (
-          <p className="mt-2 max-w-[60ch] text-ink-2">
-            Type what you said in step 3 to compare it word by word with the transcript. Error rates are shown only when
-            there is a reference to compare against.
-          </p>
-        )}
-      </section>
+          </div>
+          <dl className="mt-8 grid grid-cols-3 gap-6">
+            <Metric label="of words wrong" value={comparison.s.wer === null ? 'n/a' : pct(comparison.s.wer, 0)} flag />
+            <Metric label="of characters wrong" value={comparison.cer === null ? 'n/a' : pct(comparison.cer, 0)} flag />
+            <Metric label="words differ" value={String(comparison.s.errors)} />
+          </dl>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            onAddReference()
+            document.getElementById('voice-reference')?.focus()
+          }}
+          className="mt-12 inline-flex h-12 items-center rounded-full border border-white/25 px-6 text-[15px] font-medium transition-colors hover:border-white"
+        >
+          Add what you said to compare
+        </button>
+      )}
 
-      <p className="max-w-[68ch] border-l border-rule-2 pl-4 text-[14px] leading-relaxed text-ink-2">
-        One recording is a demonstration, not a measurement. It cannot show how accurately ElevenLabs recognises a
-        language overall; that needs many speakers and recordings, as in the Speech Intelligence results.
+      <p className="mt-14 max-w-[52ch] text-[14px] leading-relaxed text-white/50">
+        One recording is a demo, not a measure of accuracy. Real results need many speakers.
       </p>
     </article>
   )
 }
 
-function Meta({ label, children }: { label: string; children: ReactNode }) {
+function Metric({ label, value, flag }: { label: string; value: string; flag?: boolean }) {
   return (
-    <div className="flex gap-1.5">
-      <dt className="text-ink-3">{label}</dt>
-      <dd className="font-medium">{children}</dd>
-    </div>
-  )
-}
-
-function Metric({ label, value, hint, plain }: { label: string; value: string; hint?: string; plain?: boolean }) {
-  return (
-    <div className="flex flex-col-reverse justify-end border-rule py-3 pr-3 odd:pr-3 even:border-l even:pl-3 sm:border-l sm:pl-3 sm:first:border-l-0 sm:first:pl-0 [&:nth-child(n+3)]:border-t sm:[&:nth-child(n+3)]:border-t-0">
-      <dt className="mt-1.5 text-[13px] text-ink-3">
-        {label}
-        {hint && <span className="block text-[12px]">{hint}</span>}
-      </dt>
-      <dd className="text-[22px] leading-none font-semibold tracking-[-0.02em]">
+    <div className="flex flex-col-reverse">
+      <dt className="mt-2 text-[15px] text-white/60">{label}</dt>
+      <dd className="text-[clamp(2rem,4vw,2.75rem)] leading-none font-semibold tracking-[-0.04em] tabular-nums">
         {value}
-        {!plain && value !== 'n/a' && <Flag kind="C" />}
+        {flag && value !== 'n/a' && <Flag kind="C" />}
       </dd>
     </div>
   )
