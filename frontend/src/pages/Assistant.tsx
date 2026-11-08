@@ -714,7 +714,7 @@ export function Assistant() {
             <Stat value="24% → 4%" label="Urdu character error rate: auto-detected vs language specified" />
             <Stat value="8 of 40" label="Urdu clips written as Hindi, all with ≥ 91% confidence" />
             <Stat value="40 of 40" label="Cantonese clips detected as generic Chinese" />
-            <Stat value="15" label="languages the assistant can answer in" />
+            <Stat value="16" label="languages the assistant can answer in" />
           </dl>
         </div>
       </section>

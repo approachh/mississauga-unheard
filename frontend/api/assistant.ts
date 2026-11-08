@@ -56,6 +56,7 @@ const REPLY: Record<string, string> = {
   tam: 'நன்றி, உங்கள் கோரிக்கையை புரிந்துகொண்டேன். தயவுசெய்து முகவரியைச் சொல்லுங்கள்.',
   guj: 'આભાર, હું તમારી વિનંતી સમજી ગયો છું. કૃપા કરીને મને સરનામું જણાવો.',
   ben: 'ধন্যবাদ, আমি আপনার অনুরোধ বুঝেছি। অনুগ্রহ করে আমাকে ঠিকানাটি বলুন।',
+  rus: 'Спасибо, я понял ваше обращение. Пожалуйста, назовите адрес.',
 }
 
 // "Thank you. Your request draft is ready."  Worded so it never suggests anything was submitted.
@@ -76,6 +77,7 @@ const DONE: Record<string, string> = {
   tam: 'நன்றி. உங்கள் கோரிக்கையின் வரைவு தயாராக உள்ளது.',
   guj: 'આભાર. તમારી વિનંતીનો ડ્રાફ્ટ તૈયાર છે.',
   ben: 'ধন্যবাদ। আপনার অনুরোধের খসড়া প্রস্তুত।',
+  rus: 'Спасибо. Черновик вашего обращения готов.',
 }
 
 // "Do you speak X or Y?" asked in both languages  (live_demo.py CONFIRM_PROMPTS). One part per
@@ -107,6 +109,7 @@ const LANGS: Record<string, { name: string; script?: RegExp }> = {
   tam: { name: 'Tamil (Tamil script)', script: /[஀-௿]/ },
   guj: { name: 'Gujarati (Gujarati script)', script: /[઀-૿]/ },
   ben: { name: 'Bengali (Bengali script)', script: /[ঀ-৿]/ },
+  rus: { name: 'Russian', script: /[Ѐ-ӿ]/ },
 }
 
 /** Languages the standard multilingual TTS model does not cover; they use the extended model. */
@@ -301,6 +304,7 @@ const NATIVE_CLAIMS = new RegExp(
     'பதிவு செய்யப்பட்ட', 'அனுப்பப்பட்ட', // Tamil
     'નોંધાઈ', 'નોંધવામાં આવ', 'મોકલી દેવા', // Gujarati
     'নথিভুক্ত', 'পাঠানো হয়েছে', 'জমা দেওয়া হয়েছে', // Bengali
+    'отправлен', 'зарегистрирован', 'передан', 'подана', 'подан ', 'направлен', 'оформл', // Russian
   ].join('|'),
   'i',
 )
@@ -323,6 +327,7 @@ const PROTOTYPE_NOTE: Record<string, string> = {
   tam: 'இது ஒரு முன்மாதிரி, எனவே நகரத்திற்கு எதுவும் அனுப்பப்படாது.',
   guj: 'આ એક પ્રોટોટાઇપ છે, તેથી શહેરને કંઈ મોકલવામાં આવતું નથી.',
   ben: 'এটি একটি প্রোটোটাইপ, তাই শহরে কিছুই পাঠানো হয় না।',
+  rus: 'Это прототип, поэтому в город ничего не отправляется.',
 }
 
 async function handleTurn(input: unknown, env: Env): Promise<Response> {

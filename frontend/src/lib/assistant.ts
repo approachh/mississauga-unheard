@@ -35,18 +35,19 @@ export const ASSISTANT_LANGUAGES: { code: string; name: string; native: string; 
   { code: 'tam', name: 'Tamil', native: 'தமிழ்', html: 'ta' },
   { code: 'guj', name: 'Gujarati', native: 'ગુજરાતી', html: 'gu' },
   { code: 'ben', name: 'Bengali', native: 'বাংলা', html: 'bn' },
+  { code: 'rus', name: 'Russian', native: 'Русский', html: 'ru' },
 ]
 
 /** Names for languages Scribe may detect that the assistant cannot answer in. From live_demo.py, extended. */
 const OTHER_NAMES: Record<string, string> = {
-  rus: 'Russian', ukr: 'Ukrainian', kor: 'Korean', ita: 'Italian', mal: 'Malayalam', hrv: 'Croatian',
+  ukr: 'Ukrainian', kor: 'Korean', ita: 'Italian', mal: 'Malayalam', hrv: 'Croatian',
   srp: 'Serbian', jpn: 'Japanese', fra: 'French', deu: 'German', fas: 'Persian', tur: 'Turkish',
 }
 
 /** Scribe sometimes reports a variant code; fold it into the one the assistant uses. */
 const ALIASES: Record<string, string> = {
   cmn: 'zho', tgl: 'fil', en: 'eng', ur: 'urd', hi: 'hin', pa: 'pan', zh: 'zho', ar: 'ara', tl: 'fil',
-  fil: 'fil', pl: 'pol', es: 'spa', pt: 'por', vi: 'vie', ta: 'tam', gu: 'guj', bn: 'ben',
+  fil: 'fil', pl: 'pol', es: 'spa', pt: 'por', vi: 'vie', ta: 'tam', gu: 'guj', bn: 'ben', ru: 'rus',
 }
 
 export const normalizeLanguage = (code: string | null | undefined): string | null => {
@@ -93,30 +94,30 @@ export const CATEGORIES: { id: string; label: string; words: string[] }[] = [
     label: 'Streetlight',
     words: ['streetlight', 'street light', 'light is out', 'lights are out', 'light out', 'lights out', 'lamp',
       'بتی', 'روشنی', 'لائٹ', 'बत्ती', 'लाइट', 'ਬੱਤੀ', 'إنارة', 'مصباح', '路灯', '路燈', 'farola', 'ilaw', 'latarnia',
-      'poste', 'đèn', 'விளக்கு'],
+      'poste', 'đèn', 'விளக்கு', 'фонарь', 'фонар', 'освещени'],
   },
   {
     id: 'road',
     label: 'Pothole / Road',
     words: ['pothole', 'road', 'sidewalk', 'گڑھا', 'سڑک', 'गड्ढा', 'सड़क', 'ਟੋਆ', 'ਸੜਕ', 'حفرة', 'طريق', '坑', '马路',
-      '馬路', 'bache', 'calle', 'lubak', 'dziura', 'buraco', 'ổ gà', 'குழி'],
+      '馬路', 'bache', 'calle', 'lubak', 'dziura', 'buraco', 'ổ gà', 'குழி', 'яма', 'ямы', 'дорога', 'дороге', 'тротуар'],
   },
   {
     id: 'garbage',
     label: 'Garbage / Recycling',
     words: ['garbage', 'trash', 'recycling', 'waste', 'کچرا', 'کوڑا', 'कचरा', 'कूड़ा', 'ਕੂੜਾ', 'قمامة', '垃圾', 'basura',
-      'śmieci', 'lixo', 'rác', 'குப்பை'],
+      'śmieci', 'lixo', 'rác', 'குப்பை', 'мусор', 'отходы', 'переработк'],
   },
   {
     id: 'noise',
     label: 'Noise',
-    words: ['noise', 'loud', 'شور', 'शोर', 'ਸ਼ੋਰ', 'ضوضاء', '噪音', '嘈', 'ruido', 'ingay', 'hałas', 'barulho', 'ồn', 'சத்தம்'],
+    words: ['noise', 'loud', 'شور', 'शोर', 'ਸ਼ੋਰ', 'ضوضاء', '噪音', '嘈', 'ruido', 'ingay', 'hałas', 'barulho', 'ồn', 'சத்தம்', 'шум', 'громк'],
   },
   {
     id: 'water',
     label: 'Water / Flooding',
     words: ['water', 'flood', 'leak', 'پانی', 'पानी', 'ਪਾਣੀ', 'ماء', 'مياه', '水', 'agua', 'tubig', 'woda', 'água', 'nước',
-      'தண்ணீர்'],
+      'தண்ணீர்', 'вода', 'воды', 'воду', 'затоп', 'протечк', 'утечк'],
   },
 ]
 export const GENERAL = { id: 'other', label: 'Other' }
