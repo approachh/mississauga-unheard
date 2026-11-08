@@ -7,7 +7,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from .normalization import NO_WORD_BOUNDARY, normalize
+from .normalization import NO_WORD_BOUNDARY, normalize, to_simplified
 
 
 def _edit_distance(ref: list, hyp: list) -> int:
@@ -34,11 +34,16 @@ def cer(ref: str, hyp: str) -> float:
     return _edit_distance(list(r), list(h)) / len(r)
 
 
-def score_row(reference: str, prediction: str | None, iso: str) -> tuple[float, float, str, str]:
+def score_row(reference: str, prediction: str | None, iso: str):
+    """Returns (wer, cer, cer_script_neutral, ref_norm, hyp_norm).
+    cer_script_neutral: for Chinese/Cantonese both texts are converted to Simplified first,
+    so writing 們 instead of 们 is not counted as a recognition error."""
     ref_n = normalize(reference, iso)
     hyp_n = normalize(prediction, iso)
     w = np.nan if iso in NO_WORD_BOUNDARY else wer(ref_n, hyp_n)
-    return w, cer(ref_n, hyp_n), ref_n, hyp_n
+    c = cer(ref_n, hyp_n)
+    c_neutral = cer(to_simplified(ref_n), to_simplified(hyp_n)) if iso in NO_WORD_BOUNDARY else c
+    return w, c, c_neutral, ref_n, hyp_n
 
 
 def bootstrap_ci(values, n_boot: int = 2000, seed: int = 0) -> tuple[float, float]:
@@ -65,6 +70,10 @@ def summarize(results: pd.DataFrame) -> pd.DataFrame:
             "median_wer": ok["wer"].median(),
             "mean_cer": ok["cer"].mean(), "cer_ci_low": cer_lo, "cer_ci_high": cer_hi,
             "median_cer": ok["cer"].median(),
+            "mean_cer_script_neutral": ok["cer_script_neutral"].mean(),
+            "mean_latin_word_share": ok["latin_word_share"].astype(float).mean(),
+            "detected_languages": ", ".join(f"{k}:{v}" for k, v in
+                                            ok["detected_language"].value_counts().items()),
             "pct_language_mismatch": 100 * ok["language_mismatch"].astype(float).mean(),
             "pct_script_mismatch": 100 * ok["script_mismatch"].astype(float).mean(),
             "audio_minutes": ok["duration_sec"].sum() / 60,

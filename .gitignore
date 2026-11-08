@@ -1,20 +1,24 @@
-# Secrets and local configuration
+# Secrets
 .env
-.env.*
-!.env.example
-*.pem
-*.key
 
-# Python environments and generated files
+# Python
 .venv/
 venv/
 __pycache__/
-*.py[cod]
+*.pyc
+.ipynb_checkpoints/
 
-# IDE files
-.idea/
-
-# Dataset and generated-output files
-analysis/data/
-analysis/output/
+# Datasets and audio (too large for GitHub)
+data/
 *.flac
+*.mp3
+*.wav
+*.m4a
+
+# ...except the showcase clips the dashboard needs
+!analysis/outputs/showcase_audio/*
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/

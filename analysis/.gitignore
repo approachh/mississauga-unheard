@@ -1,5 +1,4 @@
 .env
-cache/
-outputs/speech_results_detailed.csv
 __pycache__/
 .venv/
+reply.mp3
