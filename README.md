@@ -40,7 +40,7 @@ The intervals come from resampling the clips (bootstrap). Wards 6, 5, 10 and 11 
 
 ## Limits
 
-- **Small samples.** Urdu, Cantonese, Punjabi, Hindi and Mandarin have 40 FLEURS clips each. Tamil, Arabic, Vietnamese, Polish, Tagalog, Spanish, Portuguese, Gujarati and English have only 5. Bengali has no FLEURS audio in the pack.
+- **Samples.** Every language has 40 FLEURS clips in auto-detect mode (560 clips in all). The comparison with the language specified is thinner: Urdu, Cantonese, Punjabi, Hindi and Mandarin have 40 clips in that mode; Tamil, Arabic, Vietnamese, Polish, Tagalog, Spanish, Portuguese, Gujarati and English have only 5. Bengali has no FLEURS audio in the pack.
 - **Language effect or speaker effect?** FLEURS has only a few speakers per language. The Urdu, Punjabi and Arabic clips are all female; the Portuguese, Tagalog and Vietnamese clips are all male. We have not yet separated a language effect from a speaker effect.
 - **Read speech is not a service request.** FLEURS and the accent archive are read aloud. Real 311 calls are spontaneous, noisy and recorded over the phone.
 - **Dialects differ from Mississauga's communities.** FLEURS Portuguese is Brazilian, Spanish is Latin American and Arabic was recorded in Egypt.

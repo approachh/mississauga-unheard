@@ -18,7 +18,11 @@ const NAV = [
   { to: '/routing', label: 'Routing' },
   { to: '/community', label: 'Community' },
   { to: '/voice', label: 'Voice' },
+  { to: '/assistant', label: '311 Assistant' },
 ]
+
+/** Pages with no published data behind them: the data-status badge would mean nothing there. */
+const NO_DATA_ROUTES = ['/voice', '/assistant']
 
 const DATA_ROUTES = ['/', '/speech']
 
@@ -61,7 +65,7 @@ export function AppLayout() {
               <Tab key={n.to} {...n} />
             ))}
           </nav>
-          {pathname !== '/voice' && <DataStatus files={statusFiles} />}
+          {!NO_DATA_ROUTES.includes(pathname) && <DataStatus files={statusFiles} />}
         </div>
         {/* Mobile tabs */}
         <nav aria-label="Primary" className="flex h-11 items-stretch overflow-x-auto border-t border-white/10 px-2 sm:hidden">

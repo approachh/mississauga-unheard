@@ -4,9 +4,9 @@
     "speech": {
       "file": "analysis/outputs/speech_results.csv",
       "ref": "origin/feature/speech-evaluation",
-      "commit": "64b7a05b41ff5352c187eff2f34da42014272e39",
+      "commit": "a68066076fc70aaf57fa468f7a66b34b1af34137",
       "dataset": "FLEURS read speech",
-      "clips_used": 480,
+      "clips_used": 760,
       "clips_dropped": 0
     },
     "census": "census_ward_languages.json (2021 ward language profile)"
@@ -18,7 +18,7 @@
     "scale_reference": {
       "mode": "auto",
       "ward": 6,
-      "raw": 0.025064
+      "raw": 0.025047
     },
     "bootstrap": {
       "resamples": 2000,
@@ -29,9 +29,9 @@
   },
   "baseline": {
     "language": "English",
-    "clips": 5,
+    "clips": 40,
     "cer": {
-      "auto": 0.0017,
+      "auto": 0.0085,
       "forced": 0.0017
     }
   },
@@ -47,12 +47,12 @@
       },
       "cer_ci": {
         "auto": [
-          0.1281,
-          0.3702
+          0.1207,
+          0.3745
         ],
         "forced": [
-          0.0273,
-          0.0564
+          0.0267,
+          0.0563
         ]
       },
       "cer_script_neutral": {
@@ -75,12 +75,12 @@
       },
       "cer_ci": {
         "auto": [
-          0.1768,
-          0.2893
+          0.1793,
+          0.2916
         ],
         "forced": [
-          0.1465,
-          0.2747
+          0.1535,
+          0.2702
         ]
       },
       "cer_script_neutral": {
@@ -103,11 +103,11 @@
       },
       "cer_ci": {
         "auto": [
-          0.0347,
-          0.165
+          0.0337,
+          0.1648
         ],
         "forced": [
-          0.0326,
+          0.0327,
           0.1339
         ]
       },
@@ -131,12 +131,12 @@
       },
       "cer_ci": {
         "auto": [
-          0.0277,
-          0.0659
+          0.0266,
+          0.0673
         ],
         "forced": [
           0.0275,
-          0.0688
+          0.0678
         ]
       },
       "cer_script_neutral": {
@@ -150,25 +150,25 @@
     },
     {
       "language": "Tamil",
-      "clips": 5,
-      "small_sample": true,
+      "clips": 40,
+      "small_sample": false,
       "citywide_speakers": 7420,
       "cer": {
-        "auto": 0.0324,
+        "auto": 0.0368,
         "forced": 0.0324
       },
       "cer_ci": {
         "auto": [
-          0.0118,
-          0.0558
+          0.0223,
+          0.0541
         ],
         "forced": [
           0.0118,
-          0.0558
+          0.053
         ]
       },
       "cer_script_neutral": {
-        "auto": 0.0324,
+        "auto": 0.0368,
         "forced": 0.0324
       },
       "pct_language_mismatch": {
@@ -187,12 +187,12 @@
       },
       "cer_ci": {
         "auto": [
-          0.0146,
-          0.0401
+          0.0151,
+          0.0407
         ],
         "forced": [
-          0.0141,
-          0.0392
+          0.014,
+          0.0394
         ]
       },
       "cer_script_neutral": {
@@ -205,18 +205,46 @@
       }
     },
     {
+      "language": "Gujarati",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 4345,
+      "cer": {
+        "auto": 0.0241,
+        "forced": 0.0016
+      },
+      "cer_ci": {
+        "auto": [
+          0.0163,
+          0.0326
+        ],
+        "forced": [
+          0,
+          0.0049
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0241,
+        "forced": 0.0016
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
       "language": "Arabic",
-      "clips": 5,
-      "small_sample": true,
+      "clips": 40,
+      "small_sample": false,
       "citywide_speakers": 20570,
       "cer": {
-        "auto": 0.0264,
+        "auto": 0.0228,
         "forced": 0.0264
       },
       "cer_ci": {
         "auto": [
-          0.0018,
-          0.054
+          0.0142,
+          0.0338
         ],
         "forced": [
           0.0018,
@@ -224,7 +252,7 @@
         ]
       },
       "cer_script_neutral": {
-        "auto": 0.0264,
+        "auto": 0.0228,
         "forced": 0.0264
       },
       "pct_language_mismatch": {
@@ -233,18 +261,74 @@
       }
     },
     {
+      "language": "Portuguese",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 6000,
+      "cer": {
+        "auto": 0.0161,
+        "forced": 0.0052
+      },
+      "cer_ci": {
+        "auto": [
+          0.0055,
+          0.0309
+        ],
+        "forced": [
+          0,
+          0.0156
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.0161,
+        "forced": 0.0052
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
+      "language": "Tagalog",
+      "clips": 40,
+      "small_sample": false,
+      "citywide_speakers": 10695,
+      "cer": {
+        "auto": 0.015,
+        "forced": 0.0138
+      },
+      "cer_ci": {
+        "auto": [
+          0.008,
+          0.0248
+        ],
+        "forced": [
+          0,
+          0.0316
+        ]
+      },
+      "cer_script_neutral": {
+        "auto": 0.015,
+        "forced": 0.0138
+      },
+      "pct_language_mismatch": {
+        "auto": 0,
+        "forced": 0
+      }
+    },
+    {
       "language": "Vietnamese",
-      "clips": 5,
-      "small_sample": true,
+      "clips": 40,
+      "small_sample": false,
       "citywide_speakers": 7315,
       "cer": {
-        "auto": 0.02,
+        "auto": 0.014,
         "forced": 0.02
       },
       "cer_ci": {
         "auto": [
-          0,
-          0.0459
+          0.0041,
+          0.0283
         ],
         "forced": [
           0,
@@ -252,7 +336,7 @@
         ]
       },
       "cer_script_neutral": {
-        "auto": 0.02,
+        "auto": 0.014,
         "forced": 0.02
       },
       "pct_language_mismatch": {
@@ -262,17 +346,17 @@
     },
     {
       "language": "Polish",
-      "clips": 5,
-      "small_sample": true,
+      "clips": 40,
+      "small_sample": false,
       "citywide_speakers": 12565,
       "cer": {
-        "auto": 0.0186,
+        "auto": 0.0103,
         "forced": 0.0186
       },
       "cer_ci": {
         "auto": [
-          0,
-          0.0558
+          0.0035,
+          0.0185
         ],
         "forced": [
           0,
@@ -280,36 +364,8 @@
         ]
       },
       "cer_script_neutral": {
-        "auto": 0.0186,
+        "auto": 0.0103,
         "forced": 0.0186
-      },
-      "pct_language_mismatch": {
-        "auto": 0,
-        "forced": 0
-      }
-    },
-    {
-      "language": "Tagalog",
-      "clips": 5,
-      "small_sample": true,
-      "citywide_speakers": 10695,
-      "cer": {
-        "auto": 0.0138,
-        "forced": 0.0138
-      },
-      "cer_ci": {
-        "auto": [
-          0,
-          0.0349
-        ],
-        "forced": [
-          0,
-          0.0349
-        ]
-      },
-      "cer_script_neutral": {
-        "auto": 0.0138,
-        "forced": 0.0138
       },
       "pct_language_mismatch": {
         "auto": 0,
@@ -318,17 +374,17 @@
     },
     {
       "language": "Spanish",
-      "clips": 5,
-      "small_sample": true,
+      "clips": 40,
+      "small_sample": false,
       "citywide_speakers": 9360,
       "cer": {
-        "auto": 0.0121,
+        "auto": 0.0055,
         "forced": 0.0121
       },
       "cer_ci": {
         "auto": [
-          0,
-          0.0321
+          0.0021,
+          0.0101
         ],
         "forced": [
           0,
@@ -336,64 +392,8 @@
         ]
       },
       "cer_script_neutral": {
-        "auto": 0.0121,
+        "auto": 0.0055,
         "forced": 0.0121
-      },
-      "pct_language_mismatch": {
-        "auto": 0,
-        "forced": 0
-      }
-    },
-    {
-      "language": "Portuguese",
-      "clips": 5,
-      "small_sample": true,
-      "citywide_speakers": 6000,
-      "cer": {
-        "auto": 0.0052,
-        "forced": 0.0052
-      },
-      "cer_ci": {
-        "auto": [
-          0,
-          0.0156
-        ],
-        "forced": [
-          0,
-          0.0156
-        ]
-      },
-      "cer_script_neutral": {
-        "auto": 0.0052,
-        "forced": 0.0052
-      },
-      "pct_language_mismatch": {
-        "auto": 0,
-        "forced": 0
-      }
-    },
-    {
-      "language": "Gujarati",
-      "clips": 5,
-      "small_sample": true,
-      "citywide_speakers": 4345,
-      "cer": {
-        "auto": 0.0016,
-        "forced": 0.0016
-      },
-      "cer_ci": {
-        "auto": [
-          0,
-          0.0049
-        ],
-        "forced": [
-          0,
-          0.0049
-        ]
-      },
-      "cer_script_neutral": {
-        "auto": 0.0016,
-        "forced": 0.0016
       },
       "pct_language_mismatch": {
         "auto": 0,
@@ -441,17 +441,17 @@
       "ward": 1,
       "language_base": 42850,
       "index": {
-        "auto": 11.8,
+        "auto": 11.2,
         "forced": 9.3
       },
       "index_ci": {
         "auto": [
-          8.5,
-          15.9
+          9.3,
+          13.3
         ],
         "forced": [
           6.3,
-          13.2
+          13
         ]
       },
       "rank": {
@@ -476,15 +476,15 @@
         "auto": [
           {
             "language": "Cantonese",
-            "share_of_score": 0.221
+            "share_of_score": 0.234
           },
           {
             "language": "Urdu",
-            "share_of_score": 0.209
+            "share_of_score": 0.221
           },
           {
-            "language": "Polish",
-            "share_of_score": 0.148
+            "language": "Mandarin",
+            "share_of_score": 0.103
           }
         ],
         "forced": [
@@ -510,17 +510,17 @@
       "ward": 2,
       "language_base": 46420,
       "index": {
-        "auto": 24.1,
+        "auto": 23.4,
         "forced": 14.7
       },
       "index_ci": {
         "auto": [
           17.9,
-          31
+          29.4
         ],
         "forced": [
-          11.1,
-          18.5
+          11.2,
+          18.6
         ]
       },
       "rank": {
@@ -545,15 +545,15 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.429
+            "share_of_score": 0.442
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.2
+            "share_of_score": 0.206
           },
           {
             "language": "Mandarin",
-            "share_of_score": 0.091
+            "share_of_score": 0.094
           }
         ],
         "forced": [
@@ -579,17 +579,17 @@
       "ward": 3,
       "language_base": 56160,
       "index": {
-        "auto": 40.6,
-        "forced": 22.6
+        "auto": 39.3,
+        "forced": 22.7
       },
       "index_ci": {
         "auto": [
-          29.1,
-          53.7
+          29,
+          50.8
         ],
         "forced": [
-          17,
-          29.3
+          17.1,
+          29.1
         ]
       },
       "rank": {
@@ -614,15 +614,15 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.498
+            "share_of_score": 0.514
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.186
+            "share_of_score": 0.192
           },
           {
-            "language": "Polish",
-            "share_of_score": 0.068
+            "language": "Mandarin",
+            "share_of_score": 0.043
           }
         ],
         "forced": [
@@ -648,16 +648,16 @@
       "ward": 4,
       "language_base": 74220,
       "index": {
-        "auto": 59.1,
+        "auto": 58.4,
         "forced": 36.1
       },
       "index_ci": {
         "auto": [
-          44.8,
-          74.9
+          45.3,
+          72.7
         ],
         "forced": [
-          29,
+          28.8,
           43.8
         ]
       },
@@ -683,15 +683,15 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.425
+            "share_of_score": 0.431
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.239
+            "share_of_score": 0.242
           },
           {
             "language": "Arabic",
-            "share_of_score": 0.074
+            "share_of_score": 0.065
           }
         ],
         "forced": [
@@ -717,16 +717,16 @@
       "ward": 5,
       "language_base": 77755,
       "index": {
-        "auto": 92.2,
+        "auto": 92.8,
         "forced": 59.7
       },
       "index_ci": {
         "auto": [
-          64.4,
-          126.6
+          65,
+          129.2
         ],
         "forced": [
-          43,
+          42.2,
           85.3
         ]
       },
@@ -752,15 +752,15 @@
         "auto": [
           {
             "language": "Punjabi",
-            "share_of_score": 0.402
+            "share_of_score": 0.399
           },
           {
             "language": "Urdu",
-            "share_of_score": 0.309
+            "share_of_score": 0.307
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.165
+            "share_of_score": 0.164
           }
         ],
         "forced": [
@@ -787,16 +787,16 @@
       "language_base": 75535,
       "index": {
         "auto": 100,
-        "forced": 57.3
+        "forced": 57.4
       },
       "index_ci": {
         "auto": [
-          74.9,
-          126.8
+          75.9,
+          126.3
         ],
         "forced": [
-          46.8,
-          68.7
+          47,
+          68.8
         ]
       },
       "rank": {
@@ -855,17 +855,17 @@
       "ward": 7,
       "language_base": 79825,
       "index": {
-        "auto": 54.5,
+        "auto": 53.9,
         "forced": 34
       },
       "index_ci": {
         "auto": [
-          41.3,
-          69.4
+          41.9,
+          66.6
         ],
         "forced": [
           26.6,
-          42
+          42.1
         ]
       },
       "rank": {
@@ -874,11 +874,11 @@
       },
       "rank_range": {
         "auto": [
-          6,
+          7,
           8
         ],
         "forced": [
-          5,
+          6,
           7
         ]
       },
@@ -890,15 +890,15 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.413
+            "share_of_score": 0.418
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.231
+            "share_of_score": 0.234
           },
           {
             "language": "Arabic",
-            "share_of_score": 0.091
+            "share_of_score": 0.08
           }
         ],
         "forced": [
@@ -924,13 +924,13 @@
       "ward": 8,
       "language_base": 69530,
       "index": {
-        "auto": 59.9,
-        "forced": 31.9
+        "auto": 59.3,
+        "forced": 32
       },
       "index_ci": {
         "auto": [
-          43.7,
-          77.9
+          43.5,
+          76.5
         ],
         "forced": [
           25.9,
@@ -944,7 +944,7 @@
       "rank_range": {
         "auto": [
           5,
-          7
+          6
         ],
         "forced": [
           6,
@@ -959,11 +959,11 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.518
+            "share_of_score": 0.524
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.248
+            "share_of_score": 0.25
           },
           {
             "language": "Mandarin",
@@ -993,17 +993,17 @@
       "ward": 9,
       "language_base": 57045,
       "index": {
-        "auto": 52.5,
+        "auto": 52,
         "forced": 27.4
       },
       "index_ci": {
         "auto": [
-          37.8,
-          69
+          37.5,
+          67.8
         ],
         "forced": [
-          22.3,
-          32.7
+          22.2,
+          32.8
         ]
       },
       "rank": {
@@ -1028,15 +1028,15 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.541
+            "share_of_score": 0.546
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.229
+            "share_of_score": 0.231
           },
           {
             "language": "Mandarin",
-            "share_of_score": 0.064
+            "share_of_score": 0.065
           }
         ],
         "forced": [
@@ -1062,17 +1062,17 @@
       "ward": 10,
       "language_base": 73830,
       "index": {
-        "auto": 88.9,
+        "auto": 88.3,
         "forced": 38.1
       },
       "index_ci": {
         "auto": [
-          60.1,
-          121.7
+          59.5,
+          120.8
         ],
         "forced": [
-          30.3,
-          46.9
+          29.9,
+          46.7
         ]
       },
       "rank": {
@@ -1097,15 +1097,15 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.66
+            "share_of_score": 0.665
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.145
+            "share_of_score": 0.146
           },
           {
             "language": "Arabic",
-            "share_of_score": 0.068
+            "share_of_score": 0.059
           }
         ],
         "forced": [
@@ -1135,16 +1135,16 @@
       "ward": 11,
       "language_base": 59655,
       "index": {
-        "auto": 80.9,
-        "forced": 42.7
+        "auto": 81.4,
+        "forced": 42.8
       },
       "index_ci": {
         "auto": [
-          58.9,
-          105.8
+          59.2,
+          106
         ],
         "forced": [
-          34.9,
+          34.6,
           52.7
         ]
       },
@@ -1170,11 +1170,11 @@
         "auto": [
           {
             "language": "Urdu",
-            "share_of_score": 0.508
+            "share_of_score": 0.505
           },
           {
             "language": "Cantonese",
-            "share_of_score": 0.211
+            "share_of_score": 0.21
           },
           {
             "language": "Punjabi",

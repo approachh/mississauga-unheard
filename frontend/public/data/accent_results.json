@@ -4,7 +4,7 @@
     "dataset": "Speech Accent Archive",
     "url": "https://accent.gmu.edu",
     "model": "ElevenLabs Scribe, language detected automatically",
-    "commit": "64b7a05b41ff5352c187eff2f34da42014272e39"
+    "commit": "a68066076fc70aaf57fa468f7a66b34b1af34137"
   },
   "passage": {
     "text": "Please call Stella. Ask her to bring these things with her from the store: Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob. We also need a small plastic snake and a big toy frog for the kids. She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.",

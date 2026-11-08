@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
+import { Assistant } from './pages/Assistant'
 import { CommunityIntelligence } from './pages/CommunityIntelligence'
 import { VoiceExperience } from './pages/VoiceExperience'
 import { Overview } from './pages/Overview'
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="routing" element={<RoutingIntelligence />} />
           <Route path="community" element={<CommunityIntelligence />} />
           <Route path="voice" element={<VoiceExperience />} />
+          <Route path="assistant" element={<Assistant />} />
           <Route
             path="*"
             element={

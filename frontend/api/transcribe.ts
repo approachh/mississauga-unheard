@@ -41,7 +41,9 @@ const EXT: Record<string, string> = {
 }
 
 const UPSTREAM_TIMEOUT_MS = 55_000
-const RATE_LIMIT = { windowMs: 60_000, max: 8 }
+// One 311 Assistant call makes up to three transcriptions (request, retranscription, address),
+// so back-to-back demo runs need room; this still blunts scripted abuse.
+const RATE_LIMIT = { windowMs: 60_000, max: 20 }
 
 export const maxDuration = 60
 
