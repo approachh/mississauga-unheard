@@ -1,0 +1,540 @@
+service_request_type,request_count,share_percent
+Residential Bin Lid Damaged,24448,4.89
+Property Standards and Maintenance Violations,17079,3.41
+Pick up Dead Wildlife,15513,3.1
+Injured - Wildlife,15192,3.04
+General Pruning,12873,2.57
+Road Pothole / Road Damage,11304,2.26
+Residential Bin Body or Handle Damaged,11238,2.25
+Sidewalk Snow Clearing Required,10241,2.05
+Res / Garbage / Not Picked Up,9159,1.83
+Residential Furniture / Not Picked Up,8634,1.73
+Res / Recycle / Not Picked Up,8370,1.67
+Tree Emergency Clean-Up,8227,1.64
+Res / Organic Green Bin / Not Picked Up,8008,1.6
+Clean up Illegal Dumping on City Road Allowance,6970,1.39
+Sewer Service Line-Blocked,6712,1.34
+Road Plowing Request,6435,1.29
+Clean up Debris on Road,6426,1.28
+Driveway Blocked By Plowed Snowbank,5816,1.16
+Hazardous Waste Pick-up,5763,1.15
+Missing / Damaged Street or Traffic Signs,5756,1.15
+Traffic Signal Repair,5585,1.12
+Zoning Regulations Violations,5445,1.09
+Publication Request - Solid Waste,5394,1.08
+Amplified Sound or Instrument Sound,5323,1.06
+Waste or Illegal Dumping on Private Property,5154,1.03
+Long Grass and Prohibited Plants on Private Property,5131,1.03
+Report an Encroachment on City Property,4802,0.96
+Residential: Recycle Bin: Missing,4777,0.95
+Residential: Garbage Bin: Missing,4483,0.9
+Replace Missing Residential Organic Bin,4213,0.84
+Construction Noise,3780,0.76
+Residential or Park Tree Removal,3679,0.74
+Residential: Garbage Bin: Exchange to Medium,3643,0.73
+Request Water Service Turn Off,3561,0.71
+Multi-residential Front End Loaded Oversized Items Not Picked Up,3527,0.71
+Street Furniture Request,3373,0.67
+Residential: Garbage Bin: Exchange to Large,3356,0.67
+Residential: Recycle Bin: Exchange to Extra Large,3267,0.65
+Amplified or Musical Instrument Noise,3184,0.64
+Bin Investigation Request,3152,0.63
+Curb Day Collection - Complaint - Solid Waste Management,3148,0.63
+Damaged Concrete Sidewalk,2990,0.6
+Sidewalk - Cleaning,2908,0.58
+Catch Basin - Blocked / Flooding,2890,0.58
+Residential: Bin: Wrong Delivery or Bin Return,2838,0.57
+Icy Sidewalk Needs Salting,2835,0.57
+Moving Motor Vehicle Noise,2802,0.56
+Outcome of Service - Complaint - Road Operations,2697,0.54
+Curb Day Collection Staff - Complaint - Solid Waste Management,2671,0.53
+Road - Sinking,2641,0.53
+Waste Set Out - Wrong Location / Time/ Day,2627,0.53
+Request Water Service Turn On,2571,0.51
+Additional Residential Organic Bin,2564,0.51
+Residential / Yard Waste / Not Picked Up,2558,0.51
+Contractor Complaint,2417,0.48
+Unreasonable and Persistent Noise,2378,0.48
+General Tree Maintenance,2353,0.47
+Residential: Recycle Bin: Additional Extra Large,2328,0.47
+Residential: Garbage Bin: Exchange to Extra Large,2322,0.46
+Litter / Bin / Overflow or Not Picked Up,2301,0.46
+Clean up Litter on Sidewalks and Boulevards,2251,0.45
+Unauthorized Tree Injury or Removal,2249,0.45
+Water Service Line-Check Water Service Box,2232,0.45
+Animal Noise,2222,0.44
+Watermain-Possible Break,2121,0.42
+Boulevard Plow Damage,2046,0.41
+Road Salting Request,2022,0.4
+Residential: Garbage Bin: Exchange to Small,2010,0.4
+Residential Bin Wheel Damaged,1988,0.4
+Water Service Line-Leaking,1987,0.4
+Postering City Property / Structures,1973,0.39
+Adequate Heat,1971,0.39
+Dangerous Private Tree Investigation,1847,0.37
+Res / Organic Green Bin / Multiple Addresses / Not Picked Up,1805,0.36
+Water Service Line-No Water,1774,0.35
+Residential: Recycle Bin: Exchange to Large,1743,0.35
+Illegal Snow Dumping & Failure to Clear Snow or Ice on Public Sidewalk,1656,0.33
+Illegal Off-Street Parking,1635,0.33
+Boulevards - Damaged Asphalt,1546,0.31
+Walkway - Damaged or Uneven,1514,0.3
+Sink Hole,1487,0.3
+Signs,1432,0.29
+Graffiti on Private Property,1411,0.28
+Snow at Intersections - Impeded Mobility,1387,0.28
+Water Service Line-Turn Off/Burst,1334,0.27
+Stray - Confined,1316,0.26
+Pick up Dead Domestic Animals,1288,0.26
+Bins - Complaint - Solid Waste Management,1265,0.25
+Business Complaint,1247,0.25
+Park Use,1236,0.25
+Multi-Res / Garbage Front-End / Not Picked Up,1235,0.25
+Timeliness - Complaint - Toronto Water,1224,0.24
+Laneway Needs Salting,1205,0.24
+Residential: Recycle Bin: Exchange to Medium,1189,0.24
+Res / Recycle / Multiple Addresses / Not Picked Up,1144,0.23
+Boulevards-Grass Cutting,1127,0.23
+Maintenance Holes Lid Loose/Missing,1122,0.22
+Investigate Regulatory Signs,1117,0.22
+Staff Service - Complaint - Road Operations,1107,0.22
+Clean up Needles or Syringes,1091,0.22
+Stray - At Large,1090,0.22
+Public Spaces Complaint,1059,0.21
+Res / Yard Waste Multiple Addresses / Not Picked Up,1055,0.21
+Dog Off-Leash in a City Park,1021,0.2
+Restoration Related,1020,0.2
+Driveway - Damaged / Ponding,1002,0.2
+Walkway Snow Clearing/Salting Request,995,0.2
+Lead Water Testing Kit Registration,989,0.2
+Injured - Domestic,950,0.19
+Illegal Dumping on City Property,940,0.19
+Stationary Source and Residential Air Conditioner Noise,927,0.19
+Process and Procedures - Complaint - Road Operations,907,0.18
+Water Service Line - Low Pressure|| Low Flow - Ongoing,896,0.18
+Water Service Line - Low Pressure|| Low Flow Inspection - (Sudden),873,0.17
+Process or Procedure - Complaint - Toronto Water,869,0.17
+Bus Stops Snow Clearing Required,849,0.17
+Vehicle Traffic Signal Issue,832,0.17
+Res / Garbage / Multiple Addresses Not Picked Up,832,0.17
+Maintenance Hole-Damage,822,0.16
+Traffic Signal Equipment - Graffiti Complaint,818,0.16
+Investigate - Animal Care,803,0.16
+Res / Organic&Recycle / Not Picked Up,802,0.16
+Multi-Tenant Houses Licensing and Violations,798,0.16
+Missing/Faded Pavement Markings,795,0.16
+Election Signs,795,0.16
+Long Grass and Weeds on the Boulevard,795,0.16
+Clean up Litter on Laneways,791,0.16
+Maintenance Holes -Damage / Repair,776,0.16
+Dog Off-Leash,773,0.15
+Investigate - Animal to Human Bite,761,0.15
+Staff Service - Complaint - 311 Toronto,752,0.15
+School Zone Snow Clearing,747,0.15
+Residential: Recycle Bin: Additional Large,715,0.14
+Res / Organic&Garbage / Not Picked Up,708,0.14
+Hydrant-Leaking,704,0.14
+Clean up Illegal Dumping on Roadways and Bridge Underpass,700,0.14
+Commercial Tree Pruning,694,0.14
+Residential: Garbage Bin: Additional Extra Large,676,0.14
+Investigate Mud or Water Discharge on the Street Allowance,671,0.13
+Timeliness of Service - Complaint - Road Operations,662,0.13
+Complaint / Investigation - Idling Enforcement,654,0.13
+Fence,648,0.13
+Curb - Damaged,646,0.13
+Sewer Odour,645,0.13
+Catch basin (Storm)-Overflowing,626,0.13
+Investigate - Menace,622,0.12
+Roadway Utility Cut - Settlement,620,0.12
+Illegal On-Street Parking,603,0.12
+Sidewalk - Graffiti Complaint,602,0.12
+Multi-Res / Recycle Front-End / Not Picked Up,598,0.12
+Tree Planting,598,0.12
+Pollution Spill & Illegal Dumping Response,594,0.12
+Automated Speed Enforcement (ASE ) Camera Vandalism or Damage,593,0.12
+Multi-Res / Furniture Pile / Not Picked Up,588,0.12
+Road - Graffiti Complaint,586,0.12
+Lead Water Pipes Record Search,557,0.11
+Commercial Tree - Emergency Clean-up,554,0.11
+Bees/Wasp,553,0.11
+Permitted or Exempted Noise,550,0.11
+Laneway - Surface Damage,540,0.11
+Large Apartment or Condo Building Collection - Complaint - Solid Waste Management,522,0.1
+Non-residential Front End Loaded Garbage Not Picked Up,517,0.1
+Waste Storage on a Multi-residential / Commercial Property,509,0.1
+Bike Removal and Lost Bike Inquiry,504,0.1
+Spills/Cleanup/Collections Curb Day,492,0.1
+Intersection Safety Review,491,0.1
+Expressway Requires Cleaning,488,0.1
+Water Meter Strong Leak or Burst,485,0.1
+Bicycle Stand (Post and Ring) Repair or Graffiti Removal,485,0.1
+Hydrant-Damage,484,0.1
+Investigate Temporary Condition Signs,482,0.1
+Pedestrian Crossover (PXO) Maintenance,481,0.1
+Boulevards - Weed Removal,479,0.1
+Illegal Dumping on Road,472,0.09
+Stump Removal,465,0.09
+Protective Custody,464,0.09
+Multi-residential Front-end Loaded Organics Not Picked Up,459,0.09
+Bridge - Graffiti Complaint,455,0.09
+Sight Line Obstruction,455,0.09
+Stationary Motor Vehicle Noise,454,0.09
+Snow Removal - Sightline Problem,453,0.09
+Damaged Catch Basin on the Road,449,0.09
+Road Water Ponding,436,0.09
+Catch basin (Storm)-Damage,431,0.09
+Catch Basin - Debris / Litter,423,0.08
+Biohazard Human Waste Removal,422,0.08
+Sidewalk - Damaged /Brick/Interlock,414,0.08
+Excessive Heat in a Rental Unit,410,0.08
+Multi-residential Front End Loaded Recycling Cart Not Picked Up,406,0.08
+Curb - Adjust Height (Too High/Low),397,0.08
+Investigate - Animal to Animal Bite,394,0.08
+Integrated Pest Management Inspection,391,0.08
+Complaint - Crossing Guard Conduct,385,0.08
+Power Device Noise,383,0.08
+Investigate - Dog Frequently At Large,377,0.08
+Residential New Account Organic Bin,376,0.08
+Complaint / Investigation - Leaves,369,0.07
+Coyote Dangerous to Public Safety,361,0.07
+Taxi|| Limo Complaint,361,0.07
+Investigate - Dog Excrement,358,0.07
+Water Quality-Discoloured (Rusty or dirty) Water,358,0.07
+Staff Service - Compliment - 311 Toronto,355,0.07
+Traffic or Street Name Sign - Graffiti Complaint,350,0.07
+Bike Lane Winter Maintenance Required,350,0.07
+Investigate - Attack to Human,340,0.07
+Residential: Recycle Bin: Exchange to Small,339,0.07
+Residential Bin Metal Bar Damaged,338,0.07
+Park Garbage Bin Overflowing,337,0.07
+Tree Brush Pick-up,337,0.07
+Disabled Persons' Parking Space,335,0.07
+Pedestrian Signal Issue,326,0.07
+Damaged Bike Lane Barrier,319,0.06
+Investigate Pavement Markings,305,0.06
+Contaminated Waste / Preparation,305,0.06
+Multi-Res / Garbage Cart / Not Picked Up,304,0.06
+Commercial Tree Removal,297,0.06
+Residential / XMAS Tree / Not Picked Up,297,0.06
+Sewer Service Line-Cleanout Repair,296,0.06
+New Tree Planting,296,0.06
+Pothole on Expressway,295,0.06
+Walkway-Weeds Need Cutting,293,0.06
+Contractor - Complaint - Toronto Water,290,0.06
+Park Litter and Garbage,287,0.06
+Restoration - Complaint - Toronto Water,284,0.06
+Res / Org&Recycle Multiple Addresses / Not Picked Up,283,0.06
+Res / Nite Garbage / Not Picked Up,278,0.06
+Park Lighting Maintenance,277,0.06
+Residential: Garbage Bin: Additional Large,275,0.05
+General Parking Regulations,274,0.05
+Investigate Warning Signs,268,0.05
+Non-residential Garbage Bag/s Not Picked Up,263,0.05
+Road Plow Damage,249,0.05
+Dead Animal On Expressway,249,0.05
+Res / Garbage Front&Side / Not Picked Up,249,0.05
+Damaged Catch Basin on the Roadside,249,0.05
+Investigate - Attack to Animal,248,0.05
+Large Apartment/Condo Building Collection Staff - Complaint - Solid Waste Management,246,0.05
+Investigate - Unsanitary Conditions,246,0.05
+Encroachments,237,0.05
+Pit Cover/Paver Maintenance,233,0.05
+Operator / Operations - Compliment - Solid Waste Management,232,0.05
+Multi-Res / Recycle Cart / Not Picked Up,231,0.05
+Park Conduct,230,0.05
+Res / Recycle Front&Side / Not Picked Up,224,0.04
+Staff Service - Compliment - Road Operations,223,0.04
+New Traffic Control Signal Request,210,0.04
+Non-residential Front End Loaded Recycling Not Picked Up,209,0.04
+Non-Residential - Recycling Bin Night Collection - Not Picked Up,208,0.04
+Non-Residential - Garbage Bin Night Collection - Not Picked Up,207,0.04
+Litter Operations - Complaint - Solid Waste Management,207,0.04
+Ditch Maintenance Request,205,0.04
+Culverts - Blocked,205,0.04
+Res / Organic Front&Side / Not Picked Up,202,0.04
+Bylaw Enforcement: Excavation,202,0.04
+Res / Org&Garbage Multiple Addresses / Not Picked Up,201,0.04
+New Pedestrian Crossover,200,0.04
+Missing/Damaged Flexible Bollards,199,0.04
+Residential: Recycle Bin: Additional Medium,196,0.04
+Multi-residential Organic Bin Not Picked Up,196,0.04
+All / Hazardous Waste / Not Picked Up,193,0.04
+Lost Items in Catch Basin,192,0.04
+Traffic Island-Grass Needs Cutting,190,0.04
+Residential: Recycle Bin: New Account Extra Large,189,0.04
+Roadside Utility Cut - Settlement,187,0.04
+Residential: Garbage Bin: Additional Medium,187,0.04
+Non-residential Recycling Bin Not Picked Up,187,0.04
+Catch Basin -Cover Missing / Damaged / Loose,186,0.04
+Containers,185,0.04
+Property Damaged - Curbside Day Collection,185,0.04
+Res Above Comm / Nite Garbage / Not Picked Up,181,0.04
+Prohibited Waste,181,0.04
+Res / Nite Recycle / Not Picked Up,181,0.04
+Loading and Unloading Noise,181,0.04
+Fence - Damaged,178,0.04
+Maintenance Hole - Overflowing,174,0.03
+New Large Water Service Turn-On,171,0.03
+Non-Residential - Organic Bin Night Collection - Not Picked Up,170,0.03
+Res / Org&Garbage Front&Side / Not Picked Up,164,0.03
+Pedestrian Crossing Protection,164,0.03
+Icy Bus Stop Needs Salting,161,0.03
+All-Way Stop Control Sign,155,0.03
+Investigate - Shelter,153,0.03
+Residential: Garbage Bin: New Account Extra Large,150,0.03
+Non-residential Organic Bin Not Picked Up,149,0.03
+Multi-Residential Christmas Tree Pick Up,148,0.03
+Residential: Garbage Bin: New Account Medium,148,0.03
+Hydrant-After Usage Test,146,0.03
+Comment - 311 Toronto,144,0.03
+Res / Nite Organic / Not Picked Up,143,0.03
+Sidewalk - Accessible Ramps & Tactile Pavers,139,0.03
+Guardrail - Damaged,138,0.03
+Traffic Infiltration,138,0.03
+Residential: Garbage Bin: New Account Large,137,0.03
+Bollard - Damaged,136,0.03
+Fireworks,135,0.03
+Res / Org&Recycle Front&Side / Not Picked Up,133,0.03
+Illegal Dumping in City Parks,132,0.03
+Complaint - Abandoned Bikes in Rideable Condition,130,0.03
+Traffic Calming Measures,130,0.03
+West Nile Virus-Standing Water / Roadside,130,0.03
+Residential: Recycle Bin: New Account Large,124,0.02
+Culverts-Damaged / Maintenance Requested,123,0.02
+Residential / Nite Furniture / Not Picked Up,121,0.02
+Night Collection - Complaint - Solid Waste Management,120,0.02
+Investigate - Prohibited Animal,120,0.02
+Bike Lane Pothole,119,0.02
+Road Design,118,0.02
+Boulevard - Pick-Up Shopping Carts,117,0.02
+Investigate - Too Many Animals,117,0.02
+Natural Area Maintenance,117,0.02
+Commercial Tree Maint Req,117,0.02
+Bridge - Damaged Structure,117,0.02
+Park General Maintenance,117,0.02
+Staff - Complaint - Toronto Water,116,0.02
+Non-Residential - Garbage Bag Night Collection - Not Picked Up,113,0.02
+Res Above Comm / Nite Recycle / Not Picked Up,112,0.02
+Bridge - Debris / Litter,112,0.02
+Speeding,112,0.02
+Multi-Res / Garbage Pile / Not Picked Up,110,0.02
+Missing/Damaged Watch Your Speed Boards,110,0.02
+Untidy Construction Site/ Equipment - Complaint - Toronto Water,107,0.02
+Water Service Valve Leaking,106,0.02
+Investigate - Animal Extreme Condition,104,0.02
+Residential: Recycle Bin: New Account Medium,101,0.02
+Road - Gravel Roads/Construction,99,0.02
+Water Service Line - Low Pressure|| Low Flow - Ongoing - Non-residential,99,0.02
+Retaining Wall - Damage / Repair,99,0.02
+Litter Operations Staff - Complaint - Solid Waste Management,97,0.02
+Non-residential Front End Loaded Recycling Cart Not Picked Up,96,0.02
+Residential: Garbage Bin: Additional Small,95,0.02
+Park Pathways and Trails Maintenance,94,0.02
+Sewer main-Backup,93,0.02
+Investigate - Pit Bull,92,0.02
+Right of Entry,87,0.02
+Icy Bridge Needs Salting,87,0.02
+Water-Miscellaneous,85,0.02
+Lane Designation,85,0.02
+Stray - Attack,84,0.02
+Park Graffiti Removal,84,0.02
+Road damaged on Expressway,83,0.02
+Sidewalk-Water Ponding,83,0.02
+Service/Staff - Complaint - Toronto Animal Services,82,0.02
+Park Property Snow and Ice Clearing,82,0.02
+Staff - Compliment - Toronto Water,77,0.02
+Unsafe Construction Site - Complaint - Toronto Water,77,0.02
+Pedestrian Crossover Operation,76,0.02
+Blocked Access By Parking,75,0.01
+Vehicles,75,0.01
+Multi-Res / Nite Garbage Pile / Not Picked Up,73,0.01
+Reserved Lane,72,0.01
+Night Collection Staff - Complaint - Solid Waste Management,71,0.01
+Investigate Vehicles Leaving Roadway,71,0.01
+Traffic Signal Information Requests,71,0.01
+Park Playground Repairs,71,0.01
+Commercial Tree Planting,69,0.01
+TPPR Request to Refund Guarantee Deposit,68,0.01
+TPPR Request for Letter of Clearance,65,0.01
+Park Water Feature Repairs,64,0.01
+School Zone Safety Review,63,0.01
+Park Washroom Maintenance,63,0.01
+Coyote Response - Animal Attack,62,0.01
+Disturbing/Injuring/Feeding Wildlife in a City Park,61,0.01
+Investigate - Licence,61,0.01
+Shoulder - Maintenance,59,0.01
+Multi-residential Organic Cart Not Picked Up,59,0.01
+Park Recycling Bin Overflowing,57,0.01
+Residential / Nite Yard Waste / Not Picked Up,57,0.01
+Accessibility / Disability - Complaint - 311 Toronto,56,0.01
+Investigate - Nuisance Cat,56,0.01
+Maintenance Hole-Missing Cover,55,0.01
+Traffic Island - Damaged,54,0.01
+Residential: Garbage Bin: New Account Small,52,0.01
+Salting - Toronto Water Asset or Site,51,0.01
+Request for Special Parking Consideration,51,0.01
+Time Limit or Excessive Duration Parking,50,0.01
+Flashing Beacon Maintenance,50,0.01
+Caf�TO Encroachment Complaint,50,0.01
+Non-residential Front End Loaded Organics Not Picked Up,50,0.01
+West Nile Virus - Standing Water / Roadway,49,0.01
+Park Garbage Bin Graffiti,49,0.01
+Illegally Dumped Appliance with Doors On (Emergency),48,0.01
+Residential: Recycle Bin: Additional Small,47,0.01
+Spongy Moth Control Insp,47,0.01
+Damage or Removal of Plants in City Parks,47,0.01
+Corner Parking Prohibition,46,0.01
+School Crossing Guard - No Show,44,0.01
+Non-residential Garbage Bag/s Not PIcked Up,44,0.01
+Games,44,0.01
+Heavy Trucks,43,0.01
+Coyote Response - Animal Bite,41,0.01
+Special Event Litter Pick-up Request,40,0.01
+River and Ravine Dumping,40,0.01
+Investigate Temporary Condition Markings,39,0.01
+Watercourse Investigation,39,0.01
+Non-residential Front End Loaded Organic Cart Not Picked Up,38,0.01
+Stoop and Scoop,37,0.01
+Accessibility / Disability - Complaint - Transportation Services,37,0.01
+Park Garbage Bin Damaged,36,0.01
+Investigate - Pigeons,35,0.01
+Multi-Res / Yard Waste / Not Picked Up,35,0.01
+Park Dog Off-leash Area Repair Request,35,0.01
+Grass and Sports Field Maintenance in Parks,35,0.01
+Non-Collections Staff - Complaint - Solid Waste Management,34,0.01
+Multi-Res / Nite Recycle Cart / Not Picked Up,34,0.01
+Access - Complaint - Road Operations,33,0.01
+Bridge - Surface Repair,33,0.01
+Missing/Damaged School Flashing Beacons,31,0.01
+Park Garbage Bin Installation,31,0.01
+Bridge Falling Debris,30,0.01
+One-way Streets,30,0.01
+Free-floating Car Share - Parking Complaint - Communauto Flex,29,0.01
+Sign Maintenance,29,0.01
+Traffic Camera (RESCU) Maintenance,29,0.01
+Coyote Response - Human Attack,29,0.01
+Park Dog Off-leash Area Maintenance,29,0.01
+Res / Above Comm / Organic Green Bin / Not Picked Up,28,0.01
+Investigate - Tied Excessive Time,27,0.01
+Parking in a Public Lane,27,0.01
+Dangerous Dog Complaint,27,0.01
+Ornamental Plant Maintenance in Parks,27,0.01
+Front End Load Customer Property Damage,26,0.01
+Commercial Enterprises,26,0.01
+School-Related Warning Signs,25,0.0
+Expressway Guide Rail Damaged,24,0.0
+Transfer Station/Drop-off Depot - Complaint - Solid Waste Management,24,0.0
+Residential: Recycle Bin: New Account Small,24,0.0
+Bus/Streetcar Signal Issues,24,0.0
+Private Transportation Company Complaint,24,0.0
+Stray - Menace,23,0.0
+Park Garbage Bin Relocate or Remove,22,0.0
+Multi-residential Front End Loaded Yard Waste Not Picked up,22,0.0
+Multi-residential Front End Loaded Bin Inventory,21,0.0
+Park Garbage Bin Missing,21,0.0
+Suggestions about Signs in Parks,21,0.0
+Res / Nite Organic&Recycle / Not Picked Up,20,0.0
+Spills/Cleanup/Litter Operations,20,0.0
+RNFP Request to Refund Guarantee Deposit,19,0.0
+Park Washroom Repairs,19,0.0
+Park Sign Maintenance,19,0.0
+Park Seating Repairs,19,0.0
+Prohibited Acts / Pollicking,18,0.0
+Disabled Loading Zone,18,0.0
+Alternate Side Parking,18,0.0
+Speed Bumps in Laneway,18,0.0
+Investigate Unauthorized Use of Permitted Park Facility,18,0.0
+Student Crossing Issues,17,0.0
+Park Recycling Bin Graffiti,17,0.0
+RNFP Request for Letter of Clearance,17,0.0
+Res Above Comm / Nite Yard Waste / Not Picked Up,16,0.0
+Multi-Res / Nite Furniture Pile / Not Picked Up,15,0.0
+Animal on Short Tether,15,0.0
+Service/Staff Comment - Toronto Animal Services,15,0.0
+Transfer Station Odour,15,0.0
+Property Damaged/Litter Operations,13,0.0
+Expressway Fence - Damaged,13,0.0
+Res / Nite Organic&Garbage / Not Picked Up,13,0.0
+Trades Complaint,13,0.0
+Park Outdoor Rink and Skate Trail Maintenance,13,0.0
+Res / Organic Bin / Replace Damaged,12,0.0
+Park Recycling Bin Damaged,11,0.0
+Postering Kiosks,11,0.0
+School Safety Programs,11,0.0
+Commercial Dog Walkers,11,0.0
+Watercraft,11,0.0
+Dangerous or Trapped Wildlife in a Park,11,0.0
+Student Pick-up/Drop-off Area,10,0.0
+Park Recycling Bin Missing,10,0.0
+Spills/Cleanup/Collections Nights,10,0.0
+Front End Loaded Bin Spills Clean-up,10,0.0
+Service/Staff - Compliment - Toronto Animal Services,9,0.0
+Minor Road Damage,9,0.0
+Catch basin on Expressway requires cleaning,9,0.0
+Emergency Watermain Turn-off,8,0.0
+Commercial Loading Zone,8,0.0
+Res / Nite Garbage / Multiple Addresses / Not Picked Up,7,0.0
+Rabies Suspect,7,0.0
+Res / Nite Recycle Multiple Addresses / Not Picked Up,6,0.0
+Accessibility / Disability - Complaint - Solid Waste Management,6,0.0
+Parks Collections Staff - Complaint - Solid Waste Management,6,0.0
+Investigate - Prohibited Collar,6,0.0
+Streetcar Platforms,6,0.0
+School Crossing Guard Shift Time Change Request,6,0.0
+Res / Nite Yard Waste Multiple Addresses / Not Picked Up,5,0.0
+Multi-Res / XMAS Tree / Not Picked Up,5,0.0
+Coyote Response - Human Bite,5,0.0
+Taxicab Stand,5,0.0
+Pedestrian Issues / Timing / Delays,5,0.0
+Non-compliance - Single-Use/Takeaway Items,4,0.0
+Multi-Residential Front End Loaded Christmas Tree Not Picked Up,4,0.0
+Sewer-See and Advise,4,0.0
+Investigate - Walking Too Many,4,0.0
+Dispute Recycling Contamination Notice,4,0.0
+Property Damaged - Night Collections,4,0.0
+Park Recycling Bin Installation,4,0.0
+Multi-Res / Ewaste / Not Picked Up,4,0.0
+Transfer Station Spill Cleanup,4,0.0
+Park Hazardous Plants and Weeds,4,0.0
+Res / Nite Org&Garbage Front&Side / Not Picked Up,3,0.0
+Investigate - Tied Prohibited Collar,3,0.0
+School Bus Loading Zone,3,0.0
+Services Wild Educ,3,0.0
+Left/Right Turn Signal Priority Features,3,0.0
+Res / Nite Org&Recycle Front&Side / Not Picked Up,3,0.0
+Pedestrian Refuge Island,3,0.0
+Planting 11 Plus Trees,3,0.0
+Res / Nite Recycle Front&Side / Not Picked Up,3,0.0
+Beach Sand Maintenance,3,0.0
+Res / Nite Org&Recycle Multiple Addresses / Not Picked Up,3,0.0
+Catch basin on Expressway damaged,2,0.0
+RNFP Request to Withdraw Permit Application,2,0.0
+Investigate - Dangerous Dog with no Warning Sign Displayed,2,0.0
+Park Recycling Bin Relocation or Removal,2,0.0
+Speed Watch Programme,2,0.0
+Mulching,2,0.0
+Motor Coach Parking,2,0.0
+TPPR Request to Withdraw Permit Application,2,0.0
+Temporary Signal Timings,2,0.0
+Park Farm Animal Wellbeing,2,0.0
+Park Community Garden Maintenance,2,0.0
+Residential - Organic Night Collection - Bin Inquiry,1,0.0
+Residential / Nite XMAS Tree / Not Picked Up,1,0.0
+Litter / Bin / Graffiti on Bin,1,0.0
+Non Qualifying Service Request,1,0.0
+Watermain emergency Valve - Turn On,1,0.0
+Res / Nite Organic Front&Side / Not Picked Up,1,0.0
+Investigate Guide and Information Signs,1,0.0
+Owner Surr Live,1,0.0
+Property Damaged - Transfer Station,1,0.0
+Application Mail Out / Premium Organics,1,0.0
+King Liberty Pedestrian Bridge Elevator Repair,1,0.0
+Litter / Bin / Removal,1,0.0
+Park Stadium Maintenance,1,0.0
+Litter / Bin / Relocate,1,0.0
+Investigate - Dangerous Dog with no Dangerous Dog Tag,1,0.0
+Res / Organic Green Bin / Retrieval,1,0.0
+Watermain Emergency Valve - Turn Off,1,0.0
+Mode of Control of TCS,1,0.0
+Owner Surr Deceased,1,0.0
+Res / Nite Org&Garbage Multiple Addresses / Not Picked Up,1,0.0

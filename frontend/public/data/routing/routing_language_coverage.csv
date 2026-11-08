@@ -1,0 +1,11 @@
+dataset,language,selected_clips,scored_test_examples,unscored_clips
+minds14,English,70,14,0
+minds14,Mandarin Chinese,70,14,0
+minds14,Polish,70,14,0
+minds14,Portuguese,70,14,0
+minds14,Spanish,70,14,0
+speech_massive,Arabic,77,18,0
+speech_massive,Polish,77,18,0
+speech_massive,Portuguese,77,18,0
+speech_massive,Spanish,77,18,0
+speech_massive,Vietnamese,77,18,0

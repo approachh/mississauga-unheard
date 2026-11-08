@@ -4,6 +4,7 @@ import { AppLayout } from './components/AppLayout'
 import { CommunityIntelligence } from './pages/CommunityIntelligence'
 import { VoiceExperience } from './pages/VoiceExperience'
 import { Overview } from './pages/Overview'
+import { RoutingIntelligence } from './pages/RoutingIntelligence'
 import { SpeechIntelligence } from './pages/SpeechIntelligence'
 
 function ScrollToTop() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route index element={<Overview />} />
           <Route path="speech" element={<SpeechIntelligence />} />
+          <Route path="routing" element={<RoutingIntelligence />} />
           <Route path="community" element={<CommunityIntelligence />} />
           <Route path="voice" element={<VoiceExperience />} />
           <Route

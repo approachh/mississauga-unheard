@@ -1,0 +1,11 @@
+dataset,language,test_examples,intent_accuracy,reference_text_intent_accuracy,asr_induced_route_errors,reference_equals_english_translation_examples,mean_wer,mean_cer
+minds14,English,14,0.7857,0.7857,0,14,0.3721,0.2588
+minds14,Mandarin Chinese,14,0.7857,0.8571,2,0,1.4286,0.4979
+minds14,Polish,14,0.8571,0.8571,0,0,0.4047,0.1509
+minds14,Portuguese,14,0.7857,0.8571,1,1,0.4665,0.2326
+minds14,Spanish,14,0.8571,0.8571,0,0,0.5236,0.3788
+speech_massive,Arabic,18,0.4444,0.5556,2,0,0.3465,0.1215
+speech_massive,Polish,18,0.4444,0.4444,0,0,0.1639,0.0338
+speech_massive,Portuguese,18,0.5556,0.5556,0,0,0.1698,0.0501
+speech_massive,Spanish,18,0.4444,0.4444,0,0,0.2138,0.0565
+speech_massive,Vietnamese,18,0.5,0.5556,1,0,0.2335,0.1373

@@ -192,3 +192,82 @@ export interface AccentResults {
   /** Accent groups, highest mean WER first. */
   groups: AccentGroup[]
 }
+
+export interface RoutingMetric {
+  dataset: 'minds14' | 'speech_massive'
+  language: string
+  test_examples: number
+  intent_accuracy: number
+  reference_text_intent_accuracy: number
+  asr_induced_route_errors: number
+  reference_equals_english_translation_examples: number
+  mean_wer: number
+  mean_cer: number
+}
+
+export interface RoutingLanguageCoverage {
+  dataset: 'minds14' | 'speech_massive'
+  language: string
+  selected_clips: number
+  scored_test_examples: number
+  unscored_clips: number
+}
+
+export interface RoutingTestResult {
+  dataset: 'minds14' | 'speech_massive'
+  language: string
+  file: string
+  true_intent: string
+  predicted_intent: string
+  reference_text_intent_prediction: string
+  intent_correct: boolean
+  reference_text_intent_correct: boolean
+  asr_induced_route_error: boolean
+  reference_equals_english_translation: boolean
+  router_similarity: number
+  reference_text: string
+  elevenlabs_transcript: string
+  wer: number
+  cer: number
+}
+
+export interface RoutingConfusion {
+  dataset: 'minds14' | 'speech_massive'
+  language: string
+  true_intent: string
+  predicted_intent: string
+  count: number
+}
+
+export type RoutingMisroute = RoutingTestResult
+
+export interface TorontoRequestType {
+  service_request_type: string
+  request_count: number
+  share_percent: number
+}
+
+export interface TorontoDivision {
+  division: string
+  request_count: number
+  share_percent: number
+}
+
+export interface RoutingUnscoredExample {
+  dataset: string
+  language: string
+  true_intent: string
+  file: string
+  reason: string
+}
+
+export interface RoutingData {
+  metrics: RoutingMetric[]
+  coverage: RoutingLanguageCoverage[]
+  confusion: RoutingConfusion[]
+  misroutes: RoutingMisroute[]
+  testResults: RoutingTestResult[]
+  unscored: RoutingUnscoredExample[]
+  torontoRequestTypes: TorontoRequestType[]
+  torontoDivisions: TorontoDivision[]
+}

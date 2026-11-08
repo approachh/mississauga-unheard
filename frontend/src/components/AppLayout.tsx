@@ -4,6 +4,7 @@ import { useDataset } from '../hooks/useDataset'
 import {
   loadCitywideLanguages,
   loadLanguageResults,
+  loadRoutingData,
   loadSpeechCoverage,
   loadTranscriptions,
   loadWardProfiles,
@@ -14,6 +15,7 @@ import { Logo } from './Logo'
 const NAV = [
   { to: '/', label: 'Overview', end: true },
   { to: '/speech', label: 'Speech' },
+  { to: '/routing', label: 'Routing' },
   { to: '/community', label: 'Community' },
   { to: '/voice', label: 'Voice' },
 ]
@@ -27,6 +29,7 @@ export function AppLayout() {
   const city = useDataset(loadCitywideLanguages)
   const wards = useDataset(loadWardProfiles)
   const cov = useDataset(loadSpeechCoverage)
+  const routing = useDataset(loadRoutingData)
   // The bar reports on the data the current page actually shows.
   const statusFiles =
     pathname === '/community'
@@ -35,6 +38,8 @@ export function AppLayout() {
           { name: 'Ward profile', ds: wards },
           { name: 'Dataset coverage', ds: cov },
         ]
+      : pathname === '/routing'
+        ? [{ name: 'Routing evaluation', ds: routing }]
       : [
           { name: 'Speech results', ds: langs },
           { name: 'Transcripts', ds: trans },

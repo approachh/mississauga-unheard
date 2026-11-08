@@ -4,8 +4,17 @@ import type {
   CitywideLanguage,
   Dataset,
   LanguageResult,
+  RoutingConfusion,
+  RoutingData,
+  RoutingLanguageCoverage,
+  RoutingMetric,
+  RoutingMisroute,
+  RoutingTestResult,
+  RoutingUnscoredExample,
   SpeechCoverage,
   TranscriptionResult,
+  TorontoDivision,
+  TorontoRequestType,
   UnheardIndex,
   WardProfile,
   WardShapes,
@@ -228,4 +237,221 @@ let accentPromise: Promise<AccentResults | null> | null = null
 export function loadAccentResults(): Promise<AccentResults | null> {
   accentPromise ??= loadDocument('accent_results.json', isAccentResults)
   return accentPromise
+}
+
+const routingUrl = (file: string) =>
+  `${import.meta.env.BASE_URL}data/routing/${file}`
+
+function parseCsv(text: string, file: string): Record<string, string>[] {
+  const rows: string[][] = []
+  let row: string[] = []
+  let field = ''
+  let quoted = false
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index]
+    if (quoted) {
+      if (character === '"' && text[index + 1] === '"') {
+        field += '"'
+        index += 1
+      } else if (character === '"') {
+        quoted = false
+      } else {
+        field += character
+      }
+    } else if (character === '"' && field.length === 0) {
+      quoted = true
+    } else if (character === ',') {
+      row.push(field)
+      field = ''
+    } else if (character === '\n' || character === '\r') {
+      row.push(field)
+      if (row.some((cell) => cell.length > 0)) rows.push(row)
+      row = []
+      field = ''
+      if (character === '\r' && text[index + 1] === '\n') index += 1
+    } else {
+      field += character
+    }
+  }
+  if (quoted) throw new Error(`${file} contains an unterminated quoted field`)
+  if (field.length > 0 || row.length > 0) {
+    row.push(field)
+    if (row.some((cell) => cell.length > 0)) rows.push(row)
+  }
+  if (!rows.length) throw new Error(`${file} is empty`)
+
+  const headers = rows[0]
+  if (headers.some((header) => !header) || new Set(headers).size !== headers.length) {
+    throw new Error(`${file} has missing or duplicate column names`)
+  }
+  return rows.slice(1).map((cells, rowIndex) => {
+    if (cells.length !== headers.length) {
+      throw new Error(
+        `${file} row ${rowIndex + 2} has ${cells.length} cells; expected ${headers.length}`,
+      )
+    }
+    return Object.fromEntries(headers.map((header, index) => [header, cells[index]]))
+  })
+}
+
+async function fetchCsv(file: string): Promise<Record<string, string>[]> {
+  const response = await fetch(routingUrl(file), { cache: 'no-cache' })
+  if (!response.ok) throw new Error(`Could not load ${file} (${response.status})`)
+  return parseCsv(await response.text(), file)
+}
+
+function csvNumber(row: Record<string, string>, column: string, file: string): number {
+  const value = Number(row[column])
+  if (!Number.isFinite(value)) throw new Error(`${file} has an invalid ${column} value`)
+  return value
+}
+
+function csvBoolean(row: Record<string, string>, column: string, file: string): boolean {
+  if (row[column] === 'True' || row[column] === 'true') return true
+  if (row[column] === 'False' || row[column] === 'false') return false
+  throw new Error(`${file} has an invalid ${column} value`)
+}
+
+function csvText(row: Record<string, string>, column: string, file: string): string {
+  const value = row[column]
+  if (typeof value !== 'string') throw new Error(`${file} is missing the ${column} column`)
+  return value
+}
+
+function parseDataset(row: Record<string, string>, file: string): 'minds14' | 'speech_massive' {
+  const dataset = csvText(row, 'dataset', file)
+  if (dataset !== 'minds14' && dataset !== 'speech_massive') {
+    throw new Error(`${file} has an unsupported dataset name: ${dataset}`)
+  }
+  return dataset
+}
+
+function parseRoutingMetric(row: Record<string, string>): RoutingMetric {
+  const file = 'routing_metrics.csv'
+  return {
+    dataset: parseDataset(row, file),
+    language: csvText(row, 'language', file),
+    test_examples: csvNumber(row, 'test_examples', file),
+    intent_accuracy: csvNumber(row, 'intent_accuracy', file),
+    reference_text_intent_accuracy: csvNumber(row, 'reference_text_intent_accuracy', file),
+    asr_induced_route_errors: csvNumber(row, 'asr_induced_route_errors', file),
+    reference_equals_english_translation_examples: csvNumber(
+      row,
+      'reference_equals_english_translation_examples',
+      file,
+    ),
+    mean_wer: csvNumber(row, 'mean_wer', file),
+    mean_cer: csvNumber(row, 'mean_cer', file),
+  }
+}
+
+function parseRoutingTestResult(
+  row: Record<string, string>,
+  file: string,
+): RoutingTestResult {
+  return {
+    dataset: parseDataset(row, file),
+    language: csvText(row, 'language', file),
+    file: csvText(row, 'file', file),
+    true_intent: csvText(row, 'true_intent', file),
+    predicted_intent: csvText(row, 'predicted_intent', file),
+    reference_text_intent_prediction: csvText(row, 'reference_text_intent_prediction', file),
+    intent_correct: csvBoolean(row, 'intent_correct', file),
+    reference_text_intent_correct: csvBoolean(row, 'reference_text_intent_correct', file),
+    asr_induced_route_error: csvBoolean(row, 'asr_induced_route_error', file),
+    reference_equals_english_translation: csvBoolean(
+      row,
+      'reference_equals_english_translation',
+      file,
+    ),
+    router_similarity: csvNumber(row, 'router_similarity', file),
+    reference_text: csvText(row, 'reference_text', file),
+    elevenlabs_transcript: csvText(row, 'elevenlabs_transcript', file),
+    wer: csvNumber(row, 'wer', file),
+    cer: csvNumber(row, 'cer', file),
+  }
+}
+
+let routingPromise: Promise<Dataset<RoutingData>> | null = null
+/** Loads the static routing-analysis CSV snapshot used by the Routing page. */
+export function loadRoutingData(): Promise<Dataset<RoutingData>> {
+  if (routingPromise) return routingPromise
+  const pending: Promise<Dataset<RoutingData>> = Promise.all([
+    fetchCsv('routing_metrics.csv'),
+    fetchCsv('routing_language_coverage.csv'),
+    fetchCsv('routing_confusion.csv'),
+    fetchCsv('routing_misroutes.csv'),
+    fetchCsv('routing_test_results.csv'),
+    fetchCsv('routing_unscored_examples.csv'),
+    fetchCsv('toronto_311_request_types.csv'),
+    fetchCsv('toronto_311_divisions.csv'),
+  ])
+    .then(
+      ([
+        metrics,
+        coverage,
+        confusion,
+        misroutes,
+        testResults,
+        unscored,
+        requestTypes,
+        divisions,
+      ]) => {
+        const data: RoutingData = {
+          metrics: metrics.map(parseRoutingMetric),
+          coverage: coverage.map((row): RoutingLanguageCoverage => ({
+            dataset: parseDataset(row, 'routing_language_coverage.csv'),
+            language: csvText(row, 'language', 'routing_language_coverage.csv'),
+            selected_clips: csvNumber(row, 'selected_clips', 'routing_language_coverage.csv'),
+            scored_test_examples: csvNumber(
+              row,
+              'scored_test_examples',
+              'routing_language_coverage.csv',
+            ),
+            unscored_clips: csvNumber(row, 'unscored_clips', 'routing_language_coverage.csv'),
+          })),
+          confusion: confusion.map((row): RoutingConfusion => ({
+            dataset: parseDataset(row, 'routing_confusion.csv'),
+            language: csvText(row, 'language', 'routing_confusion.csv'),
+            true_intent: csvText(row, 'true_intent', 'routing_confusion.csv'),
+            predicted_intent: csvText(row, 'predicted_intent', 'routing_confusion.csv'),
+            count: csvNumber(row, 'count', 'routing_confusion.csv'),
+          })),
+          misroutes: misroutes.map((row): RoutingMisroute =>
+            parseRoutingTestResult(row, 'routing_misroutes.csv'),
+          ),
+          testResults: testResults.map((row) =>
+            parseRoutingTestResult(row, 'routing_test_results.csv'),
+          ),
+          unscored: unscored.map((row): RoutingUnscoredExample => ({
+            dataset: csvText(row, 'dataset', 'routing_unscored_examples.csv'),
+            language: csvText(row, 'language', 'routing_unscored_examples.csv'),
+            true_intent: csvText(row, 'true_intent', 'routing_unscored_examples.csv'),
+            file: csvText(row, 'file', 'routing_unscored_examples.csv'),
+            reason: csvText(row, 'reason', 'routing_unscored_examples.csv'),
+          })),
+          torontoRequestTypes: requestTypes.map((row): TorontoRequestType => ({
+            service_request_type: csvText(row, 'service_request_type', 'toronto_311_request_types.csv'),
+            request_count: csvNumber(row, 'request_count', 'toronto_311_request_types.csv'),
+            share_percent: csvNumber(row, 'share_percent', 'toronto_311_request_types.csv'),
+          })),
+          torontoDivisions: divisions.map((row): TorontoDivision => ({
+            division: csvText(row, 'division', 'toronto_311_divisions.csv'),
+            request_count: csvNumber(row, 'request_count', 'toronto_311_divisions.csv'),
+            share_percent: csvNumber(row, 'share_percent', 'toronto_311_divisions.csv'),
+          })),
+        }
+        return { status: 'ready' as const, data: [data], isSample: false, skipped: 0 }
+      },
+    )
+    .catch((error: unknown) => ({
+      status: 'error' as const,
+      data: [],
+      isSample: false,
+      skipped: 0,
+      error: error instanceof Error ? error.message : 'Unable to load routing results',
+    }))
+  routingPromise = pending
+  return pending
 }
