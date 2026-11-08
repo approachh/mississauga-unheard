@@ -26,7 +26,12 @@ const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFin
 const isStr = (v: unknown): v is string => typeof v === 'string' && v.length > 0
 
 export const isLanguageResult: Validator<LanguageResult> = (r): r is LanguageResult =>
-  isObj(r) && isStr(r.language) && isStr(r.language_code) && isNum(r.clips_tested) && isNum(r.wer) && isNum(r.cer)
+  isObj(r) &&
+  isStr(r.language) &&
+  isStr(r.language_code) &&
+  isNum(r.clips_tested) &&
+  (isNum(r.wer) || r.wer === null) &&
+  isNum(r.cer)
 
 export const isTranscriptionResult: Validator<TranscriptionResult> = (r): r is TranscriptionResult =>
   isObj(r) &&

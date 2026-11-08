@@ -1,5 +1,6 @@
 import type { CitywideLanguage, LanguageResult, SpeechCoverage, WardProfile } from '../types/data'
 import { langKey } from './language'
+import { inMode, PRIMARY_MODE } from './speech'
 
 /** Ward whose published zeros are treated as unverified. */
 export const CAUTION_WARD = 10
@@ -43,7 +44,8 @@ export function buildModel(
   const wardName = new Map<string, string>()
   for (const w of wards) for (const name of Object.keys(w.home_speakers)) wardName.set(langKey(name), name)
   const coverageBy = new Map(coverage.map((c) => [langKey(c.language), c]))
-  const speechBy = new Map(speechIsSample ? [] : speech.map((s) => [langKey(s.language), s]))
+  // One result per language: the headline (auto-detect) mode, published data only.
+  const speechBy = new Map(speechIsSample ? [] : inMode(speech, PRIMARY_MODE).map((s) => [langKey(s.language), s]))
 
   const assessed = ranking.filter((r) => coverageBy.has(langKey(r.language)))
   const uncovered = assessed.filter((r) => !coverageBy.get(langKey(r.language))!.has_service_request_audio)

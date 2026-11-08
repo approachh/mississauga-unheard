@@ -3,10 +3,21 @@ export interface LanguageResult {
   language: string
   language_code: string
   clips_tested: number
-  /** Word Error Rate, 0–1 (can exceed 1 when many insertions occur). */
-  wer: number
+  /** Word Error Rate, 0–1 (can exceed 1). Null for scripts without word spaces (e.g. Chinese). */
+  wer: number | null
   /** Character Error Rate, 0–1. */
   cer: number
+  /** 'auto' = language detected by the model; 'forced' = language given to it. */
+  mode?: string
+  dataset?: string
+  /** 95% confidence interval [low, high] for WER / CER, when computed. */
+  wer_ci?: [number, number] | null
+  cer_ci?: [number, number] | null
+  /** CER ignoring script choice (e.g. Simplified vs Traditional Chinese). */
+  cer_script_neutral?: number | null
+  /** % of clips where the detected language / script differed from the expected one. */
+  pct_language_mismatch?: number | null
+  pct_script_mismatch?: number | null
 }
 
 /** One row of `transcription_results.json`. */
@@ -21,6 +32,11 @@ export interface TranscriptionResult {
   /** Optional per-clip metrics; computed in the browser (WER only) if absent. */
   wer?: number
   cer?: number
+  mode?: string
+  detected_language?: string | null
+  script_mismatch?: boolean
+  /** Text is split into characters for display (no word spaces in the script). */
+  char_level?: boolean
 }
 
 /** `census_citywide_languages.json`: validated citywide home-language ranking. */

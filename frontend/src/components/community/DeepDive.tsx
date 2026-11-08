@@ -6,7 +6,8 @@ import type { CensusChecks, CitywideLanguage } from '../../types/data'
 import { Code } from '../EmptyState'
 import { Flag } from '../Flag'
 import { Notes } from '../Notes'
-import { Disclosure } from './Disclosure'
+import { Disclosure } from '../Disclosure'
+import { CoverageGrid } from './CoverageGrid'
 
 /** Everything a careful reader may want, one click away and closed by default. */
 export function DeepDive({
@@ -22,6 +23,9 @@ export function DeepDive({
 }) {
   return (
     <div className="border-t border-ink">
+      <Disclosure title="Which datasets include each language" summary="Read speech, accented English, banking calls and assistant commands.">
+        <CoverageGrid model={model} selected={selected} onSelect={onSelect} />
+      </Disclosure>
       <Disclosure title="Every ward, every language" summary={`The full table: ${model.wardName.size} languages across 11 wards.`}>
         <WardMatrix model={model} selected={selected} onSelect={onSelect} />
       </Disclosure>

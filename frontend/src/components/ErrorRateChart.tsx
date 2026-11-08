@@ -1,7 +1,9 @@
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { int, pct, titleCase } from '../lib/format'
+import { orMinus, rate } from '../lib/speech'
 import type { LanguageResult } from '../types/data'
-import type { Metric } from './RankedTable'
+
+export type Metric = 'wer' | 'cer'
 
 interface ErrorRateChartProps {
   data: LanguageResult[]
@@ -15,9 +17,10 @@ const CER_FILL = 'var(--color-proof-light)'
 
 /** WER and CER side by side per language, ranked worst first. Axis starts at zero. */
 export function ErrorRateChart({ data, rankBy, selected, onSelect }: ErrorRateChartProps) {
-  const rows = [...data].sort((a, b) => b[rankBy] - a[rankBy]).map((d) => ({ ...d, name: titleCase(d.language) }))
+  // Languages without a WER (no word spaces) rank last when sorting by WER.
+  const rows = [...data].sort((a, b) => orMinus(b[rankBy]) - orMinus(a[rankBy])).map((d) => ({ ...d, name: titleCase(d.language) }))
 
-  const max = Math.max(0.05, ...rows.flatMap((r) => [r.wer, r.cer]))
+  const max = Math.max(0.05, ...rows.flatMap((r) => [r.wer ?? 0, r.cer]))
   const step = max <= 0.25 ? 0.05 : max <= 0.6 ? 0.1 : 0.2
   const top = Math.ceil(max / step) * step
   const ticks = Array.from({ length: Math.round(top / step) + 1 }, (_, i) => +(i * step).toFixed(2))
@@ -77,7 +80,7 @@ export function ErrorRateChart({ data, rankBy, selected, onSelect }: ErrorRateCh
                 className={onSelect ? 'cursor-pointer' : undefined}
                 label={{
                   position: 'right',
-                  formatter: (v: unknown) => pct(Number(v)),
+                  formatter: (v: unknown) => (v === null || v === undefined ? (m === 'wer' ? 'no WER' : '–') : pct(Number(v))),
                   fill: 'var(--color-ink-2)',
                   fontSize: 11,
                 }}
@@ -113,7 +116,7 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: { paylo
       </p>
       <dl className="grid grid-cols-[1fr_auto] gap-x-6 gap-y-0.5">
         <dt className="text-ink-3">WER</dt>
-        <dd className="text-right font-medium">{pct(d.wer)}</dd>
+        <dd className="text-right font-medium">{d.wer === null ? 'n/a, see CER' : rate(d.wer)}</dd>
         <dt className="text-ink-3">CER</dt>
         <dd className="text-right font-medium">{pct(d.cer)}</dd>
         <dt className="text-ink-3">Clips</dt>
